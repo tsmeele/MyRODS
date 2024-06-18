@@ -93,7 +93,9 @@ public class IrodsPackedMessage {
 				"info = " + intInfo + apiNum +"\n";
 	}
 	
-
+	public IrodsMessageType getType() {
+		return messageType;
+	}
 	
 		
 	public IrodsMessage unpack(String unpackInstruction) throws MyRodsException  {

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -21,6 +20,7 @@ public class IrodsSession {
 	private IrodsInputStream irodsIn = null;
 	private IrodsOutputStream irodsOut = null;
 	private IrodsProtocolType protocol = null;
+	private SessionDetails sessionDetails = null;
 	
 	
 	
@@ -32,8 +32,7 @@ public class IrodsSession {
 		return sslActive;
 	}
 	
-
-	public IrodsInputStream getInputStream() {
+	public IrodsInputStream getInputStream()  {
 		return irodsIn;
 	}
 	
@@ -50,6 +49,17 @@ public class IrodsSession {
 		irodsIn.setProtocol(protocol);
 		irodsOut.setProtocol(protocol);
 	}
+	
+	public SessionDetails getSessionDetails() {
+		return sessionDetails;
+	}
+	
+	public void setSessionDetails(SessionDetails sessionDetails) {
+		this.sessionDetails = sessionDetails;
+	}
+	
+	
+	
 	
 	public void connect(String hostname, int port) throws MyRodsException {
 		try {
@@ -96,31 +106,27 @@ public class IrodsSession {
 	
 	/**
 	 * Upgrade current connection to SSL.
-	 * @throws MyRodsException 
+	 * @throws IOException 
 	 */
-	public void startSSL() throws MyRodsException  {
+	public void startSSL() throws IOException  {
 		if (sslActive) {
 			// already on SSL, no further action needed
 			return;
 		}
-		
 		// ensure no data in flight on old socket
 		tryFlushOutputStream();
 		
 		// start SSL socket on top of regular socket
-		try {
-			sslSocket = (SSLSocket) ((SSLSocketFactory) SSLSocketFactory.getDefault()).createSocket(
-			        socket, 
-			        socket.getInetAddress().getHostAddress(), 
-			        socket.getPort(), 
-			        false	// no autoclose of underlying socket
-			        );
-			// update streams to use the SSL socket going forward
-			irodsIn = new IrodsInputStream(sslSocket.getInputStream(), protocol);
-			irodsOut = new IrodsOutputStream(sslSocket.getOutputStream(), protocol);
-		} catch (IOException e) {
-			throw new MyRodsException("Unable to upgrade connection to SSL: " + e.getMessage());
-		}    
+
+		sslSocket = (SSLSocket) ((SSLSocketFactory) SSLSocketFactory.getDefault()).createSocket(
+				        socket, 
+				        socket.getInetAddress().getHostAddress(), 
+				        socket.getPort(), 
+				        false	// no autoclose of underlying socket
+				        );
+		// update streams to use the SSL socket going forward
+		irodsIn = new IrodsInputStream(sslSocket.getInputStream(), protocol);
+		irodsOut = new IrodsOutputStream(sslSocket.getOutputStream(), protocol);   
 		sslActive = true;
 	}
 	
