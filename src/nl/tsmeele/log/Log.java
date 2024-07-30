@@ -14,6 +14,7 @@ public class Log {
 	private static PrintStream out = System.out;
 	@SuppressWarnings("rawtypes")
 	private static Enum logLevel = LogLevel.ERROR;	// default loglevel
+	private static String[] debugClassFilter = null;	// if set, limit debug output to these classes
 	private static Long lastTime = -1L;
 	
 	public static void setPrintStream(PrintStream stream) {
@@ -30,6 +31,15 @@ public class Log {
 		logLevel = level;
 	}
 	
+	/*
+	 * Filter debug output to only print messages that stem from classes of which
+	 * the canonical name begins with one of the literals entered as filter.
+	 * @param classPrefixes  filter array with (partial) canonical classnames
+	 */
+	public static void setDebugOutputFilter(String[] classPrefixes) {
+		debugClassFilter = classPrefixes;
+	}
+	
 	public static void error(String message) {
 		println(LogLevel.ERROR, message);
 	}
@@ -39,7 +49,26 @@ public class Log {
 	}
 	
 	public static void debug(String message) {
+		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+		if (stack.length > 2) {
+			String caller = stack[2].getClassName();
+			if (!inFilter(caller)) {
+				return;
+			}
+		}
 		println(LogLevel.DEBUG, message);
+	}
+	
+	private static boolean inFilter(String caller) {
+		if (debugClassFilter == null) {
+			return true;
+		}
+		for (String filter : debugClassFilter) {
+			if (caller.startsWith(filter)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static void timerStart() {
