@@ -55,6 +55,18 @@ public class GenQueryInp extends DataStruct {
 		init(256, 0, 0, 0, keyValPair, inxIvalPair, inxValPair);
 	}
 	
+	// e.g. to fetch a new set of rows
+	public void setContinueInx(int newContinueInx) {
+		DataInt continueInx = (DataInt) lookupName("continueInx");
+		continueInx.set(newContinueInx);
+	}
+	
+	// e.g. to close a query (set maxRows to a value <= 0)
+	public void setMaxRows(int newMaxRows) {
+		DataInt maxRows = (DataInt) lookupName("maxRows");
+		maxRows.set(newMaxRows);
+	}
+	
 	private void init(int maxRows, int continueInx, int partialStartIndex, int options,
 			KeyValPair keyValPair, InxIvalPair inxIvalPair, InxValPair inxValPair) {
 		add(new DataInt("maxRows", maxRows));
