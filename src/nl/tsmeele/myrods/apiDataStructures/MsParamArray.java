@@ -1,5 +1,6 @@
 package nl.tsmeele.myrods.apiDataStructures;
 
+import java.util.Iterator;
 import java.util.List;
 
 import nl.tsmeele.myrods.irodsDataTypes.DataArray;
@@ -29,6 +30,15 @@ public class MsParamArray extends DataStruct {
 		init(oprType);
 	}
 	
+	/**
+	 * Construct an MsParamArray from an API reply's message part.
+	 * @param message	MsParamArray_PI formatted message
+	 */
+	public MsParamArray(DataStruct message) {
+		super("MsParamArray_PI");
+		addFrom(message);
+	}
+	
 	private void init(int oprType) {
 		add(new DataInt("paramLen", 0));
 		add(new DataInt("oprType", oprType));
@@ -49,6 +59,34 @@ public class MsParamArray extends DataStruct {
 	
 	public DataArray getArray() {
 		return (DataArray) ((DataPtr) get(2)).get();
+	}
+	
+	private class MsParamIterator implements Iterator<MsParam> {
+		private int index;
+		
+		private MsParam get(int i) {
+			DataArray array = getArray();
+			if (array.size() < i) {
+				return null;
+			}
+			return (MsParam) array.get(i);
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return get(index) != null;
+		}
+
+		@Override
+		public MsParam next() {
+			MsParam msParam = get(index);
+			index++;
+			return msParam;
+		}
+	}
+	
+	public Iterator<MsParam> msParamIterator() {
+		return new MsParamIterator();
 	}
 	
 }
