@@ -2,6 +2,7 @@ package nl.tsmeele.myrods.apiDataStructures;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import nl.tsmeele.myrods.irodsDataTypes.DataArray;
 import nl.tsmeele.myrods.irodsDataTypes.DataInt;
@@ -64,22 +65,17 @@ public class MsParamArray extends DataStruct {
 	private class MsParamIterator implements Iterator<MsParam> {
 		private int index;
 		
-		private MsParam get(int i) {
-			DataArray array = getArray();
-			if (array.size() < i) {
-				return null;
-			}
-			return (MsParam) array.get(i);
-		}
-		
 		@Override
 		public boolean hasNext() {
-			return get(index) != null;
+			return getArray().size() > index;
 		}
 
 		@Override
 		public MsParam next() {
-			MsParam msParam = get(index);
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			MsParam msParam = (MsParam) getArray().get(index);
 			index++;
 			return msParam;
 		}
