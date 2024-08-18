@@ -8,11 +8,11 @@ public class JSONnumber implements JSON {
 	private Object obj = null;
 	
 	public JSONnumber(long i) {
-		obj = new Long(i);
+		obj = (Long) i;
 	}
 	
 	public JSONnumber(double f) {
-		obj = new Double(f);
+		obj = (Double) f;
 	}
 	
 	public Object get() {
