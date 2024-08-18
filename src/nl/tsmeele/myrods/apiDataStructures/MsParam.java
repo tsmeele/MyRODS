@@ -1,6 +1,5 @@
 package nl.tsmeele.myrods.apiDataStructures;
 
-import nl.tsmeele.myrods.irodsDataTypes.Data;
 import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
 import nl.tsmeele.myrods.irodsDataTypes.DataInt;
 import nl.tsmeele.myrods.irodsDataTypes.DataPIStr;
@@ -46,9 +45,7 @@ public class MsParam extends DataStruct {
 	 */
 	public MsParam(DataStruct msParam) {
 		super("MsParam_PI");
-		for (Data d : msParam) {
-			add(d);
-		}
+		addFrom(msParam);
 	}
 	
 	

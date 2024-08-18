@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import nl.tsmeele.myrods.api.RodsCall;
+import nl.tsmeele.myrods.irodsDataTypes.Data;
 import nl.tsmeele.myrods.irodsDataTypes.DataArray;
 import nl.tsmeele.myrods.irodsDataTypes.DataInt;
 import nl.tsmeele.myrods.irodsDataTypes.DataPtr;
@@ -32,34 +34,42 @@ public class MsParamArray extends DataStruct {
 	}
 	
 	/**
-	 * Construct an MsParamArray from an API reply's message part.
-	 * @param message	MsParamArray_PI formatted message
+	 * Construct an MsParamArray from a generic DataStruct.
+	 * This constructor is typically used to interpret an API reply.
+	 * @param dataStruct	MsParamArray_PI formatted data structure
 	 */
-	public MsParamArray(DataStruct message) {
+	public MsParamArray(DataStruct dataStruct) {
 		super("MsParamArray_PI");
-		addFrom(message);
+		addFrom(dataStruct);
+		// convert members from generic DataStruct to MsParam
+		DataArray array = (DataArray) get(2);
+		for (Data member : array) {
+			DataPtr paramPtr = (DataPtr) member;
+			DataStruct param = 
+					RodsCall.convertToOutputClass((DataStruct)paramPtr.get());
+			paramPtr.set(0, param);
+		}
+		
 	}
 	
 	private void init(int oprType) {
 		add(new DataInt("paramLen", 0));
 		add(new DataInt("oprType", oprType));
 		DataArray array = new DataArray("msParam_PI");
-		add(new DataPtr("msParam_PI", array));
+		add(array);
 	}
-	
-	
+		
 	public void add(MsParam msParam) {
 		if (msParam == null) {
 			return;
 		}
 		DataInt paramLen = (DataInt) get(0);
-		DataArray array = (DataArray) ((DataPtr) get(2)).get();
 		paramLen.set(paramLen.get() + 1);
-		array.add(msParam);
+		getArray().add(new DataPtr("msParam_PI", msParam));
 	}
 	
 	public DataArray getArray() {
-		return (DataArray) ((DataPtr) get(2)).get();
+		return (DataArray) get(2);
 	}
 	
 	private class MsParamIterator implements Iterator<MsParam> {
@@ -75,7 +85,8 @@ public class MsParamArray extends DataStruct {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
-			MsParam msParam = (MsParam) getArray().get(index);
+			DataPtr p = (DataPtr) getArray().get(index);
+			MsParam msParam = (MsParam) p.get();
 			index++;
 			return msParam;
 		}

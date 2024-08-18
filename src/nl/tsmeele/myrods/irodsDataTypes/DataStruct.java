@@ -39,6 +39,12 @@ public class DataStruct extends Data implements Iterable<Data> {
 		return null;
 	}
 	
+	public void set(int i, Data d) {
+		if (i < list.size()) {
+			list.set(i, d);
+		}
+	}
+	
 	public Iterator<Data> iterator() {
 		return list.iterator();
 	}

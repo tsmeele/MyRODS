@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import nl.tsmeele.log.Log;
 import nl.tsmeele.myrods.api.RcExecMyRule;
@@ -54,8 +55,9 @@ public class ExeRule {
 		
 		System.out.println("RULE TO EXECUTE:\n" + myRule + "\n");
 		System.out.println("INPUTVARS:");
-		for (Data paramStruct : (DataArray) inputVars.getArray()) {
-			printMsParam(new MsParam((DataStruct)paramStruct));
+		Iterator<MsParam> it = inputVars.msParamIterator();
+		while (it.hasNext()) {
+			printMsParam(it.next());
 			System.out.println();
 		}
 		
@@ -64,20 +66,13 @@ public class ExeRule {
 		RcExecMyRule rcExecMyRule = new RcExecMyRule(ruleInp);
 		Message reply = rcExecMyRule.sendTo(irodsSession);
 		Log.debug(reply.toString());
-		DataStruct msParamStruct = (DataStruct) reply.getMessage();
+		MsParamArray msArray = (MsParamArray) reply.getMessage();
 		
-		// interprete/show the rule output
-		int paramLen = ((DataInt)msParamStruct.get(0)).get();
+		// show returned parameters
 		System.out.println("OUTPUTVARS:");
-		DataArray msParams = (DataArray) msParamStruct.get(2);
-		for (int i = 0; i < paramLen; i++) {
-			DataPtr outParamPtr = (DataPtr)msParams.get(i);
-			if (outParamPtr.get() == null) {
-				System.out.println("var #" + i + " is a nullpointer");
-				continue;
-			}
-			MsParam outParam = new MsParam((DataStruct)outParamPtr.get());
-			printMsParam(outParam);
+		it = msArray.msParamIterator();
+		while (it.hasNext()) {
+			printMsParam(it.next());
 		}
 	}
 
@@ -93,6 +88,8 @@ public class ExeRule {
 		} else {
 			if (content != null) {
 				System.out.println("Content: " + content);
+			} else {
+				System.out.println("Content: <null>");
 			}
 		}
 	}
