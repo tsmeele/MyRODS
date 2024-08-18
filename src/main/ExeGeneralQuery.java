@@ -9,6 +9,7 @@ import nl.tsmeele.myrods.apiDataStructures.GenQueryOut;
 import nl.tsmeele.myrods.apiDataStructures.InxIvalPair;
 import nl.tsmeele.myrods.apiDataStructures.InxValPair;
 import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
+import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.plumbing.IrodsSession;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
@@ -48,11 +49,12 @@ public class ExeGeneralQuery {
 		GenQueryInp genQueryInp = new GenQueryInp(maxRows, continueInx, partialStartIndex,
 				queryOptions, new KeyValPair(), inxIvalPair , inxValPair);
 		RcGenQuery rcGenQuery = new RcGenQuery(genQueryInp);
-		GenQueryOut genOut = new GenQueryOut(rcGenQuery.sendTo(irodsSession));
-		if (genOut.intInfo < 0) {
-			System.out.println("Query failed, ierror = " + genOut.intInfo);
+		Message reply = rcGenQuery.sendTo(irodsSession);
+		if (reply.getIntInfo() < 0) {
+			System.out.println("Query failed, ierror = " + reply.getIntInfo());
 			return;
 		}
+		GenQueryOut genOut = (GenQueryOut) reply.getMessage();
 		System.out.println("query succesful!");
 		System.out.println(genOut);
 	}	

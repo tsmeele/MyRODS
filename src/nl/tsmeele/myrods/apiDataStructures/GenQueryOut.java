@@ -25,22 +25,14 @@ public class GenQueryOut extends DataStruct {
 	// "SqlResult_PI", "int attriInx; int reslen; str *value(rowCnt)(reslen);",
 	// "GenQueryOut_PI", "int rowCnt; int attriCnt; int continueInx; int totalRowCount; struct SqlResult_PI[MAX_SQL_ATTR];",
 	
-
-	public GenQueryOut(Message rodsReplyMessageForGenQuery) {
+	public GenQueryOut(DataStruct dataStruct) {
 		super("GenQueryOut_PI");
-		intInfo = rodsReplyMessageForGenQuery.getIntInfo();
-		errorMessage = rodsReplyMessageForGenQuery.getErrorMessage();
-		if (intInfo < 0) {
-			// other data not available, don't bother to retrieve
-			return;
-		}
-		// retrieve GenQueryOut data
-		DataStruct queryOut = (DataStruct) rodsReplyMessageForGenQuery.getMessage();
-		rowCount = queryOut.lookupInt("rowCnt");
-		columnCount = queryOut.lookupInt("attriCnt");
-		continueInx = queryOut.lookupInt("continueInx");
-		totalRowCount = queryOut.lookupInt("totalRowCount");
-		DataArray results = (DataArray)queryOut.lookupName("SqlResult_PI", true);
+		addFrom(dataStruct);
+		rowCount = lookupInt("rowCnt");
+		columnCount = lookupInt("attriCnt");
+		continueInx = lookupInt("continueInx");
+		totalRowCount = lookupInt("totalRowCount");
+		DataArray results = (DataArray) lookupName("SqlResult_PI", true);
 		
 		// put returned rows/columns in an array
 		data = new String[rowCount][columnCount];
@@ -51,11 +43,11 @@ public class GenQueryOut extends DataStruct {
 			int attriInx = colResult.lookupInt("attriInx");
 			columnNames[col] = Columns.findById(attriInx).getLabel();
 			// get array with row data for this column
-			DataPtr pValue = (DataPtr)colResult.lookupName("value", true);
+			DataPtr pValue = (DataPtr) colResult.lookupName("value", true);
 			DataArray value = (DataArray) pValue.get(0);
 			// extract data 
 			for (int row = 0; row < rowCount; row++) {
-				data[row][col] = ((DataString)value.get(row)).get();
+				data[row][col] = ((DataString) value.get(row)).get();
 			}
 		}
 	}
