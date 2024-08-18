@@ -57,7 +57,6 @@ public abstract class RodsCall {
 	 * of DataStruct.
 	 * 
 	 * @param inStruct	object to be converted
-	 * @param className	simple name of the target class with optional suffix "_PI"
 	 * @return converted object (or original object if conversion failed)
 	 */
 	public static DataStruct convertToOutputClass(DataStruct inStruct) {
