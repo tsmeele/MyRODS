@@ -24,7 +24,7 @@ import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.ObjType;
 import nl.tsmeele.myrods.apiDataStructures.OpenedDataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.OprType;
-import nl.tsmeele.myrods.apiDataStructures.RodsObjStatOut;
+import nl.tsmeele.myrods.apiDataStructures.RodsObjStat;
 import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
 import nl.tsmeele.myrods.plumbing.IrodsSession;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
@@ -294,9 +294,10 @@ public class Replica implements PosixFile {
 		// simply has not been checked so far...we will need to query the server.
 		RcObjStat rcObjStat = new RcObjStat(objPath, ObjType.DATAOBJECT);
 		try {
-			RodsObjStatOut stat = new RodsObjStatOut(rcObjStat.sendTo(irodsSession));
-			exists = stat.objectExists();
-			if (exists) {
+			Message reply = rcObjStat.sendTo(irodsSession);
+			if (reply.getIntInfo() >= 0) {
+				RodsObjStat stat = (RodsObjStat) reply.getMessage();
+				exists = true;
 				objSize = stat.objSize;
 			}
 		} catch (Exception e) { } 	

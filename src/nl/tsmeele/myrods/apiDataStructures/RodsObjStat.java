@@ -9,7 +9,7 @@ import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
  * @author Ton Smeele
  *
  */
-public class RodsObjStatOut extends DataStruct {
+public class RodsObjStat extends DataStruct {
 //	"RodsObjStat_PI", "double objSize; int objType; int dataMode; str dataId[NAME_LEN]; 
 //     str chksum[NAME_LEN]; str ownerName[NAME_LEN]; str ownerZone[NAME_LEN]; 
 //     str createTime[TIME_LEN]; str modifyTime[TIME_LEN]; struct *SpecColl_PI;",
@@ -27,13 +27,9 @@ public class RodsObjStatOut extends DataStruct {
 	public TimeStamp modifyTime = null;
 	public DataStruct specColl = null;
 	
-	
-	public RodsObjStatOut(Message rodsReplyMessageForRcObjStat) {
+	public RodsObjStat(DataStruct dataStruct) {
 		super("RodsObjStat_PI");
-		intInfo = rodsReplyMessageForRcObjStat.getIntInfo();
-		errorMessage = rodsReplyMessageForRcObjStat.getErrorMessage();
-		
-		addFrom(rodsReplyMessageForRcObjStat.getMessage());
+		addFrom(dataStruct);
 		objSize = lookupLong("objSize");
 		objType = lookupInt("objType");
 		dataMode = lookupInt("dataMode");
@@ -46,18 +42,7 @@ public class RodsObjStatOut extends DataStruct {
 		specColl = (DataStruct) lookupName("specColl");
 	}
 	
-	public boolean objectExists() {
-		return (intInfo >= 0);
-	}
-	
-	
 	public String toString() {
-		if (intInfo == -310000) {
-			return "RodsObjStat: Object does not exist";
-		}
-		if (intInfo < 0) {
-			return "RodsObjStat: error = " + intInfo;
-		}
 		return "RodsObjStat: " +
 				"objSize(" + objSize + "), objType(" + objType + "), dataMode(" + dataMode + 
 				"), dataId='" + dataId + "', chksum='" + chksum + 
