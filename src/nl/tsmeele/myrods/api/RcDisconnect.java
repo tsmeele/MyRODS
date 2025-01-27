@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.MessageType;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 
 /**
  * Api call to end a connection to an iRODS server.
@@ -19,7 +19,7 @@ public class RcDisconnect extends RodsCall {
 	
 
 	@Override
-	public Message sendTo(IrodsSession session) throws IOException {
+	public Message sendTo(ServerConnection session) throws IOException {
 		// construct and send a trivial message, only the message type is specified
 		session.getOutputStream().writeMessage(msg);
 		session.disconnect();

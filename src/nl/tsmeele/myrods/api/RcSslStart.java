@@ -6,7 +6,7 @@ import nl.tsmeele.myrods.apiDataStructures.Api;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.irodsDataTypes.DataString;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 import nl.tsmeele.myrods.plumbing.MessageSerializer;
 
@@ -30,7 +30,7 @@ public class RcSslStart extends RodsApiCall {
 	}
 
 	@Override
-	public Message sendTo(IrodsSession session) throws IOException, MyRodsException {
+	public Message sendTo(ServerConnection session) throws IOException, MyRodsException {
 		session.getOutputStream().writeMessage(msg);
 		MessageSerializer reply = session.getInputStream().readMessage();
 		Message unpackedMessage = reply.unpack(unpackInstruction());

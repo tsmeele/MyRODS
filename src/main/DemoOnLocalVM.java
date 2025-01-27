@@ -16,7 +16,7 @@ import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.ModAVUMetadataInp;
 import nl.tsmeele.myrods.apiDataStructures.ModAccessControlInp;
 import nl.tsmeele.myrods.high.Session;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 /**
@@ -62,7 +62,7 @@ public class DemoOnLocalVM {
 			System.out.println("Could not login");
 			System.exit(1);
 		}
-		IrodsSession irodsSession = session.getIrodsSession();
+		ServerConnection irodsSession = session.getIrodsSession();
 		System.out.println("is connected = " + irodsSession.isConnected());
 		System.out.println("is ssl = " + irodsSession.isSsl());
 		System.out.println("protocol = " + irodsSession.getProtocol().name());
@@ -81,7 +81,7 @@ public class DemoOnLocalVM {
 		// show get file
 		System.out.println("\n\nDEMO: Execution of a data object Get data transfer\n");
 		GetOrPutFile tx = new GetOrPutFile(session);
-		tx.setThreads(2); // 0 = multithreaded
+		tx.setThreads(0); // 0 = multithreaded
 		Log.timerStart();
 		tx.get("/tempZone/home/ton/mybook1.docx", "/tmp/boek-4-jul-2024.docx");
 		Log.timerRead("GET transfer done");

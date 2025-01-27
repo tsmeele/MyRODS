@@ -9,7 +9,7 @@ import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.ObjType;
 import nl.tsmeele.myrods.apiDataStructures.RodsObjStat;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 /** Demonstrator class to show how a checksum is added to a data object.
@@ -18,9 +18,9 @@ import nl.tsmeele.myrods.plumbing.MyRodsException;
  *
  */
 public class ChksumDataObject {
-	private IrodsSession irodsSession;
+	private ServerConnection irodsSession;
 
-	public ChksumDataObject(IrodsSession irodsSession) {
+	public ChksumDataObject(ServerConnection irodsSession) {
 		this.irodsSession = irodsSession;
 	}
 

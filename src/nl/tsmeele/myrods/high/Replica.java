@@ -26,7 +26,7 @@ import nl.tsmeele.myrods.apiDataStructures.OpenedDataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.OprType;
 import nl.tsmeele.myrods.apiDataStructures.RodsObjStat;
 import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 import nl.tsmeele.myrods.plumbing.SessionDetails;
 
@@ -47,7 +47,7 @@ public class Replica implements PosixFile {
 	
 	// connection
 	private Session session = null;
-	private IrodsSession irodsSession = null;
+	private ServerConnection irodsSession = null;
 	private String host = null;
 	
 	private int numThreads = 0;

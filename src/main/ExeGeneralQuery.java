@@ -10,7 +10,7 @@ import nl.tsmeele.myrods.apiDataStructures.InxIvalPair;
 import nl.tsmeele.myrods.apiDataStructures.InxValPair;
 import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
 import nl.tsmeele.myrods.apiDataStructures.Message;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 /** Demonstrator class to show General Query use.
@@ -19,9 +19,9 @@ import nl.tsmeele.myrods.plumbing.MyRodsException;
  *
  */
 public class ExeGeneralQuery {
-	private IrodsSession irodsSession;
+	private ServerConnection irodsSession;
 
-	public ExeGeneralQuery(IrodsSession irodsSession) {
+	public ExeGeneralQuery(ServerConnection irodsSession) {
 		this.irodsSession = irodsSession;
 	}
 

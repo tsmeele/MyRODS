@@ -16,7 +16,7 @@ import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.ModAVUMetadataInp;
 import nl.tsmeele.myrods.apiDataStructures.ModAccessControlInp;
 import nl.tsmeele.myrods.high.Session;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 /**
@@ -62,7 +62,7 @@ public class AccScienceTest {
 			System.out.println("Could not login");
 			System.exit(1);
 		}
-		IrodsSession irodsSession = session.getIrodsSession();
+		ServerConnection irodsSession = session.getIrodsSession();
 		System.out.println("is connected = " + irodsSession.isConnected());
 		System.out.println("is ssl = " + irodsSession.isSsl());
 		System.out.println("protocol = " + irodsSession.getProtocol().name());

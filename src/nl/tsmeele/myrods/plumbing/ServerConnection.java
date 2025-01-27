@@ -13,7 +13,7 @@ import javax.net.ssl.SSLSocketFactory;
  * @author Ton Smeele
  *
  */
-public class IrodsSession {
+public class ServerConnection {
 	private Socket socket = null;
 	private SSLSocket sslSocket = null;
 	private boolean sslActive = false;

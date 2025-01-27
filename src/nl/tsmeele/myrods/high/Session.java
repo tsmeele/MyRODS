@@ -13,7 +13,7 @@ import nl.tsmeele.myrods.api.RcSslStart;
 import nl.tsmeele.myrods.api.RodsCall;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 import nl.tsmeele.myrods.plumbing.SessionDetails;
 
@@ -23,7 +23,7 @@ import nl.tsmeele.myrods.plumbing.SessionDetails;
  *
  */
 public class Session implements Cloneable {
-	private IrodsSession irodsSession = null;
+	private ServerConnection irodsSession = null;
 	private SessionPool pool = null; 
 	private Long connectTime = null;
 	private Long markedTime = null;
@@ -33,7 +33,7 @@ public class Session implements Cloneable {
 		return pool;
 	}
 	
-	public IrodsSession getIrodsSession() {
+	public ServerConnection getIrodsSession() {
 		return irodsSession;
 	}
 	
@@ -191,8 +191,8 @@ public class Session implements Cloneable {
 	}
 	
 	
-	private IrodsSession connect(String host, int port, String userName, String userZone) throws IOException {
-		IrodsSession server = new IrodsSession();
+	private ServerConnection connect(String host, int port, String userName, String userZone) throws IOException {
+		ServerConnection server = new ServerConnection();
 		server.connect(host,  port);
 		RcConnect rcConnect = new RcConnect(0, 1, userName, userZone, userName, userZone);
 		rcConnect.sendTo(server);

@@ -10,7 +10,7 @@ import nl.tsmeele.myrods.apiDataStructures.RodsObjStat;
 import nl.tsmeele.myrods.apiDataStructures.RodsVersion;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
 import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 /**
@@ -27,7 +27,7 @@ public class Irods {
 	
 	private String host;
 	private int port;
-	private IrodsSession irodsSession = new IrodsSession();
+	private ServerConnection irodsSession = new ServerConnection();
 	private Message response = null;
 
 	

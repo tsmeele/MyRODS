@@ -11,7 +11,7 @@ import nl.tsmeele.myrods.irodsDataTypes.DataString;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
 import nl.tsmeele.myrods.plumbing.DataEncryptConfig;
 import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 import nl.tsmeele.myrods.plumbing.MessageSerializer;
 import nl.tsmeele.myrods.plumbing.SessionDetails;
@@ -128,7 +128,7 @@ public class RcConnect extends RodsCall {
 	
 
 	@Override
-	public Message sendTo(IrodsSession session) throws IOException, MyRodsException { 
+	public Message sendTo(ServerConnection session) throws IOException, MyRodsException { 
 		// try to reuse details from a prior connection
 
 
@@ -170,7 +170,7 @@ public class RcConnect extends RodsCall {
 		return "Version_PI";
 	}
 	
-	private Message makeNegotiationRoundtrip(IrodsSession session, Message reply) throws IOException {
+	private Message makeNegotiationRoundtrip(ServerConnection session, Message reply) throws IOException {
 		DataInt status = (DataInt) reply.getMessage().lookupName("status");
 		DataString result = (DataString) reply.getMessage().lookupName("result");
 		if (status == null || status.get() != NEGO_SUCCESS) {

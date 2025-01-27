@@ -14,7 +14,7 @@ import nl.tsmeele.myrods.apiDataStructures.MsParamArray;
 import nl.tsmeele.myrods.apiDataStructures.RHostAddr;
 import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
-import nl.tsmeele.myrods.plumbing.IrodsSession;
+import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 /** Demonstrator class to show the execution of a client rule with input and output variables.
@@ -24,9 +24,9 @@ import nl.tsmeele.myrods.plumbing.MyRodsException;
  */
 public class ExeRule {
 	private final String EXTERNALRULE = "@external rule ";
-	private IrodsSession irodsSession;
+	private ServerConnection irodsSession;
 	
-	public ExeRule(IrodsSession irodsSession) {
+	public ExeRule(ServerConnection irodsSession) {
 		this.irodsSession = irodsSession;
 	}
 	
