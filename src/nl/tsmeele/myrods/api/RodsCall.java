@@ -8,7 +8,7 @@ import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
 import nl.tsmeele.myrods.plumbing.IrodsSession;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
-import nl.tsmeele.myrods.plumbing.PackedMessage;
+import nl.tsmeele.myrods.plumbing.MessageSerializer;
 
 /**
  * Superclass for all API calls to iRODS server.
@@ -28,7 +28,7 @@ public abstract class RodsCall {
 	 */
 	public Message sendTo(IrodsSession session) throws IOException, MyRodsException {
 		session.getOutputStream().writeMessage(msg);
-		PackedMessage reply = session.getInputStream().readMessage();
+		MessageSerializer reply = session.getInputStream().readMessage();
 		Message message = reply.unpack(unpackInstruction());
 		if (unpackInstruction() != null) {
 			// facilitate casting of message to the output class 

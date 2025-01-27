@@ -30,9 +30,9 @@ public class IrodsInputStream extends InputStream {
 		this.protocol = protocol;
 	}
 
-	public PackedMessage readMessage() throws IOException {
+	public MessageSerializer readMessage() throws IOException {
 		// the IrodsPackedMessage will read exactly one message from the input stream 
-		return new PackedMessage(this);		
+		return new MessageSerializer(this);		
 	}
 	
 	public int readInt32() throws MyRodsException {

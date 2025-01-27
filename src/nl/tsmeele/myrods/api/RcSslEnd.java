@@ -8,7 +8,7 @@ import nl.tsmeele.myrods.irodsDataTypes.DataString;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
 import nl.tsmeele.myrods.plumbing.IrodsSession;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
-import nl.tsmeele.myrods.plumbing.PackedMessage;
+import nl.tsmeele.myrods.plumbing.MessageSerializer;
 
 /**
  * API call to request downgrading of current SSL connection to regular TCP connection.
@@ -31,7 +31,7 @@ public class RcSslEnd extends RodsApiCall {
 
 	public Message sendTo(IrodsSession session) throws IOException, MyRodsException {
 		session.getOutputStream().writeMessage(msg);
-		PackedMessage reply = session.getInputStream().readMessage();
+		MessageSerializer reply = session.getInputStream().readMessage();
 		Message unpackedMessage = reply.unpack(unpackInstruction());
 		if (unpackedMessage.getIntInfo() == 0) {
 			// server agrees to switch back to regular TCP, make the change

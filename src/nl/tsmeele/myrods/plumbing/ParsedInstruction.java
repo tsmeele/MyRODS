@@ -22,7 +22,7 @@ import nl.tsmeele.myrods.irodsDataTypes.IrodsType;
  *
  */
 public class ParsedInstruction {
-	private static PackMapConstants packMapConstants = new PackMapConstants();
+	private static PackInstructionsConstants packMapConstants = new PackInstructionsConstants();
 	
 	private Pattern regexType  = Pattern.compile("^\\s*([?]?)(\\w+)\\s+([*]?)(\\w+)\\s*(.*)\\s*$");
 	private Pattern regexArray = Pattern.compile("\\s*\\[\\s*(\\w+)\\s*\\]");

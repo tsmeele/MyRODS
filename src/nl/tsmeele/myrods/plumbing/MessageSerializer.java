@@ -16,7 +16,7 @@ import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
  * @author Ton Smeele
  *
  */
-public class PackedMessage {
+public class MessageSerializer {
 	private IrodsProtocolType protocol = null;
 	
 	private byte[] packedHeader = new byte[0];
@@ -32,7 +32,7 @@ public class PackedMessage {
 	 * @param in
 	 * @throws MyRodsException
 	 */
-	public PackedMessage(IrodsInputStream in) throws MyRodsException {
+	public MessageSerializer(IrodsInputStream in) throws MyRodsException {
 		protocol = in.getProtocol();
 		// first read the header part from inputstream
 		int headerSize = in.readInt32();
@@ -63,7 +63,7 @@ public class PackedMessage {
 	 * @param protocol
 	 * @throws IOException
 	 */
-	public PackedMessage(Message msg, IrodsProtocolType protocol) throws IOException {
+	public MessageSerializer(Message msg, IrodsProtocolType protocol) throws IOException {
 		this.protocol = protocol;
 		intInfo = msg.getIntInfo();
 		messageType = msg.getMessageType();

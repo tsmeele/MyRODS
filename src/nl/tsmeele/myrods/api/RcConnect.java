@@ -13,7 +13,7 @@ import nl.tsmeele.myrods.plumbing.DataEncryptConfig;
 import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
 import nl.tsmeele.myrods.plumbing.IrodsSession;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
-import nl.tsmeele.myrods.plumbing.PackedMessage;
+import nl.tsmeele.myrods.plumbing.MessageSerializer;
 import nl.tsmeele.myrods.plumbing.SessionDetails;
 
 /**
@@ -135,7 +135,7 @@ public class RcConnect extends RodsCall {
 		// By convention, RODS_CONNECT type messages always use XML protocol for request/reply exchange
 		session.updateProtocol(IrodsProtocolType.XML_PROT);  
 	    session.getOutputStream().writeMessage(msg);
-		PackedMessage pMsg = session.getInputStream().readMessage();
+		MessageSerializer pMsg = session.getInputStream().readMessage();
 		Message reply = null;
 		if (pMsg.getType() == MessageType.RODS_CS_NEG_T) {
 			// server is iRODS v4+ and ready to negotiate
@@ -196,7 +196,7 @@ public class RcConnect extends RodsCall {
 	    
 	    // first receive the reply from server, before applying the negotiation result
 	    // the reply will be a RODS_VERSION msg
-		PackedMessage pMsg = session.getInputStream().readMessage();
+		MessageSerializer pMsg = session.getInputStream().readMessage();
 		Message versionMsg = pMsg.unpack(unpackInstruction());
 		// now take action based on the negotiation result
 		switch (negResult) {

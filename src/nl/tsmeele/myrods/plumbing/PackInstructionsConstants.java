@@ -8,10 +8,10 @@ import java.util.HashMap;
  * @author Ton Smeele
  *
  */
-public class PackMapConstants extends HashMap<String,Integer> {
+public class PackInstructionsConstants extends HashMap<String,Integer> {
 	private static final long serialVersionUID = 1L;
 
-	public PackMapConstants() {
+	public PackInstructionsConstants() {
 		// For underpinning data see: https://github.com/irods/irods/lib/core/include/irods/rodsDef.h
 		// (unless specified otherwise)
 		this.put("MAX_PATH_ALLOWED", 1024);

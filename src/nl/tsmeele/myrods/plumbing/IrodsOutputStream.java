@@ -39,7 +39,7 @@ public class IrodsOutputStream extends OutputStream {
 	 * @throws IOException
 	 */
 	public void writeMessage(Message msg) throws IOException {
-		PackedMessage pMsg = new PackedMessage(msg, protocol);
+		MessageSerializer pMsg = new MessageSerializer(msg, protocol);
 		// send message (includes flush)
 		pMsg.writeToOutputStream(this);
 	}

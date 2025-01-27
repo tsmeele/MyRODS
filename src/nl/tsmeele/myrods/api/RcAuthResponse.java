@@ -7,7 +7,7 @@ import nl.tsmeele.myrods.apiDataStructures.Api;
 import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
 import nl.tsmeele.myrods.irodsDataTypes.DataString;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
-import nl.tsmeele.myrods.plumbing.PackMapConstants;
+import nl.tsmeele.myrods.plumbing.PackInstructionsConstants;
 
 /**
  * API call to provide proof of credentials for native authentication.
@@ -39,7 +39,7 @@ public class RcAuthResponse extends RodsApiCall {
 
 	
 	public static byte[] calcResponse(byte[] challenge, String passwordStr) throws NoSuchAlgorithmException {
-		PackMapConstants constants = new PackMapConstants();
+		PackInstructionsConstants constants = new PackInstructionsConstants();
 		byte[] password = passwordStr.getBytes();
 		
 		// create a byte array from the challenge + password, 

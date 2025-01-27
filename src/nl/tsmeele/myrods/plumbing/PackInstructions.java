@@ -9,10 +9,10 @@ import java.util.HashMap;
  * @author Ton Smeele
  *
  */
-public class PackMap  extends HashMap<String, ArrayList<String>> {
+public class PackInstructions  extends HashMap<String, ArrayList<String>> {
 	private static final long serialVersionUID = 1L;
 
-	public PackMap() {
+	public PackInstructions() {
 		populate(table());
 	}
 	

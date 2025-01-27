@@ -15,7 +15,7 @@ import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
  *
  */
 public class Unpacker {
-	private static PackMap packMap = new PackMap();
+	private static PackInstructions packMap = new PackInstructions();
 	
 	
 	public static DataStruct unpack(IrodsProtocolType protocol, String packInstruction, byte[] packedData) throws MyRodsException {
