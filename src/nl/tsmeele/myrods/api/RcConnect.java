@@ -31,9 +31,7 @@ public class RcConnect extends RodsCall {
 	private IrodsProtocolType requestedProtocol = IrodsProtocolType.NATIVE_PROT;
 	private IrodsCsNegType clientPolicy = IrodsCsNegType.CS_NEG_DONT_CARE;
 	private String applicationName = "MyRods";
-	
-//	private SessionDetails sessionDetails = null;
-	
+		
 	
 	/**
 	 * Connect with default application name and client policy
@@ -49,24 +47,6 @@ public class RcConnect extends RodsCall {
 		
 		connect(reconnFlag, connectCnt, proxyUser, proxyZone, clientUser, clientZone, 
 				applicationName, clientPolicy);
-	}
-	
-	public void setRequestedProtocol(IrodsProtocolType protocol) {
-		if (protocol != null) {
-			requestedProtocol = protocol;
-		}
-	}
-	
-	public void setClientPolicy(IrodsCsNegType policy) {
-		if (policy != null) {
-			clientPolicy = policy;
-		}
-	}
-	
-	public void setApplicationName(String name) {
-		if (name != null) {
-			applicationName = name;
-		}
 	}
 	
 	/**
@@ -88,6 +68,45 @@ public class RcConnect extends RodsCall {
 				applicationName, clientPolicy);
 	}
 	
+	/**
+	 * Connect with full flexibility
+	 * @param irodsProt
+	 * @param reconnFlag
+	 * @param connectCnt
+	 * @param proxyUser
+	 * @param proxyZone
+	 * @param clientUser
+	 * @param clientZone
+	 * @param applicationNAme
+	 */
+	public RcConnect(IrodsProtocolType irodsProt, int reconnFlag, int connectCnt,
+			String proxyUser, String proxyZone, String clientUser, String clientZone, 
+			String applicationName, IrodsCsNegType clientPolicy) {
+		requestedProtocol = irodsProt;
+		connect(reconnFlag, connectCnt, proxyUser, proxyZone, clientUser, clientZone, 
+				applicationName, clientPolicy);
+	}
+	
+
+	
+//	public void setRequestedProtocol(IrodsProtocolType protocol) {
+//		if (protocol != null) {
+//			requestedProtocol = protocol;
+//		}
+//	}
+//	
+//	public void setClientPolicy(IrodsCsNegType policy) {
+//		if (policy != null) {
+//			clientPolicy = policy;
+//		}
+//	}
+//	
+//	public void setApplicationName(String name) {
+//		if (name != null) {
+//			applicationName = name;
+//		}
+//	}
+
 	public void connect(int reconnFlag, int connectCnt, String proxyUser, String proxyZone, 
 			String clientUser, String clientZone, String applicationName, 
 			IrodsCsNegType clientPolicy) {

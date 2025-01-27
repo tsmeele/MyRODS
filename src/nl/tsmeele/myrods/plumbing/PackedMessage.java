@@ -5,6 +5,7 @@ import java.io.IOException;
 import nl.tsmeele.myrods.apiDataStructures.Api;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.MessageType;
+import nl.tsmeele.myrods.apiDataStructures.RError;
 import nl.tsmeele.myrods.irodsDataTypes.DataInt;
 import nl.tsmeele.myrods.irodsDataTypes.DataString;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
@@ -111,14 +112,12 @@ public class PackedMessage {
 		} 
 		msg.setMessage(message);
 		// unpack error message part 
-		DataStruct errorMessage;
-
 		if (packedErrorMessage.length == 0) {
-			errorMessage = new DataStruct("errorMessage");
+			msg.setErrorMessage(null);
 		} else {
-			errorMessage = Unpacker.unpack(protocol, "RError_PI", packedErrorMessage);
-		} 	
-		msg.setErrorMessage(errorMessage);
+			DataStruct errorMessage = Unpacker.unpack(protocol, "RError_PI", packedErrorMessage);
+			msg.setErrorMessage(new RError(errorMessage));
+		}
 		msg.setBs(packedBs);
 		return msg;
 	}
