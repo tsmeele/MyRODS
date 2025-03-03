@@ -70,10 +70,10 @@ public class Irods {
 	public DataStruct errorMessage = null;
 	public int returnCode = 0;
 	public byte[] bs = null;
+	public ServerConnection serverConnection = new ServerConnection();
 	
 	private String host;
 	private int port;
-	private ServerConnection serverConnection = new ServerConnection();
 	private Message response = null;
 
 	
@@ -94,6 +94,8 @@ public class Irods {
 		return response.getMessage();
 	}
 	
+	
+	
 	public RodsVersion rcConnect(int reconnFlag, int connectCnt, String proxyUser, String proxyZone, 
 			String clientUser, String clientZone) throws MyRodsException, IOException {
 		serverConnection.connect(host, port);
@@ -105,6 +107,14 @@ public class Irods {
 	//    API CALLS START HERE
 	
 	// CATEGORY: CONNECTIVITY & AUTHENTICATION
+	
+	public RodsVersion rcConnect(int reconnFlag, int connectCnt,
+			String proxyUser, String proxyZone, String clientUser, String clientZone,
+			String applicationName, IrodsCsNegType clientPolicy) throws IOException {
+		return rcConnect(IrodsProtocolType.NATIVE_PROT, reconnFlag, connectCnt,
+			proxyUser, proxyZone, clientUser, clientZone,
+			applicationName, clientPolicy);
+	}
 	
 	public RodsVersion rcConnect(IrodsProtocolType irodsProt, int reconnFlag, int connectCnt,
 			String proxyUser, String proxyZone, String clientUser, String clientZone,

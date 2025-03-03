@@ -22,13 +22,5 @@ public class RcMiscSvrInfo extends RodsApiCall {
 		return "MiscSvrInfo_PI";
 	}
 
-
-	public static String getServerType(int type) {
-		switch (type) {
-		case 0: return "iRODS consumer";
-		case 1: return "iRODS provider";
-		default: return "iRODS server type " + type;
-		}
-	}
 	
 }
