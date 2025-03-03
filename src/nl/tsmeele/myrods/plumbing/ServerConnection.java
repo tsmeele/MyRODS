@@ -20,7 +20,7 @@ public class ServerConnection {
 	private IrodsInputStream irodsIn = null;
 	private IrodsOutputStream irodsOut = null;
 	private IrodsProtocolType protocol = null;
-	private SessionDetails sessionDetails = new SessionDetails();
+	private ServerConnectionDetails sessionDetails = new ServerConnectionDetails();
 	
 	
 	
@@ -50,7 +50,7 @@ public class ServerConnection {
 		irodsOut.setProtocol(protocol);
 	}
 	
-	public SessionDetails getSessionDetails() {
+	public ServerConnectionDetails getSessionDetails() {
 		return sessionDetails;
 	}
 	
@@ -100,7 +100,7 @@ public class ServerConnection {
 		tryCloseSocket(socket);
 		socket = null;
 		irodsOut = null;
-		sessionDetails = new SessionDetails();
+		sessionDetails = new ServerConnectionDetails();
 	}
 	
 	

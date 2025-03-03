@@ -12,7 +12,7 @@ import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 import nl.tsmeele.myrods.plumbing.MessageSerializer;
-import nl.tsmeele.myrods.plumbing.SessionDetails;
+import nl.tsmeele.myrods.plumbing.ServerConnectionDetails;
 
 /**
  * API call to establish a connection with an iRODS server.
@@ -78,6 +78,15 @@ public class RcConnect extends RodsCall {
 				applicationName, clientPolicy);
 	}
 	
+	// connect reusing parameters from another connection 
+	public RcConnect(DataStruct startupPack, IrodsCsNegType clientPolicy) {
+		DataStruct message = new DataStruct("StartupPack_PI");
+		message.addFrom(startupPack);
+		msg = new Message(MessageType.RODS_CONNECT);
+		msg.setMessage(message);
+		this.clientPolicy = clientPolicy;
+	}
+	
 
 
 	public void connect(int reconnFlag, int connectCnt, String proxyUser, String proxyZone, 
@@ -124,13 +133,14 @@ public class RcConnect extends RodsCall {
 		DataStruct m = reply.getMessage();
 		DataString relVersion = (DataString) m.lookupName("relVersion");
 		DataString apiVersion = (DataString) m.lookupName("apiVersion");
-		SessionDetails sd = session.getSessionDetails();
+		ServerConnectionDetails sd = session.getSessionDetails();
 		sd.relVersion = relVersion;
 		sd.apiVersion = apiVersion;
 		sd.reconnPort = (DataInt) m.lookupName("reconnPort");
 		sd.reconnAddr = (DataString) m.lookupName("reconnAddr");
 		sd.cookie = (DataInt) m.lookupName("cookie");
-		sd.connectMsg = msg.getMessage();
+		sd.startupPack = msg.getMessage();
+		sd.clientPolicy = clientPolicy;
 		
 		// subsequent message exchanges will use the agreed-upon protocol
 		requestedProtocol = negotiateXmlProtocol(requestedProtocol, relVersion);
@@ -153,7 +163,7 @@ public class RcConnect extends RodsCall {
 		if (serverPolicy == null) {
 			throw new MyRodsException("Error during connect: Unrecognized server policy");
 		}
-		SessionDetails sessionDetails = session.getSessionDetails();
+		ServerConnectionDetails sessionDetails = session.getSessionDetails();
 		sessionDetails.serverPolicy = serverPolicy;
 		
 		// perform policy negotiation

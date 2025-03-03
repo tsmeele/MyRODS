@@ -11,7 +11,7 @@ import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
  * @author Ton Smeele
  *
  */
-public class SessionDetails {
+public class ServerConnectionDetails {
 	public DataString relVersion = null;
 	public DataString apiVersion = null;
 	public DataInt reconnPort = null;
@@ -21,8 +21,8 @@ public class SessionDetails {
 	public DataEncryptConfig dataEncryptConfig = null;
 	public String host = null;
 	public int port = 0;
-	public DataStruct connectMsg = null;
-	//public String nativePassword = null;
+	public DataStruct startupPack = null;
+	public IrodsCsNegType clientPolicy = null;
 	
 	
 	/**
