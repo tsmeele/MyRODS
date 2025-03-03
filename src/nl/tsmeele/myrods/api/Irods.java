@@ -58,6 +58,7 @@ import nl.tsmeele.myrods.irodsDataTypes.RcSslEnd;
 import nl.tsmeele.myrods.irodsDataTypes.RcSslStart;
 import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
+import nl.tsmeele.myrods.plumbing.ServerConnectionDetails;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 /**
@@ -82,7 +83,6 @@ public class Irods implements Cloneable {
 	private ServerConnection serverConnection = new ServerConnection();
 	private String host;
 	private int port;
-	private String proxyUser, proxyZone, clientUser, clientZone;
 	private String authenticatedPassword = null;
 
 	
@@ -102,7 +102,34 @@ public class Irods implements Cloneable {
 			return null;
 		}
 		Irods irods2 = new Irods(host, port);
-		// todo
+		ServerConnectionDetails sd = serverConnection.getSessionDetails();
+		
+		RcConnect rcConnect = new RcConnect(sd.startupPack, sd.clientPolicy);
+		try {
+			// clone connects to the server
+			irods2.rcConnect(rcConnect);
+			if (irods2.error) {
+				return null;
+			}
+			// clone authenticates
+			byte[] challenge = irods2.rcAuthRequest();
+			if (irods2.error) {
+				irods2.rcDisconnect();
+				return null;
+			}
+			String proxyUser = sd.startupPack.lookupString("proxyUser");
+			String proxyZone = sd.startupPack.lookupString("proxyRcatZone");
+			irods2.rcAuthResponse(proxyUser + "#" + proxyZone, authenticatedPassword, challenge);
+			if (irods2.error) {
+				irods2.rcDisconnect();
+				return null;
+			}
+		} catch (MyRodsException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+		// clone is now an authenticated session
 		return irods2;
 	}
 
@@ -110,6 +137,19 @@ public class Irods implements Cloneable {
 	//    API CALLS START HERE
 	
 	// CATEGORY: CONNECTIVITY & AUTHENTICATION
+	
+	// used during cloning
+	private RodsVersion rcConnect(RcConnect rcConnect) throws MyRodsException, IOException {
+		DataStruct response = exchangeRequest(rcConnect);
+		if (!error) {
+			connectTimeStamp = Instant.now().getEpochSecond();
+//			this.proxyUser = proxyUser;
+//			this.proxyZone = proxyZone;
+//			this.clientUser = clientUser;
+//			this.clientZone = clientZone;
+		}
+		return new RodsVersion(response);
+	}
 
 	// connect using option defaults
 	public RodsVersion rcConnect(String proxyUser, String proxyZone, 
@@ -118,10 +158,10 @@ public class Irods implements Cloneable {
 		DataStruct response = exchangeRequest(new RcConnect(proxyUser, proxyZone, clientUser, clientZone));
 		if (!error) {
 			connectTimeStamp = Instant.now().getEpochSecond();
-			this.proxyUser = proxyUser;
-			this.proxyZone = proxyZone;
-			this.clientUser = clientUser;
-			this.clientZone = clientZone;
+//			this.proxyUser = proxyUser;
+//			this.proxyZone = proxyZone;
+//			this.clientUser = clientUser;
+//			this.clientZone = clientZone;
 		}
 		return new RodsVersion(response);
 	}
@@ -136,10 +176,10 @@ public class Irods implements Cloneable {
 		DataStruct response = exchangeRequest(rcConnect);
 		if (!error) {
 			connectTimeStamp = Instant.now().getEpochSecond();
-			this.proxyUser = proxyUser;
-			this.proxyZone = proxyZone;
-			this.clientUser = clientUser;
-			this.clientZone = clientZone;
+//			this.proxyUser = proxyUser;
+//			this.proxyZone = proxyZone;
+//			this.clientUser = clientUser;
+//			this.clientZone = clientZone;
 		}
 		return new RodsVersion(response);
 	}
