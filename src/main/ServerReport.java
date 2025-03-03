@@ -6,6 +6,7 @@ import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.apiDataStructures.IrodsCsNegType;
 import nl.tsmeele.myrods.apiDataStructures.MiscSvrInfo;
 import nl.tsmeele.myrods.apiDataStructures.RodsVersion;
+import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
 
 /** Demonstrator class that retrieves and reports public attributes of an iRODS server.
  *  Precondition: none
@@ -24,10 +25,10 @@ public class ServerReport {
 		Irods irods = new Irods(host, port);
 		
 		// exchange startup message, obtain version info
-		RodsVersion version = irods.rcConnect(0, 1, "","", "", "", "Ping", IrodsCsNegType.CS_NEG_DONT_CARE);
+		RodsVersion version = irods.rcConnect(IrodsProtocolType.NATIVE_PROT, 0, 0, "","", "", "", "Ping", IrodsCsNegType.CS_NEG_DONT_CARE);
 		relVersion = version.relVersion;
 		apiVersion = version.apiVersion;	
-		IrodsCsNegType policy = irods.serverConnection.getSessionDetails().serverPolicy;
+		IrodsCsNegType policy = irods.getServerPolicy();
 		if (policy == null) {
 			// server did not negotiate, only returned with Version reply message
 			serverPolicy = "<unknown>";

@@ -22,7 +22,7 @@ public class SessionDetails {
 	public String host = null;
 	public int port = 0;
 	public DataStruct connectMsg = null;
-	public String nativePassword = null;
+	//public String nativePassword = null;
 	
 	
 	/**

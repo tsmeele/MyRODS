@@ -3,16 +3,16 @@ package nl.tsmeele.myrods.high;
 import java.io.IOException;
 import java.time.Instant;
 
-import nl.tsmeele.myrods.api.RcAuthRequest;
-import nl.tsmeele.myrods.api.RcAuthResponse;
-import nl.tsmeele.myrods.api.RcConnect;
-import nl.tsmeele.myrods.api.RcDisconnect;
-import nl.tsmeele.myrods.api.RcPamAuthRequest;
-import nl.tsmeele.myrods.api.RcSslEnd;
-import nl.tsmeele.myrods.api.RcSslStart;
 import nl.tsmeele.myrods.api.RodsCall;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsDataTypes.RcAuthRequest;
+import nl.tsmeele.myrods.irodsDataTypes.RcAuthResponse;
+import nl.tsmeele.myrods.irodsDataTypes.RcConnect;
+import nl.tsmeele.myrods.irodsDataTypes.RcDisconnect;
+import nl.tsmeele.myrods.irodsDataTypes.RcPamAuthRequest;
+import nl.tsmeele.myrods.irodsDataTypes.RcSslEnd;
+import nl.tsmeele.myrods.irodsDataTypes.RcSslStart;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 import nl.tsmeele.myrods.plumbing.SessionDetails;
@@ -161,7 +161,8 @@ public class Session implements Cloneable {
 			}
 			// use obtained password to login
 			if (irodsPamPassword != null && authNative(userName, userZone, irodsPamPassword)) {
-				irodsSession.getSessionDetails().nativePassword = irodsPamPassword;
+				// todo
+				//irodsSession.getSessionDetails().nativePassword = irodsPamPassword;
 				return true;
 			}
 		}
@@ -181,7 +182,10 @@ public class Session implements Cloneable {
 		DataStruct connectMsg = sd.connectMsg;
 		String userName = connectMsg.lookupString("clientUser");
 		String userZone = connectMsg.lookupString("clientRcatZone");
-		if (cSession.nativeLogin(sd.host, sd.port, userName, userZone, sd.nativePassword)) {
+		if (cSession.nativeLogin(sd.host, sd.port, userName, userZone, 
+			//	sd.nativePassword
+				"todo"
+				)) {
 			return cSession;
 		}
 		try {
@@ -194,7 +198,7 @@ public class Session implements Cloneable {
 	private ServerConnection connect(String host, int port, String userName, String userZone) throws IOException {
 		ServerConnection server = new ServerConnection();
 		server.connect(host,  port);
-		RcConnect rcConnect = new RcConnect(0, 1, userName, userZone, userName, userZone);
+		RcConnect rcConnect = new RcConnect(userName, userZone, userName, userZone);
 		rcConnect.sendTo(server);
 		return server;
 	}
@@ -207,7 +211,8 @@ public class Session implements Cloneable {
 		reply = rcAuthResponse.sendTo(irodsSession);
 		int intInfo = reply.getIntInfo();
 		if (intInfo == 0) {
-			irodsSession.getSessionDetails().nativePassword = irodsPassword;
+			// TODO
+		//	irodsSession.getSessionDetails().nativePassword = irodsPassword;
 			setConnectTimeStamp();
 			if (pool == null) {
 				pool = new SessionPool(this);

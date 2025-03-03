@@ -1,6 +1,7 @@
 package nl.tsmeele.myrods.api;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import nl.tsmeele.json.JSONParser;
 import nl.tsmeele.json.JSONobject;
@@ -65,57 +66,67 @@ import nl.tsmeele.myrods.plumbing.MyRodsException;
  * @author Ton Smeele
  *
  */
-public class Irods {
+public class Irods implements Cloneable {
+	
+	// content of last received message
 	public boolean error = false;
 	public DataStruct errorMessage = null;
 	public int returnCode = 0;
 	public byte[] bs = null;
-	public ServerConnection serverConnection = new ServerConnection();
 	
+	// timestamps, in seconds since epoch
+	public long connectTimeStamp = 0L;	// start of current connection
+	public long authenticatedTimeStamp = 0L;	// last successful iRODS authentication
+	
+	// internal state, keep private
+	private ServerConnection serverConnection = new ServerConnection();
 	private String host;
 	private int port;
-	private Message response = null;
+	private String proxyUser, proxyZone, clientUser, clientZone;
+	private String authenticatedPassword = null;
 
 	
-	public Irods(String host, int port) throws MyRodsException {
+	
+	public Irods(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
 	
-	private DataStruct exchangeRequest(RodsCall request) throws MyRodsException, IOException {
-		if (!serverConnection.isConnected()) {
-			throw new MyRodsException("Unable to execute API calls, not connected");
+	public IrodsCsNegType getServerPolicy() {
+		return serverConnection.getSessionDetails().serverPolicy;
+	}
+	
+	@Override
+	public Irods clone() {
+		if (serverConnection == null || authenticatedPassword == null) {
+			return null;
 		}
-		response = request.sendTo(serverConnection);
-		returnCode = response.getIntInfo();
-		error = returnCode < 0;
-		errorMessage = response.getErrorMessage();
-		bs = response.getBs();
-		return response.getMessage();
+		Irods irods2 = new Irods(host, port);
+		// todo
+		return irods2;
 	}
-	
-	
-	
-	public RodsVersion rcConnect(int reconnFlag, int connectCnt, String proxyUser, String proxyZone, 
-			String clientUser, String clientZone) throws MyRodsException, IOException {
-		serverConnection.connect(host, port);
-		DataStruct response = exchangeRequest(new RcConnect(reconnFlag, connectCnt, 
-				proxyUser, proxyZone, clientUser, clientZone));
-		return new RodsVersion(response);
-	}
+
 	
 	//    API CALLS START HERE
 	
 	// CATEGORY: CONNECTIVITY & AUTHENTICATION
-	
-	public RodsVersion rcConnect(int reconnFlag, int connectCnt,
-			String proxyUser, String proxyZone, String clientUser, String clientZone,
-			String applicationName, IrodsCsNegType clientPolicy) throws IOException {
-		return rcConnect(IrodsProtocolType.NATIVE_PROT, reconnFlag, connectCnt,
-			proxyUser, proxyZone, clientUser, clientZone,
-			applicationName, clientPolicy);
+
+	// connect using option defaults
+	public RodsVersion rcConnect(String proxyUser, String proxyZone, 
+			String clientUser, String clientZone) throws MyRodsException, IOException {
+		serverConnection.connect(host, port);
+		DataStruct response = exchangeRequest(new RcConnect(proxyUser, proxyZone, clientUser, clientZone));
+		if (!error) {
+			connectTimeStamp = Instant.now().getEpochSecond();
+			this.proxyUser = proxyUser;
+			this.proxyZone = proxyZone;
+			this.clientUser = clientUser;
+			this.clientZone = clientZone;
+		}
+		return new RodsVersion(response);
 	}
 	
+	// connect specifying all options
 	public RodsVersion rcConnect(IrodsProtocolType irodsProt, int reconnFlag, int connectCnt,
 			String proxyUser, String proxyZone, String clientUser, String clientZone,
 			String applicationName, IrodsCsNegType clientPolicy) throws IOException {
@@ -123,8 +134,16 @@ public class Irods {
 		RcConnect rcConnect = new RcConnect(irodsProt,reconnFlag, connectCnt, proxyUser, proxyZone,
 				clientUser, clientZone, applicationName, clientPolicy);
 		DataStruct response = exchangeRequest(rcConnect);
+		if (!error) {
+			connectTimeStamp = Instant.now().getEpochSecond();
+			this.proxyUser = proxyUser;
+			this.proxyZone = proxyZone;
+			this.clientUser = clientUser;
+			this.clientZone = clientZone;
+		}
 		return new RodsVersion(response);
 	}
+	
 	
 	public void rcDisconnect() throws MyRodsException, IOException {
 		RcDisconnect request = new RcDisconnect();
@@ -134,6 +153,9 @@ public class Irods {
 		errorMessage = null;
 		bs = null;
 		serverConnection.disconnect();
+		connectTimeStamp = 0L;
+		authenticatedTimeStamp = 0L;
+		authenticatedPassword = null;
 	}
 	
 	public MiscSvrInfo rcMiscSvrInfo() throws MyRodsException, IOException {
@@ -158,6 +180,14 @@ public class Irods {
 	
 	public void rcAuthResponse(String userNameAndZone, String password, byte[] challenge) throws MyRodsException, IOException {
 		exchangeRequest(new RcAuthResponse(userNameAndZone, password, challenge));
+		if (!error) {
+			// keep timestamp and credential to support parallel connect
+			authenticatedTimeStamp = Instant.now().getEpochSecond();
+			authenticatedPassword = password;	
+		} else {
+			authenticatedTimeStamp = 0L;
+			authenticatedPassword = null;
+		}
 	}
 	
 	public boolean rcSslStart() throws MyRodsException, IOException {
@@ -303,6 +333,18 @@ public class Irods {
 			return null;
 		}
 		return jsonObject;
+	}
+	
+	private DataStruct exchangeRequest(RodsCall request) throws MyRodsException, IOException {
+		if (!serverConnection.isConnected()) {
+			throw new MyRodsException("Unable to execute API calls, not connected");
+		}
+		Message response = request.sendTo(serverConnection);
+		returnCode = response.getIntInfo();
+		error = returnCode < 0;
+		errorMessage = response.getErrorMessage();
+		bs = response.getBs();
+		return response.getMessage();
 	}
 	
 }

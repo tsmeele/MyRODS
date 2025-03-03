@@ -24,33 +24,28 @@ public class RcConnect extends RodsCall {
 	
 	private static final String RELVERSION = "rods4.3.1";
 	private static final String APIVERSION = "d";
+	private static final String APPLICATIONNAME = "MyRods";
 	private static final String OPTION = ";request_server_negotiation";
 
 	private IrodsProtocolType requestedProtocol = IrodsProtocolType.NATIVE_PROT;
 	private IrodsCsNegType clientPolicy = IrodsCsNegType.CS_NEG_DONT_CARE;
-	private String applicationName = "MyRods";
+	private String applicationName = APPLICATIONNAME;
 		
 	
 	/**
 	 * Connect with default application name and client policy
-	 * @param reconnFlag
-	 * @param connectCnt
 	 * @param proxyUser
 	 * @param proxyZone
 	 * @param clientUser
 	 * @param clientZone
 	 */
-	public RcConnect(int reconnFlag, int connectCnt,
-			String proxyUser, String proxyZone, String clientUser, String clientZone) {
-		
-		connect(reconnFlag, connectCnt, proxyUser, proxyZone, clientUser, clientZone, 
+	public RcConnect(String proxyUser, String proxyZone, String clientUser, String clientZone) {
+		connect(0, 1, proxyUser, proxyZone, clientUser, clientZone, 
 				applicationName, clientPolicy);
 	}
 	
 	/**
 	 * Connect using specified application name and client policy
-	 * @param reconnFlag
-	 * @param connectCnt
 	 * @param proxyUser
 	 * @param proxyZone
 	 * @param clientUser
@@ -58,11 +53,9 @@ public class RcConnect extends RodsCall {
 	 * @param applicationName
 	 * @param clientPolicy
 	 */
-	public RcConnect(int reconnFlag, int connectCnt,
-			String proxyUser, String proxyZone, String clientUser, String clientZone,
-			String applicationName, IrodsCsNegType clientPolicy) {
-		
-		connect(reconnFlag, connectCnt, proxyUser, proxyZone, clientUser, clientZone, 
+	public RcConnect(String proxyUser, String proxyZone, String clientUser, String clientZone,
+			String applicationName, IrodsCsNegType clientPolicy) {	
+		connect(0, 1, proxyUser, proxyZone, clientUser, clientZone, 
 				applicationName, clientPolicy);
 	}
 	
@@ -86,24 +79,6 @@ public class RcConnect extends RodsCall {
 	}
 	
 
-	
-//	public void setRequestedProtocol(IrodsProtocolType protocol) {
-//		if (protocol != null) {
-//			requestedProtocol = protocol;
-//		}
-//	}
-//	
-//	public void setClientPolicy(IrodsCsNegType policy) {
-//		if (policy != null) {
-//			clientPolicy = policy;
-//		}
-//	}
-//	
-//	public void setApplicationName(String name) {
-//		if (name != null) {
-//			applicationName = name;
-//		}
-//	}
 
 	public void connect(int reconnFlag, int connectCnt, String proxyUser, String proxyZone, 
 			String clientUser, String clientZone, String applicationName, 
