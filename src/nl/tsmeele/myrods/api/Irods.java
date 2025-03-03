@@ -9,11 +9,15 @@ import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.ExecMyRuleInp;
 import nl.tsmeele.myrods.apiDataStructures.GenQueryInp;
 import nl.tsmeele.myrods.apiDataStructures.GenQueryOut;
+import nl.tsmeele.myrods.apiDataStructures.GeneralAdminInp;
 import nl.tsmeele.myrods.apiDataStructures.Genquery2Input;
 import nl.tsmeele.myrods.apiDataStructures.IrodsCsNegType;
 import nl.tsmeele.myrods.apiDataStructures.JsonInp;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.MiscSvrInfo;
+import nl.tsmeele.myrods.apiDataStructures.ModAVUMetadataInp;
+import nl.tsmeele.myrods.apiDataStructures.ModAccessControlInp;
+import nl.tsmeele.myrods.apiDataStructures.ModDataObjMetaInp;
 import nl.tsmeele.myrods.apiDataStructures.MsParamArray;
 import nl.tsmeele.myrods.apiDataStructures.ObjType;
 import nl.tsmeele.myrods.apiDataStructures.OpenedDataObjInp;
@@ -36,12 +40,16 @@ import nl.tsmeele.myrods.irodsDataTypes.RcDataObjWrite;
 import nl.tsmeele.myrods.irodsDataTypes.RcDisconnect;
 import nl.tsmeele.myrods.irodsDataTypes.RcExecMyRule;
 import nl.tsmeele.myrods.irodsDataTypes.RcGenQuery;
+import nl.tsmeele.myrods.irodsDataTypes.RcGeneralAdmin;
 import nl.tsmeele.myrods.irodsDataTypes.RcGenquery2;
 import nl.tsmeele.myrods.irodsDataTypes.RcGetFileDescriptorInfo;
 import nl.tsmeele.myrods.irodsDataTypes.RcGetLimitedPassword;
 import nl.tsmeele.myrods.irodsDataTypes.RcGetResourceInfoForOperation;
 import nl.tsmeele.myrods.irodsDataTypes.RcGetTempPassword;
 import nl.tsmeele.myrods.irodsDataTypes.RcMiscSvrInfo;
+import nl.tsmeele.myrods.irodsDataTypes.RcModAVUMetadata;
+import nl.tsmeele.myrods.irodsDataTypes.RcModAccessControl;
+import nl.tsmeele.myrods.irodsDataTypes.RcModDataObjMeta;
 import nl.tsmeele.myrods.irodsDataTypes.RcObjStat;
 import nl.tsmeele.myrods.irodsDataTypes.RcPamAuthRequest;
 import nl.tsmeele.myrods.irodsDataTypes.RcReplicaOpen;
@@ -158,6 +166,19 @@ public class Irods {
 	}
 	
 
+	// CATEGORY: METADATA AND ADMINISTRATION
+	
+	public void rcModAVUMetadata(ModAVUMetadataInp modAVUMetadataInp) throws MyRodsException, IOException {
+		exchangeRequest(new RcModAVUMetadata(modAVUMetadataInp));
+	}
+	
+	public void rcModDataObjMeta(ModDataObjMetaInp modDataObjMetaInp) throws MyRodsException, IOException {
+		exchangeRequest(new RcModDataObjMeta(modDataObjMetaInp));
+	}
+	
+	public void rcGeneralAdmin(GeneralAdminInp generalAdminInp) throws MyRodsException, IOException {
+		exchangeRequest(new RcGeneralAdmin(generalAdminInp));
+	}
 	
 	
 	// CATEGORY: COLLECTIONS AND DATA OBJECTS
@@ -166,6 +187,10 @@ public class Irods {
 	public RodsObjStat rcObjStat(String objPath, ObjType objType) throws MyRodsException, IOException {
 		DataStruct response = exchangeRequest(new RcObjStat(objPath, objType));
 		return new RodsObjStat(response);
+	}
+	
+	public void rcModAccessControl(ModAccessControlInp modAccessControlInp) throws MyRodsException, IOException {
+		exchangeRequest(new RcModAccessControl(modAccessControlInp));
 	}
 	
 	public void rcCollCreate(CollInp collInp) throws MyRodsException, IOException {

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import nl.tsmeele.log.Log;
-import nl.tsmeele.myrods.api.RcExecMyRule;
 import nl.tsmeele.myrods.apiDataStructures.ExecMyRuleInp;
 import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
 import nl.tsmeele.myrods.apiDataStructures.Kw;
@@ -14,6 +13,7 @@ import nl.tsmeele.myrods.apiDataStructures.MsParamArray;
 import nl.tsmeele.myrods.apiDataStructures.RHostAddr;
 import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsDataTypes.RcExecMyRule;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
