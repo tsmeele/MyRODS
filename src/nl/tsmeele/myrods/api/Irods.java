@@ -6,19 +6,47 @@ import nl.tsmeele.json.JSONParser;
 import nl.tsmeele.json.JSONobject;
 import nl.tsmeele.myrods.apiDataStructures.CollInp;
 import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
+import nl.tsmeele.myrods.apiDataStructures.ExecMyRuleInp;
+import nl.tsmeele.myrods.apiDataStructures.GenQueryInp;
+import nl.tsmeele.myrods.apiDataStructures.GenQueryOut;
+import nl.tsmeele.myrods.apiDataStructures.Genquery2Input;
 import nl.tsmeele.myrods.apiDataStructures.IrodsCsNegType;
 import nl.tsmeele.myrods.apiDataStructures.JsonInp;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.MiscSvrInfo;
+import nl.tsmeele.myrods.apiDataStructures.MsParamArray;
 import nl.tsmeele.myrods.apiDataStructures.ObjType;
 import nl.tsmeele.myrods.apiDataStructures.OpenedDataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.RodsObjStat;
 import nl.tsmeele.myrods.apiDataStructures.RodsVersion;
 import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
 import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsDataTypes.RcAuthRequest;
+import nl.tsmeele.myrods.irodsDataTypes.RcAuthResponse;
+import nl.tsmeele.myrods.irodsDataTypes.RcCollCreate;
+import nl.tsmeele.myrods.irodsDataTypes.RcConnect;
+import nl.tsmeele.myrods.irodsDataTypes.RcDataObjChksum;
+import nl.tsmeele.myrods.irodsDataTypes.RcDataObjClose;
+import nl.tsmeele.myrods.irodsDataTypes.RcDataObjCreate;
+import nl.tsmeele.myrods.irodsDataTypes.RcDataObjLseek;
 import nl.tsmeele.myrods.irodsDataTypes.RcDataObjOpen;
 import nl.tsmeele.myrods.irodsDataTypes.RcDataObjRead;
+import nl.tsmeele.myrods.irodsDataTypes.RcDataObjUnlink;
+import nl.tsmeele.myrods.irodsDataTypes.RcDataObjWrite;
+import nl.tsmeele.myrods.irodsDataTypes.RcDisconnect;
+import nl.tsmeele.myrods.irodsDataTypes.RcExecMyRule;
+import nl.tsmeele.myrods.irodsDataTypes.RcGenQuery;
+import nl.tsmeele.myrods.irodsDataTypes.RcGenquery2;
+import nl.tsmeele.myrods.irodsDataTypes.RcGetFileDescriptorInfo;
+import nl.tsmeele.myrods.irodsDataTypes.RcGetLimitedPassword;
+import nl.tsmeele.myrods.irodsDataTypes.RcGetResourceInfoForOperation;
+import nl.tsmeele.myrods.irodsDataTypes.RcGetTempPassword;
 import nl.tsmeele.myrods.irodsDataTypes.RcMiscSvrInfo;
+import nl.tsmeele.myrods.irodsDataTypes.RcObjStat;
+import nl.tsmeele.myrods.irodsDataTypes.RcPamAuthRequest;
+import nl.tsmeele.myrods.irodsDataTypes.RcReplicaOpen;
+import nl.tsmeele.myrods.irodsDataTypes.RcSslEnd;
+import nl.tsmeele.myrods.irodsDataTypes.RcSslStart;
 import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
@@ -188,13 +216,47 @@ public class Irods {
 		return dataBinArray2JSONobject(response);
 	}
 	
+	public JSONobject rcGetResourceInfoForOperation(String dataObjPath, String operation, String rescHier) throws MyRodsException, IOException {
+		DataStruct response = exchangeRequest(new RcGetResourceInfoForOperation(dataObjPath, operation, rescHier));
+		return str2JSONobject(response);
+	}
 	
-	// CATEGORY: QUERIES
+	public JSONobject rcGetResourceInfoForOperation(String dataObjPath, String operation, int rescNum) throws MyRodsException, IOException {
+		DataStruct response = exchangeRequest(new RcGetResourceInfoForOperation(dataObjPath, operation, rescNum));
+		return str2JSONobject(response);
+	}
 	
+	
+	// CATEGORY: QUERIES AND RULES
+	
+	public GenQueryOut rcGenQuery(GenQueryInp genQueryInp) throws MyRodsException, IOException {
+		DataStruct response = exchangeRequest(new RcGenQuery(genQueryInp));
+		return new GenQueryOut(response);
+	}
+	
+	// TODO: update return type to a more appropriate type
+	public String rcGenquery2(Genquery2Input genquery2Input) throws MyRodsException, IOException {
+		DataStruct response = exchangeRequest(new RcGenquery2(genquery2Input));
+		return response.lookupString("myStr");
+	}
+	
+	public MsParamArray rcExecMyRule(ExecMyRuleInp execMyRuleInp) throws MyRodsException, IOException {
+		DataStruct response = exchangeRequest(new RcExecMyRule(execMyRuleInp));
+		return new MsParamArray(response);
+	}
 	
 	
 	
 	// internal helper methods
+	
+	private JSONobject str2JSONobject(DataStruct response) {
+		String myStr = response.lookupString("myStr");
+		if (myStr == null) {
+			return null;
+		}
+		JSONobject json = (JSONobject) JSONParser.parse(myStr);
+		return json;
+	}
 	
 	private JSONobject dataBinArray2JSONobject(DataStruct response) {
 		JSONobject jsonObject = null;

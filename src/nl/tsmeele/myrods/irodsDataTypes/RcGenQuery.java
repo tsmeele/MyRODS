@@ -1,5 +1,6 @@
-package nl.tsmeele.myrods.api;
+package nl.tsmeele.myrods.irodsDataTypes;
 
+import nl.tsmeele.myrods.api.RodsApiCall;
 import nl.tsmeele.myrods.apiDataStructures.Api;
 import nl.tsmeele.myrods.apiDataStructures.GenQueryInp;
 
