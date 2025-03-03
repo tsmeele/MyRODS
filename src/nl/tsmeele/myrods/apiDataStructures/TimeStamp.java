@@ -6,7 +6,7 @@ import java.time.ZoneId;
 import nl.tsmeele.myrods.irodsDataTypes.DataString;
 
 public class TimeStamp {
-	private long epochSecond = 0L;	// seconds since epoch
+	public long epochSecond = 0L;	// seconds since epoch
 
 	public TimeStamp(long epoch) {
 		this.epochSecond = epoch;
