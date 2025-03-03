@@ -99,6 +99,7 @@ public class Irods implements Cloneable {
 	@Override
 	public Irods clone() {
 		if (serverConnection == null || authenticatedPassword == null) {
+			System.out.println("PRECOND FAILED");
 			return null;
 		}
 		Irods irods2 = new Irods(host, port);
@@ -109,11 +110,13 @@ public class Irods implements Cloneable {
 			// clone connects to the server
 			irods2.rcConnect(rcConnect);
 			if (irods2.error) {
+				System.out.println("CONNECT FAILED");
 				return null;
 			}
 			// clone authenticates
 			byte[] challenge = irods2.rcAuthRequest();
 			if (irods2.error) {
+				System.out.println("AUTH REQ FAILED");
 				irods2.rcDisconnect();
 				return null;
 			}
@@ -121,12 +124,15 @@ public class Irods implements Cloneable {
 			String proxyZone = sd.startupPack.lookupString("proxyRcatZone");
 			irods2.rcAuthResponse(proxyUser + "#" + proxyZone, authenticatedPassword, challenge);
 			if (irods2.error) {
+				System.out.println("AUTH FAILED");
 				irods2.rcDisconnect();
 				return null;
 			}
 		} catch (MyRodsException e) {
+			System.out.println(e.getMessage());
 			return null;
 		} catch (IOException e) {
+			System.out.println(e.getMessage());
 			return null;
 		}
 		// clone is now an authenticated session
@@ -140,6 +146,7 @@ public class Irods implements Cloneable {
 	
 	// used during cloning
 	private RodsVersion rcConnect(RcConnect rcConnect) throws MyRodsException, IOException {
+		serverConnection.connect(host, port);
 		DataStruct response = exchangeRequest(rcConnect);
 		if (!error) {
 			connectTimeStamp = Instant.now().getEpochSecond();
