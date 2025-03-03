@@ -1,14 +1,12 @@
-package nl.tsmeele.myrods.api;
+package nl.tsmeele.myrods.irodsDataTypes;
 
 import java.io.IOException;
 
+import nl.tsmeele.myrods.api.RodsCall;
 import nl.tsmeele.myrods.apiDataStructures.IrodsCsNegResult;
 import nl.tsmeele.myrods.apiDataStructures.IrodsCsNegType;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.MessageType;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
 import nl.tsmeele.myrods.plumbing.DataEncryptConfig;
 import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
 import nl.tsmeele.myrods.plumbing.ServerConnection;

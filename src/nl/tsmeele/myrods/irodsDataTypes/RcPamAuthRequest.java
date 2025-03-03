@@ -1,9 +1,7 @@
-package nl.tsmeele.myrods.api;
+package nl.tsmeele.myrods.irodsDataTypes;
 
+import nl.tsmeele.myrods.api.RodsApiCall;
 import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
 
 /**
  * API call to authenticate using a PAM (plaintext) password.

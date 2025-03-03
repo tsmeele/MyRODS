@@ -1,12 +1,10 @@
-package nl.tsmeele.myrods.api;
+package nl.tsmeele.myrods.irodsDataTypes;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import nl.tsmeele.myrods.api.RodsApiCall;
 import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
 import nl.tsmeele.myrods.plumbing.PackInstructionsConstants;
 
 /**

@@ -1,7 +1,8 @@
-package nl.tsmeele.myrods.api;
+package nl.tsmeele.myrods.irodsDataTypes;
 
 import java.io.IOException;
 
+import nl.tsmeele.myrods.api.RodsCall;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.MessageType;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
