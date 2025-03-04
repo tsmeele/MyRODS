@@ -130,41 +130,35 @@ public class Irods {
 	
 	// CATEGORY: CONNECTIVITY & AUTHENTICATION
 	
-	// connect clone to server
-	private RodsVersion rcConnect(RcConnect rcConnect) throws MyRodsException, IOException {
-		serverConnection.connect(host, port);
-		DataStruct response = exchangeRequest(rcConnect);
-		if (!error) {
-			connectTimeStamp = Instant.now().getEpochSecond();
-		}
-		return new RodsVersion(response);
-	}
 
-	// connect using option defaults
+
+	// standard connect, uses default values for options
 	public RodsVersion rcConnect(String proxyUser, String proxyZone, 
 			String clientUser, String clientZone) throws MyRodsException, IOException {
-		serverConnection.connect(host, port);
-		DataStruct response = exchangeRequest(new RcConnect(proxyUser, proxyZone, clientUser, clientZone));
-		if (!error) {
-			connectTimeStamp = Instant.now().getEpochSecond();
-		}
-		return new RodsVersion(response);
+		RcConnect startupPack = new RcConnect(proxyUser, proxyZone, clientUser, clientZone);
+		return rcConnect(startupPack);
 	}
 	
-	// connect specifying all options
+	// general connect, values specified for all options
 	public RodsVersion rcConnect(IrodsProtocolType irodsProt, int reconnFlag, int connectCnt,
 			String proxyUser, String proxyZone, String clientUser, String clientZone,
 			String applicationName, IrodsCsNegType clientPolicy) throws IOException {
-		serverConnection.connect(host, port);
-		RcConnect rcConnect = new RcConnect(irodsProt,reconnFlag, connectCnt, proxyUser, proxyZone,
+		RcConnect startupPack = new RcConnect(irodsProt,reconnFlag, connectCnt, proxyUser, proxyZone,
 				clientUser, clientZone, applicationName, clientPolicy);
-		DataStruct response = exchangeRequest(rcConnect);
+		return rcConnect(startupPack);
+	}
+	
+	// execute rcConnect using a prepared startup pack
+	private RodsVersion rcConnect(RcConnect startupPack) throws MyRodsException, IOException {
+		serverConnection.connect(host, port);
+		DataStruct response = exchangeRequest(startupPack);
 		if (!error) {
 			connectTimeStamp = Instant.now().getEpochSecond();
+			authenticatedTimeStamp = 0L;
+			authenticatedPassword = null;
 		}
 		return new RodsVersion(response);
 	}
-	
 	
 	public void rcDisconnect() throws MyRodsException, IOException {
 		RcDisconnect request = new RcDisconnect();
