@@ -80,7 +80,7 @@ public class Irods {
 	public long authenticatedTimeStamp = 0L;	// last successful iRODS authentication
 	
 	// internal state, keep private
-	private ServerConnection serverConnection = new ServerConnection();
+	protected ServerConnection serverConnection = new ServerConnection();
 	private String host;
 	private int port;
 	private String authenticatedPassword = null;
@@ -96,8 +96,9 @@ public class Irods {
 		return serverConnection.getSessionDetails().serverPolicy;
 	}
 	
+	
 	public Irods cloneConnection() throws IOException, MyRodsException {
-		if (serverConnection == null || authenticatedPassword == null) {
+		if (!serverConnection.isConnected() || authenticatedPassword == null) {
 			throw new MyRodsException("Unable to clone: Missing authenticated iRODS connection");
 		}
 		Irods irods2 = new Irods(host, port);
@@ -150,7 +151,9 @@ public class Irods {
 	
 	// execute rcConnect using a prepared startup pack
 	private RodsVersion rcConnect(RcConnect startupPack) throws MyRodsException, IOException {
-		serverConnection.connect(host, port);
+		if (!serverConnection.isConnected()) {
+			serverConnection.connect(host, port);
+		}
 		DataStruct response = exchangeRequest(startupPack);
 		if (!error) {
 			connectTimeStamp = Instant.now().getEpochSecond();
