@@ -3,8 +3,7 @@ package nl.tsmeele.myrods.api;
 import java.io.IOException;
 import java.time.Instant;
 
-import nl.tsmeele.json.JSONParser;
-import nl.tsmeele.json.JSONobject;
+import nl.tsmeele.json2.JObject;
 import nl.tsmeele.myrods.apiDataStructures.CollInp;
 import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.ExecMyRuleInp;
@@ -309,22 +308,22 @@ public class Irods {
 		return response.lookupString("myStr");
 	}
 	
-	public JSONobject rcReplicaOpen(DataObjInp dataObjInp) throws MyRodsException, IOException {
+	public JObject rcReplicaOpen(DataObjInp dataObjInp) throws MyRodsException, IOException {
 		DataStruct response = exchangeRequest(new RcReplicaOpen(dataObjInp));
 		return dataBinArray2JSONobject(response);
 	}
 	
-	public JSONobject rcGetFileDescriptorInfo(JsonInp jsonInp) throws MyRodsException, IOException {
+	public JObject rcGetFileDescriptorInfo(JsonInp jsonInp) throws MyRodsException, IOException {
 		DataStruct response = exchangeRequest(new RcGetFileDescriptorInfo(jsonInp));
 		return dataBinArray2JSONobject(response);
 	}
 	
-	public JSONobject rcGetResourceInfoForOperation(String dataObjPath, String operation, String rescHier) throws MyRodsException, IOException {
+	public JObject rcGetResourceInfoForOperation(String dataObjPath, String operation, String rescHier) throws MyRodsException, IOException {
 		DataStruct response = exchangeRequest(new RcGetResourceInfoForOperation(dataObjPath, operation, rescHier));
 		return str2JSONobject(response);
 	}
 	
-	public JSONobject rcGetResourceInfoForOperation(String dataObjPath, String operation, int rescNum) throws MyRodsException, IOException {
+	public JObject rcGetResourceInfoForOperation(String dataObjPath, String operation, int rescNum) throws MyRodsException, IOException {
 		DataStruct response = exchangeRequest(new RcGetResourceInfoForOperation(dataObjPath, operation, rescNum));
 		return str2JSONobject(response);
 	}
@@ -352,21 +351,21 @@ public class Irods {
 	
 	// internal helper methods
 	
-	private JSONobject str2JSONobject(DataStruct response) {
+	private JObject str2JSONobject(DataStruct response) {
 		String myStr = response.lookupString("myStr");
 		if (myStr == null) {
 			return null;
 		}
-		JSONobject json = (JSONobject) JSONParser.parse(myStr);
+		JObject json = new JObject(myStr);
 		return json;
 	}
 	
-	private JSONobject dataBinArray2JSONobject(DataStruct response) {
-		JSONobject jsonObject = null;
+	private JObject dataBinArray2JSONobject(DataStruct response) {
+		JObject jsonObject = null;
 		try {
 			DataBinArray bin = (DataBinArray) response.lookupName("buf");
 			String s = bin.getAsString();
-			jsonObject = (JSONobject) JSONParser.parse(s);
+			jsonObject = new JObject(s);
 		} catch (NullPointerException e) {
 			return null;
 		}

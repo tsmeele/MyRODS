@@ -3,25 +3,25 @@ package nl.tsmeele.json2;
 import java.util.ArrayList;
 
 public class JNumber implements Json {
-	public long i;
-	public double d;
+	public long dataLong;
+	public double dataDouble;
 	public boolean isInt;
 	
 	public JNumber(long i) {
-		this.i = i;
+		this.dataLong = i;
 		isInt = true;
 	}
 	
 	public JNumber(double d) {
-		this.d = d;
+		this.dataDouble = d;
 		isInt = false;
 	}
 	
 	public String toString() {
 		if (isInt) {
-			return String.valueOf(i);
+			return String.valueOf(dataLong);
 		} else {
-			return String.valueOf(d);
+			return String.valueOf(dataDouble);
 		}
 	}
 

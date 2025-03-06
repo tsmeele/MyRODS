@@ -3,19 +3,19 @@ package nl.tsmeele.json2;
 import java.util.ArrayList;
 
 public class JString implements Json{
-	public String s = "";
+	public String data = "";
 	
-	public JString(String s) {
-		this.s = s;
+	public JString(String data) {
+		this.data = data;
 	}
 	
 	public String toString() {
-		return serialize(s);
+		return serialize(data);
 	}
 	
 	public ArrayList<String> toPrettyLines() {
 		ArrayList<String> str = new ArrayList<String>();
-		str.add(serialize(s));
+		str.add(serialize(data));
 		return str;
 	}
 	

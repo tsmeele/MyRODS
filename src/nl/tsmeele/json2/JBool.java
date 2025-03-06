@@ -3,14 +3,14 @@ package nl.tsmeele.json2;
 import java.util.ArrayList;
 
 public class JBool implements Json {
-	public boolean b;
+	public boolean data;
 	
-	public JBool(boolean b) {
-		this.b = b;
+	public JBool(boolean data) {
+		this.data = data;
 	}
 
 	public String toString() {
-		return b ? "true" : "false";
+		return data ? "true" : "false";
 	}
 	
 	@Override

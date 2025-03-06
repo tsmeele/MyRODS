@@ -2,9 +2,10 @@ package nl.tsmeele.myrods.high;
 
 import java.io.IOException;
 
-import nl.tsmeele.json.JSONnumber;
-import nl.tsmeele.json.JSONobject;
-import nl.tsmeele.json.JSONstring;
+
+import nl.tsmeele.json2.JNumber;
+import nl.tsmeele.json2.JObject;
+import nl.tsmeele.json2.JString;
 import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.Flag;
@@ -197,13 +198,14 @@ public class Replica implements PosixFile {
 	
 	private void getResourceForReplica(String operation, String rescHier) throws MyRodsException, IOException {
 		if (serverVersionNumberIsAtLeast("4.3.1")) {
-			JSONobject json = session.rcGetResourceInfoForOperation(objPath, operation, rescHier);
+			JObject json = session.rcGetResourceInfoForOperation(objPath, operation, rescHier);
 			if (session.error) {
 				throw new MyRodsException("Unable to get resource info for replica (" + session.intInfo + ")");
 			}
 			// TODO: support connections to hosts other than the connected host, if the resource is located elsewhere
 			//resourceHost = ((JSONstring)json.get("host")).get();
-			this.resource = ((JSONstring)json.get("resource_hierarchy")).get();
+			JString jString = (JString) json.get("resource_hierarchy");
+			 this.resource =jString.data;
 		} 
 	}
 	
@@ -223,7 +225,7 @@ public class Replica implements PosixFile {
 		DataObjInp dataObjInp = new DataObjInp(objPath, 0, openFlags, 0L, -1L, numThreads, OprType.NULL, null, condInput); 
 
 		if (serverVersionNumberIsAtLeast("4.2.9")) {
-			JSONobject json = session.rcReplicaOpen(dataObjInp);
+			JObject json = session.rcReplicaOpen(dataObjInp);
 			if (session.error) {
 				throw new MyRodsException("Unable to open replica (" + session.intInfo + ")");
 			}
@@ -241,7 +243,7 @@ public class Replica implements PosixFile {
 			if (serverVersionNumberIsAtLeast("4.2.8")) {
 				JsonInp jsonInp = new JsonInp("{\"fd\":" + fileDescriptor + "}");
 				try {
-					JSONobject json = session.rcGetFileDescriptorInfo(jsonInp);
+					JObject json = session.rcGetFileDescriptorInfo(jsonInp);
 					registerReplicaDetails(json);
 				} catch (Exception e) {
 					// ignore, the API may be not available. impact is that we fail to obtain a replica token
@@ -250,12 +252,13 @@ public class Replica implements PosixFile {
 		}
 	}
 	
-	private void registerReplicaDetails(JSONobject json) {
+	private void registerReplicaDetails(JObject json) {
 		try {
-		JSONstring jReplicaToken = (JSONstring) json.get("replica_token");
-		replicaToken = jReplicaToken.get();
-		JSONobject jDataObjInfo = (JSONobject) json.get("data_object_info");
-		replNum = JSONnumber.toInt(jDataObjInfo.get("replica_number"));
+		JString jReplicaToken = (JString) json.get("replica_token");
+		replicaToken = jReplicaToken.data;
+		JObject jDataObjInfo = (JObject) json.get("data_object_info");
+		JNumber jNumber = (JNumber) jDataObjInfo.get("replica_number");
+		replNum = (int) jNumber.dataLong;
 		} catch (NullPointerException e) {}
 	}
 
