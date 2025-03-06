@@ -40,20 +40,14 @@ public class Replica implements PosixFile {
 	
 	private int numThreads = 0;
 	
-//	public Irods getSession() {
-//		return session;
-//	}
-//	
-//	public void setSession(Hirods session) {
-//		this.session = session;
-//		this.irodsPool = session.irodsPool;
-//	}
+	protected Replica() {
+	}
 	
-	public void setSession(Irods session) {
+	protected void setSession(Irods session) {
 		this.session = session;
 	}
 	
-	public void setReplica(Hirods session, String objPath, String resource) {
+	protected void setReplica(Hirods session, String objPath, String resource) {
 		this.session = session;
 		this.irodsPool = session.irodsPool;
 		this.host = session.getHost();
@@ -62,7 +56,7 @@ public class Replica implements PosixFile {
 		this.replNum = null;
 	}
 	
-	public void setReplica(Hirods session, String objPath, int replNum) {
+	protected void setReplica(Hirods session, String objPath, int replNum) {
 		this.session = session;
 		this.irodsPool = session.irodsPool;
 		this.host = session.getHost();

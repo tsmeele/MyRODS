@@ -67,7 +67,7 @@ public abstract class RodsCall {
 		}
 		try {
 			targetClass = 
-					Class.forName("nl.tsmeele.myrods.apiDataStructures." + className);
+					Class.forName("nl.tsmeele.myrods.api." + className);
 			Constructor<?> constr = targetClass.getConstructor(DataStruct.class);
 			obj = constr.newInstance(inStruct);			
 		} catch (ClassNotFoundException | NoSuchMethodException | 

@@ -89,6 +89,10 @@ public class Irods {
 		return serverConnection.isConnected();
 	}
 	
+	public boolean isAuthenticated() {
+		return authenticatedTimeStamp > 0L;
+	}
+	
 	public IrodsProtocolType getProtocol() {
 		return serverConnection.getProtocol();
 	}

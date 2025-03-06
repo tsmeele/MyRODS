@@ -60,14 +60,17 @@ execute not just one but a sequence of API calls.
 The package *high* contains classes that can be used as macro functions, 
 they chain a few API calls together. 
 
-The class **Hirods** is a subclass of the class Irods (which was mentioned earlier). 
-Hirods supports: 
-- PAM and Native scheme authentication.
-- Single and multi-threaded data transfers, where multi-threaded transfers use port 1247.
+The class **Hirods** can be used to initiate communications with an iRODS server.
+Hirods is a subclass of the class Irods. 
+It supports PAM and Native scheme authentication. 
 
+The class **DataTransfer** supports single and multi-threaded data 
+transfers, where multi-threaded transfers use multiple connections
+over port 1247.  
 Data transfers are supported between any type of datafile that is an 
-implementation of the interface PosixFile.  Currently there are
-two implementations of PosixFile: **LocalFile** and **Replica**.  
+implementation of the interface PosixFile.  
+
+Currently there are two implementations of PosixFile: **LocalFile** and **Replica**.  
 Hence the equivalent of an 'iput' is achieved by using a LocalFile as 
 source object and a Replica as destination object upon a data transfer. 
 The opposite is used to realize an 'iget',

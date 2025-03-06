@@ -7,17 +7,20 @@ import java.io.RandomAccessFile;
 import java.nio.file.FileAlreadyExistsException;
 
 public class LocalFile implements PosixFile {
-	boolean isOpenWrite = false;
-	boolean isOpenRead = false;
-	String path = null;
-	RandomAccessFile file = null;
+	private boolean isOpenWrite = false;
+	private boolean isOpenRead = false;
+	private String path = null;
+	private RandomAccessFile file = null;
+	
+	protected LocalFile() {
+	}
+	
+	protected void setPath(String path) {
+		this.path = path;
+	}
 	
 	public String getPath() {
 		return path;
-	}
-	
-	public void setPath(String path) {
-		this.path = path;
 	}
 
 	public String toString() {

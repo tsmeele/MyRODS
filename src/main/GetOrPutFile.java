@@ -4,9 +4,9 @@ import nl.tsmeele.myrods.high.DataTransfer;
 import nl.tsmeele.myrods.high.DataTransferMultiThreaded;
 import nl.tsmeele.myrods.high.DataTransferSingleThreaded;
 import nl.tsmeele.myrods.high.Hirods;
-import nl.tsmeele.myrods.high.LocalFile;
 import nl.tsmeele.myrods.high.PosixFile;
-import nl.tsmeele.myrods.high.Replica;
+import nl.tsmeele.myrods.high.PosixFileFactory;
+import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 /** Demonstrator class to show data transfers between local files and data objects.
  *  Precondition: user has logged in via the Session class  
@@ -31,19 +31,18 @@ public class GetOrPutFile {
 		return threadsUsed;
 	}
 	
-	public void get(String objectPath, String localPath) {
+	public void get(String objectPath, String localPath) throws MyRodsException {
 		execute(localPath, objectPath, false);
 	}
 	
-	public void put(String localPath, String objectPath) {
+	public void put(String localPath, String objectPath) throws MyRodsException {
 		execute(localPath, objectPath, true);
 	}
 	
-	private void execute(String localPath, String objectPath, boolean put) {
-		LocalFile local = new LocalFile();
-		local.setPath(localPath);
-		Replica replica = new Replica();
-		replica.setReplica(session, objectPath, null);
+	private void execute(String localPath, String objectPath, boolean put) throws MyRodsException {
+		PosixFileFactory posix = new PosixFileFactory();
+		PosixFile local = posix.createLocalFile(localPath);
+		PosixFile replica = posix.createReplica(session, objectPath);
 		PosixFile source, dest;
 		if (put) {
 			source = local;
