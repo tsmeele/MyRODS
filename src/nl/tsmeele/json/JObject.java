@@ -1,4 +1,4 @@
-package nl.tsmeele.json2;
+package nl.tsmeele.json;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -2,10 +2,9 @@ package nl.tsmeele.myrods.high;
 
 import java.io.IOException;
 
-
-import nl.tsmeele.json2.JNumber;
-import nl.tsmeele.json2.JObject;
-import nl.tsmeele.json2.JString;
+import nl.tsmeele.json.JNumber;
+import nl.tsmeele.json.JObject;
+import nl.tsmeele.json.JString;
 import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.Flag;

@@ -2,7 +2,7 @@ package nl.tsmeele.myrods.apiDataStructures;
 
 import java.nio.charset.StandardCharsets;
 
-import nl.tsmeele.json2.JObject;
+import nl.tsmeele.json.JObject;
 import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
 import nl.tsmeele.myrods.irodsDataTypes.DataInt;
 import nl.tsmeele.myrods.irodsDataTypes.DataPtr;

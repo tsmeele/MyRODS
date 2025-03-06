@@ -3,7 +3,7 @@ package nl.tsmeele.myrods.api;
 import java.io.IOException;
 import java.time.Instant;
 
-import nl.tsmeele.json2.JObject;
+import nl.tsmeele.json.JObject;
 import nl.tsmeele.myrods.apiDataStructures.CollInp;
 import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.ExecMyRuleInp;
