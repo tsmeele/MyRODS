@@ -1,7 +1,7 @@
 package nl.tsmeele.myrods.apiDataStructures;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 /**
  * The class RodsObjStat contains an output datastructure as returned by RcObjStat.

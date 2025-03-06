@@ -2,9 +2,9 @@ package nl.tsmeele.myrods.apiDataStructures;
 
 import java.util.List;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 public class SpecificQueryInp extends DataStruct {
 	//	"specificQueryInp_PI", "str *sql; str *arg1; str *arg2; str *arg3; str *arg4; 

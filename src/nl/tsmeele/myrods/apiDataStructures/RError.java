@@ -3,8 +3,8 @@ package nl.tsmeele.myrods.apiDataStructures;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import nl.tsmeele.myrods.irodsDataTypes.Data;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.Data;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 // "RErrMsg_PI", "int status; str msg[ERR_MSG_LEN];",
 // "RError_PI", "int count; struct *RErrMsg_PI[count];",

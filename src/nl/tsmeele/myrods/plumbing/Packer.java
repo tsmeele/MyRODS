@@ -1,6 +1,6 @@
 package nl.tsmeele.myrods.plumbing;
 
-import nl.tsmeele.myrods.irodsDataTypes.Data;
+import nl.tsmeele.myrods.irodsStructures.Data;
 
 /** Class Packer packs data according to the selected protocol strategy.
  * @author Ton Smeele

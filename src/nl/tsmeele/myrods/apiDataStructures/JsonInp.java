@@ -3,10 +3,10 @@ package nl.tsmeele.myrods.apiDataStructures;
 import java.nio.charset.StandardCharsets;
 
 import nl.tsmeele.json.JObject;
-import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataPtr;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataBinArray;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataPtr;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 public class JsonInp extends DataStruct {
 

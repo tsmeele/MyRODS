@@ -3,9 +3,9 @@ package nl.tsmeele.myrods.plumbing;
 import java.io.IOException;
 import java.util.Random;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 /** Class DataEncryptConfig manages the user-configured encryption parameters associated with
  * an IrodsSession that will be used for portal based data transfers (transfers via 'high' ports).

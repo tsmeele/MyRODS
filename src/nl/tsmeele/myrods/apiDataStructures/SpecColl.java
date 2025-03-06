@@ -1,8 +1,8 @@
 package nl.tsmeele.myrods.apiDataStructures;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 public class SpecColl extends DataStruct {
 	// "SpecColl_PI", "int collClass; int type; str collection[MAX_NAME_LEN]; 

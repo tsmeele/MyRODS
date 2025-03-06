@@ -2,7 +2,7 @@ package main;
 
 import java.io.IOException;
 
-import nl.tsmeele.myrods.api.Irods;
+import nl.tsmeele.myrods.apiDataStructures.Irods;
 import nl.tsmeele.myrods.apiDataStructures.IrodsCsNegType;
 import nl.tsmeele.myrods.apiDataStructures.MiscSvrInfo;
 import nl.tsmeele.myrods.apiDataStructures.RodsVersion;

@@ -3,9 +3,9 @@ package nl.tsmeele.myrods.apiDataStructures;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.tsmeele.myrods.irodsDataTypes.Data;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.Data;
+import nl.tsmeele.myrods.irodsStructures.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 public class KeyValPair extends IrodsMap {
 	// "KeyValPair_PI", "int ssLen; str *keyWord[ssLen]; str *svalue[ssLen];",

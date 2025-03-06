@@ -6,9 +6,9 @@ import nl.tsmeele.myrods.apiDataStructures.Api;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.MessageType;
 import nl.tsmeele.myrods.apiDataStructures.RError;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 /**
  * The class PackedMessage is responsible for packing/unpacking a Message

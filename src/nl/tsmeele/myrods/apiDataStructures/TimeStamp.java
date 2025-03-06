@@ -3,7 +3,7 @@ package nl.tsmeele.myrods.apiDataStructures;
 import java.time.Instant;
 import java.time.ZoneId;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataString;
 
 public class TimeStamp {
 	public long epochSecond = 0L;	// seconds since epoch

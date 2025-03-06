@@ -1,8 +1,8 @@
 package nl.tsmeele.myrods.apiDataStructures;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt64;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataInt64;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 public class OpenedDataObjInp extends DataStruct {
 	// "OpenedDataObjInp_PI", "int l1descInx; int len; int whence; int oprType; 

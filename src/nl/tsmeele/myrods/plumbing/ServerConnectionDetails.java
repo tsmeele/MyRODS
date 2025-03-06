@@ -1,9 +1,9 @@
 package nl.tsmeele.myrods.plumbing;
 
 import nl.tsmeele.myrods.apiDataStructures.IrodsCsNegType;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 /** SessionDetails holds attributes accumulated during an IrodsSession.
  * These properties are populated gradually using data obtained from iRODS api calls, 

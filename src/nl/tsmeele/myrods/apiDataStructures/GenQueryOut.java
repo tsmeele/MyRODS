@@ -1,9 +1,9 @@
 package nl.tsmeele.myrods.apiDataStructures;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataPtr;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataArray;
+import nl.tsmeele.myrods.irodsStructures.DataPtr;
+import nl.tsmeele.myrods.irodsStructures.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 /**
  * The class GenQueryOut contains an output datastructure as returned by RcGenQuery.

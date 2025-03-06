@@ -2,13 +2,13 @@ package nl.tsmeele.myrods.plumbing;
 
 import java.util.Base64;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataCharArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt16;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt64;
-import nl.tsmeele.myrods.irodsDataTypes.DataPIStr;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataBinArray;
+import nl.tsmeele.myrods.irodsStructures.DataCharArray;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataInt16;
+import nl.tsmeele.myrods.irodsStructures.DataInt64;
+import nl.tsmeele.myrods.irodsStructures.DataPIStr;
+import nl.tsmeele.myrods.irodsStructures.DataString;
 
 /**Implements the xml unpack protocol as in use before iRODS release 4.2.9.
  * @author Ton Smeele

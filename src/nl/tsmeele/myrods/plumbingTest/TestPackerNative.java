@@ -6,16 +6,16 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataCharArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt16;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt64;
-import nl.tsmeele.myrods.irodsDataTypes.DataPIStr;
-import nl.tsmeele.myrods.irodsDataTypes.DataPtr;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataArray;
+import nl.tsmeele.myrods.irodsStructures.DataBinArray;
+import nl.tsmeele.myrods.irodsStructures.DataCharArray;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataInt16;
+import nl.tsmeele.myrods.irodsStructures.DataInt64;
+import nl.tsmeele.myrods.irodsStructures.DataPIStr;
+import nl.tsmeele.myrods.irodsStructures.DataPtr;
+import nl.tsmeele.myrods.irodsStructures.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 import nl.tsmeele.myrods.plumbing.PackerNative;
 
 class TestPackerNative {

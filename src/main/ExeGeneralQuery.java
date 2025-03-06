@@ -2,15 +2,15 @@ package main;
 
 import java.io.IOException;
 
-import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.apiDataStructures.Columns;
 import nl.tsmeele.myrods.apiDataStructures.GenQueryInp;
 import nl.tsmeele.myrods.apiDataStructures.GenQueryOut;
 import nl.tsmeele.myrods.apiDataStructures.InxIvalPair;
 import nl.tsmeele.myrods.apiDataStructures.InxValPair;
+import nl.tsmeele.myrods.apiDataStructures.Irods;
 import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
 import nl.tsmeele.myrods.apiDataStructures.Message;
-import nl.tsmeele.myrods.irodsDataTypes.RcGenQuery;
+import nl.tsmeele.myrods.irodsStructures.RcGenQuery;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 

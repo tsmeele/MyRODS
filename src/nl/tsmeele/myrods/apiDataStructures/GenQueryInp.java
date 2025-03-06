@@ -1,7 +1,7 @@
 package nl.tsmeele.myrods.apiDataStructures;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 public class GenQueryInp extends DataStruct {
 	// 	"GenQueryInp_PI", "int maxRows; int continueInx; int partialStartIndex; int options; 

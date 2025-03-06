@@ -1,6 +1,6 @@
 package nl.tsmeele.myrods.apiDataStructures;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 public class RErrMsg extends DataStruct {
 	

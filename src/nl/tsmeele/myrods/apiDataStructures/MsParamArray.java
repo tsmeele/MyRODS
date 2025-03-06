@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import nl.tsmeele.myrods.api.RodsCall;
-import nl.tsmeele.myrods.irodsDataTypes.Data;
-import nl.tsmeele.myrods.irodsDataTypes.DataArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataPtr;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.Data;
+import nl.tsmeele.myrods.irodsStructures.DataArray;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataPtr;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.RodsCall;
 
 public class MsParamArray extends DataStruct {
 

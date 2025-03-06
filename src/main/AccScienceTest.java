@@ -13,9 +13,9 @@ import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.ModAVUMetadataInp;
 import nl.tsmeele.myrods.apiDataStructures.ModAccessControlInp;
 import nl.tsmeele.myrods.high.Hirods;
-import nl.tsmeele.myrods.irodsDataTypes.RcDataObjUnlink;
-import nl.tsmeele.myrods.irodsDataTypes.RcModAVUMetadata;
-import nl.tsmeele.myrods.irodsDataTypes.RcModAccessControl;
+import nl.tsmeele.myrods.irodsStructures.RcDataObjUnlink;
+import nl.tsmeele.myrods.irodsStructures.RcModAVUMetadata;
+import nl.tsmeele.myrods.irodsStructures.RcModAccessControl;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 

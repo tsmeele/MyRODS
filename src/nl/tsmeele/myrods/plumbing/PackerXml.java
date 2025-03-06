@@ -4,17 +4,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Iterator;
 
-import nl.tsmeele.myrods.irodsDataTypes.Data;
-import nl.tsmeele.myrods.irodsDataTypes.DataArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataCharArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt16;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt64;
-import nl.tsmeele.myrods.irodsDataTypes.DataPIStr;
-import nl.tsmeele.myrods.irodsDataTypes.DataPtr;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.Data;
+import nl.tsmeele.myrods.irodsStructures.DataArray;
+import nl.tsmeele.myrods.irodsStructures.DataBinArray;
+import nl.tsmeele.myrods.irodsStructures.DataCharArray;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataInt16;
+import nl.tsmeele.myrods.irodsStructures.DataInt64;
+import nl.tsmeele.myrods.irodsStructures.DataPIStr;
+import nl.tsmeele.myrods.irodsStructures.DataPtr;
+import nl.tsmeele.myrods.irodsStructures.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 /** PackerXml packs data in line with XML based protocol as used before iRODS 4.2.9.
  * @author Ton Smeele

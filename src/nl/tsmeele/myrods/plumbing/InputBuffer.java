@@ -1,12 +1,12 @@
 package nl.tsmeele.myrods.plumbing;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataCharArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt16;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt64;
-import nl.tsmeele.myrods.irodsDataTypes.DataPIStr;
-import nl.tsmeele.myrods.irodsDataTypes.DataString;
+import nl.tsmeele.myrods.irodsStructures.DataBinArray;
+import nl.tsmeele.myrods.irodsStructures.DataCharArray;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataInt16;
+import nl.tsmeele.myrods.irodsStructures.DataInt64;
+import nl.tsmeele.myrods.irodsStructures.DataPIStr;
+import nl.tsmeele.myrods.irodsStructures.DataString;
 
 /** Interface for unpack protocol strategies.
  * The Unpacker class will use these methods whenever a variable of a specified type is expected

@@ -6,11 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import nl.tsmeele.log.Log;
-import nl.tsmeele.myrods.irodsDataTypes.Data;
-import nl.tsmeele.myrods.irodsDataTypes.DataInt;
-import nl.tsmeele.myrods.irodsDataTypes.DataPIStr;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
-import nl.tsmeele.myrods.irodsDataTypes.IrodsType;
+import nl.tsmeele.myrods.irodsStructures.Data;
+import nl.tsmeele.myrods.irodsStructures.DataInt;
+import nl.tsmeele.myrods.irodsStructures.DataPIStr;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.IrodsType;
 
 /**
  * Class ParsedInstruction provides for a parsed single packing instruction.

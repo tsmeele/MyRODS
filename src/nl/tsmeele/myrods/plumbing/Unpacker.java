@@ -3,10 +3,10 @@ package nl.tsmeele.myrods.plumbing;
 import java.util.List;
 
 import nl.tsmeele.log.Log;
-import nl.tsmeele.myrods.irodsDataTypes.Data;
-import nl.tsmeele.myrods.irodsDataTypes.DataArray;
-import nl.tsmeele.myrods.irodsDataTypes.DataPtr;
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.Data;
+import nl.tsmeele.myrods.irodsStructures.DataArray;
+import nl.tsmeele.myrods.irodsStructures.DataPtr;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 /** Class Unpacker unpacks data that was serialized in accordance with a predefined protocol. 
  * The data is unpacked using a pack instruction that specifies the expected sequence of data elements, 

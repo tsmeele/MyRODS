@@ -1,6 +1,6 @@
 package nl.tsmeele.myrods.apiDataStructures;
 
-import nl.tsmeele.myrods.irodsDataTypes.DataStruct;
+import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 // "MiscSvrInfo_PI":  "int serverType; int serverBootTime; str relVersion[NAME_LEN]; 
 //                    str apiVersion[NAME_LEN]; str rodsZone[NAME_LEN];",
