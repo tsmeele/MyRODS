@@ -2,33 +2,21 @@ package nl.tsmeele.myrods.high;
 
 import java.io.IOException;
 
-import nl.tsmeele.json.JSONParser;
 import nl.tsmeele.json.JSONnumber;
 import nl.tsmeele.json.JSONobject;
 import nl.tsmeele.json.JSONstring;
-import nl.tsmeele.myrods.api.RcDataObjClose;
-import nl.tsmeele.myrods.api.RcDataObjLseek;
-import nl.tsmeele.myrods.api.RcDataObjOpen;
-import nl.tsmeele.myrods.api.RcDataObjRead;
-import nl.tsmeele.myrods.api.RcDataObjWrite;
-import nl.tsmeele.myrods.api.RcGetFileDescriptorInfo;
-import nl.tsmeele.myrods.api.RcGetResourceInfoForOperation;
-import nl.tsmeele.myrods.api.RcObjStat;
-import nl.tsmeele.myrods.api.RcReplicaOpen;
+import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.Flag;
 import nl.tsmeele.myrods.apiDataStructures.JsonInp;
 import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
 import nl.tsmeele.myrods.apiDataStructures.Kw;
-import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.ObjType;
 import nl.tsmeele.myrods.apiDataStructures.OpenedDataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.OprType;
 import nl.tsmeele.myrods.apiDataStructures.RodsObjStat;
-import nl.tsmeele.myrods.irodsDataTypes.DataBinArray;
-import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
-import nl.tsmeele.myrods.plumbing.SessionDetails;
+import nl.tsmeele.myrods.plumbing.ServerConnectionDetails;
 
 public class Replica implements PosixFile {
 	
@@ -46,38 +34,38 @@ public class Replica implements PosixFile {
 	private String replicaToken = null;
 	
 	// connection
-	private Session session = null;
-	private ServerConnection irodsSession = null;
+	public Irods session = null;
+	public IrodsPool irodsPool = null;
 	private String host = null;
 	
 	private int numThreads = 0;
 	
-	public Session getSession() {
-		return session;
+//	public Irods getSession() {
+//		return session;
+//	}
+//	
+//	public void setSession(Hirods session) {
+//		this.session = session;
+//		this.irodsPool = session.irodsPool;
+//	}
+	
+	public void setSession(Irods session) {
+		this.session = session;
 	}
 	
-	public void setSession(Session session) {
+	public void setReplica(Hirods session, String objPath, String resource) {
 		this.session = session;
-		if (session == null) {
-			this.irodsSession = null;
-			return;
-		}
-		this.irodsSession = session.getIrodsSession();
-	}
-	
-	public void setReplica(Session session, String objPath, String resource) {
-		this.session = session;
-		this.irodsSession = session.getIrodsSession();
-		this.host = irodsSession.getSessionDetails().host;
+		this.irodsPool = session.irodsPool;
+		this.host = session.getHost();
 		this.objPath = objPath;
 		this.resource = resource;
 		this.replNum = null;
 	}
 	
-	public void setReplica(Session session, String objPath, int replNum) {
+	public void setReplica(Hirods session, String objPath, int replNum) {
 		this.session = session;
-		this.irodsSession = session.getIrodsSession();
-		this.host = irodsSession.getSessionDetails().host;
+		this.irodsPool = session.irodsPool;
+		this.host = session.getHost();
 		this.objPath = objPath;
 		this.replNum = replNum;
 		this.resource = null;
@@ -113,9 +101,8 @@ public class Replica implements PosixFile {
 		KeyValPair kv = new KeyValPair();
 		OpenedDataObjInp openedDataObjInp = new OpenedDataObjInp(fileDescriptor, 0, Flag.SEEK_SET, OprType.NULL,
 				offset, 0L, kv);
-		RcDataObjLseek rcDataObjLseek = new RcDataObjLseek(openedDataObjInp);
-		Message reply = rcDataObjLseek.sendTo(irodsSession);
-		if (reply.getIntInfo() < 0) {
+		session.rcDataObjLseek(openedDataObjInp);
+		if (session.error) {
 			throw new MyRodsException("Seek on replica to " + offset + " failed");
 		}
 	}
@@ -127,13 +114,11 @@ public class Replica implements PosixFile {
 		KeyValPair kv = new KeyValPair();
 		OpenedDataObjInp openedDataObjInp = new OpenedDataObjInp(fileDescriptor, bytes, 0, OprType.NULL,
 				0L, 0L, kv);
-		RcDataObjRead rcDataObjRead = new RcDataObjRead(openedDataObjInp);
-		Message reply = rcDataObjRead.sendTo(irodsSession);
-		int status = reply.getIntInfo();
-		if (status < 0) {
+		session.rcDataObjRead(openedDataObjInp);
+		if (session.error) {
 			throw new MyRodsException("Unable to read " + bytes + " bytes from replica");
 		}
-		byte[] buf = reply.getBs();
+		byte[] buf = session.bs;
 		if (buf != null) {
 			return buf;
 		}
@@ -148,16 +133,14 @@ public class Replica implements PosixFile {
 			OpenedDataObjInp openedDataObjInp = 
 					new OpenedDataObjInp(fileDescriptor, needToWrite, Flag.SEEK_CUR, OprType.PUT_OPR,
 				0L, 0L, kv);
-			RcDataObjWrite rcDataObjWrite = new RcDataObjWrite(openedDataObjInp, bytes);
-			Message reply = rcDataObjWrite.sendTo(irodsSession);
-			int status = reply.getIntInfo();
-			if (status <= 0) {
-				throw new MyRodsException("Unable to write to replica (" + status + ")");
+			session.rcDataObjWrite(openedDataObjInp, bytes);
+			if (session.error) {
+				throw new MyRodsException("Unable to write to replica (" + session.intInfo + ")");
 			}
-			needToWrite = needToWrite - status;
+			needToWrite = needToWrite - session.intInfo;
 			byte[] remain = new byte[needToWrite];
 			for (int i = 0; i < needToWrite; i++) {
-				 remain[i] = bytes[status + i];
+				 remain[i] = bytes[session.intInfo + i];
 			}
 			bytes = remain;
 		}
@@ -168,13 +151,12 @@ public class Replica implements PosixFile {
 		KeyValPair kv = new KeyValPair();
 		OpenedDataObjInp openedDataObjInp = new OpenedDataObjInp(fileDescriptor, 0, 0, null,
 				0L, 0L, kv);
-		RcDataObjClose rcDataObjClose = new RcDataObjClose(openedDataObjInp);
-		Message reply = rcDataObjClose.sendTo(irodsSession);
+		session.rcDataObjClose(openedDataObjInp);
 		openForRead = false;
 		openForWrite = false;
 		replicaToken = null;
-		if (reply.getIntInfo() < 0) {
-			throw new MyRodsException("Error when closing replica (" + reply.getIntInfo() + ")");
+		if (session.error) {
+			throw new MyRodsException("Error when closing replica (" + session.intInfo + ")");
 		}		
 	}
 
@@ -213,15 +195,12 @@ public class Replica implements PosixFile {
 		openForWrite = true;
 	}
 	
-	private void getResourceForReplica(String operation, String resource) throws MyRodsException, IOException {
+	private void getResourceForReplica(String operation, String rescHier) throws MyRodsException, IOException {
 		if (serverVersionNumberIsAtLeast("4.3.1")) {
-			RcGetResourceInfoForOperation rcGetInfo = new RcGetResourceInfoForOperation(objPath, operation, resource); 
-			Message reply = rcGetInfo.sendTo(irodsSession);
-			if (reply.getIntInfo() < 0) {
-				throw new MyRodsException("Unable to get resource info for replica (" + reply.getIntInfo() + ")");
+			JSONobject json = session.rcGetResourceInfoForOperation(objPath, operation, rescHier);
+			if (session.error) {
+				throw new MyRodsException("Unable to get resource info for replica (" + session.intInfo + ")");
 			}
-			String myStr = reply.getMessage().lookupString("myStr");
-			JSONobject json = (JSONobject) JSONParser.parse(myStr);
 			// TODO: support connections to hosts other than the connected host, if the resource is located elsewhere
 			//resourceHost = ((JSONstring)json.get("host")).get();
 			this.resource = ((JSONstring)json.get("resource_hierarchy")).get();
@@ -244,29 +223,26 @@ public class Replica implements PosixFile {
 		DataObjInp dataObjInp = new DataObjInp(objPath, 0, openFlags, 0L, -1L, numThreads, OprType.NULL, null, condInput); 
 
 		if (serverVersionNumberIsAtLeast("4.2.9")) {
-			RcReplicaOpen rcReplicaOpen = new RcReplicaOpen(dataObjInp);
-			Message reply = rcReplicaOpen.sendTo(irodsSession);
-			if (reply.getIntInfo() < 0) {
-				throw new MyRodsException("Unable to open replica (" + reply.getIntInfo() + ")");
+			JSONobject json = session.rcReplicaOpen(dataObjInp);
+			if (session.error) {
+				throw new MyRodsException("Unable to open replica (" + session.intInfo + ")");
 			}
-			fileDescriptor = reply.getIntInfo();
+			fileDescriptor = session.intInfo;
 			exists = true;
-			registerReplicaDetails((DataBinArray) reply.getMessage().lookupName("buf"));
+			registerReplicaDetails(json);
 		} else {
 			// we are in contact with a pre-4.2.9 version iRODS server
-			RcDataObjOpen rcDataObjOpen = new RcDataObjOpen(dataObjInp);
-			Message reply = rcDataObjOpen.sendTo(irodsSession);
-			if (reply.getIntInfo() < 0) {
-				throw new MyRodsException("Unable to open data object' replica (" + reply.getIntInfo() + ")");
+			session.rcDataObjOpen(dataObjInp);
+			if (session.error) {
+				throw new MyRodsException("Unable to open data object' replica (" + session.intInfo + ")");
 			}
-			fileDescriptor = reply.getIntInfo();
+			fileDescriptor = session.intInfo;
 			exists = true;
 			if (serverVersionNumberIsAtLeast("4.2.8")) {
 				JsonInp jsonInp = new JsonInp("{\"fd\":" + fileDescriptor + "}");
-				RcGetFileDescriptorInfo rcGetFileDescriptorInfo = new RcGetFileDescriptorInfo(jsonInp);
 				try {
-					reply = rcGetFileDescriptorInfo.sendTo(irodsSession);
-					registerReplicaDetails((DataBinArray) reply.getMessage().lookupName("buf"));
+					JSONobject json = session.rcGetFileDescriptorInfo(jsonInp);
+					registerReplicaDetails(json);
 				} catch (Exception e) {
 					// ignore, the API may be not available. impact is that we fail to obtain a replica token
 				}
@@ -274,10 +250,8 @@ public class Replica implements PosixFile {
 		}
 	}
 	
-	private void registerReplicaDetails(DataBinArray bin) {
+	private void registerReplicaDetails(JSONobject json) {
 		try {
-		String s = bin.getAsString();
-		JSONobject json = (JSONobject) JSONParser.parse(s);
 		JSONstring jReplicaToken = (JSONstring) json.get("replica_token");
 		replicaToken = jReplicaToken.get();
 		JSONobject jDataObjInfo = (JSONobject) json.get("data_object_info");
@@ -292,13 +266,11 @@ public class Replica implements PosixFile {
 		}
 		// the status of the replica might be 'not exists' yet another option is that its status
 		// simply has not been checked so far...we will need to query the server.
-		RcObjStat rcObjStat = new RcObjStat(objPath, ObjType.DATAOBJECT);
 		try {
-			Message reply = rcObjStat.sendTo(irodsSession);
-			if (reply.getIntInfo() >= 0) {
-				RodsObjStat stat = (RodsObjStat) reply.getMessage();
+			RodsObjStat rodsObjStat = session.rcObjStat(objPath, ObjType.DATAOBJECT);
+			if (!session.error) {
 				exists = true;
-				objSize = stat.objSize;
+				objSize = rodsObjStat.objSize;
 			}
 		} catch (Exception e) { } 	
 		return exists;
@@ -324,7 +296,7 @@ public class Replica implements PosixFile {
 
 	@Override
 	public int maxThreads() {
-		if (session == null || session.getSessionPool() == null) {
+		if (session == null || irodsPool == null) {
 			return 0; // 0 means no limitation
 		}
 		if (openForWrite && replicaToken == null) {
@@ -332,13 +304,13 @@ public class Replica implements PosixFile {
 			// restrict data transfer to single-threaded transfer
 			return 1;
 		}
-		return session.getSessionPool().getMaxConnections() - 1;
+		return irodsPool.maxEntries - 1;
 	}
 
 	private boolean serverVersionNumberIsAtLeast(String minimumVersion) {
 		try {
-			String serverVersion = irodsSession.getSessionDetails().relVersion.get();
-			if (SessionDetails.compareVersions(serverVersion, "rods" + minimumVersion) >= 0) {
+			String serverVersion = session.getServerRelVersion();
+			if (ServerConnectionDetails.compareVersions(serverVersion, "rods" + minimumVersion) >= 0) {
 				return true;
 			}
 		} catch (NullPointerException e){

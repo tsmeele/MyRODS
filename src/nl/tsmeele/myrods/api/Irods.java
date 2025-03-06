@@ -72,7 +72,7 @@ public class Irods {
 	// content of last received message
 	public boolean error = false;
 	public DataStruct errorMessage = null;
-	public int returnCode = 0;
+	public int intInfo = 0;
 	public byte[] bs = null;
 	
 	// timestamps, in seconds since epoch
@@ -81,8 +81,8 @@ public class Irods {
 	
 	// internal state, keep private
 	protected ServerConnection serverConnection = new ServerConnection();
-	private String host;
-	private int port;
+	protected String host;
+	protected int port;
 	private String authenticatedPassword = null;
 
 	
@@ -94,6 +94,26 @@ public class Irods {
 	
 	public IrodsCsNegType getServerPolicy() {
 		return serverConnection.getSessionDetails().serverPolicy;
+	}
+	
+	public String getServerRelVersion() {
+		return serverConnection.getSessionDetails().relVersion.get();
+	}
+	
+	public boolean isSsl() {
+		return serverConnection.isSsl();
+	}
+	
+	public boolean isConnected() {
+		return serverConnection.isConnected();
+	}
+	
+	public IrodsProtocolType getProtocol() {
+		return serverConnection.getProtocol();
+	}
+	
+	public String getHost() {
+		return host;
 	}
 	
 	
@@ -166,7 +186,7 @@ public class Irods {
 	public void rcDisconnect() throws MyRodsException, IOException {
 		RcDisconnect request = new RcDisconnect();
 		request.sendTo(serverConnection);	// skip action to receive a response
-		returnCode = 0;
+		intInfo = 0;
 		error = false;
 		errorMessage = null;
 		bs = null;
@@ -358,8 +378,8 @@ public class Irods {
 			throw new MyRodsException("Unable to execute API calls, not connected");
 		}
 		Message response = request.sendTo(serverConnection);
-		returnCode = response.getIntInfo();
-		error = returnCode < 0;
+		intInfo = response.getIntInfo();
+		error = intInfo < 0;
 		errorMessage = response.getErrorMessage();
 		bs = response.getBs();
 		return response.getMessage();

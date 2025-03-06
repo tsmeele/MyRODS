@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import nl.tsmeele.log.Log;
-import nl.tsmeele.myrods.api.RcDataObjUnlink;
-import nl.tsmeele.myrods.api.RcModAVUMetadata;
-import nl.tsmeele.myrods.api.RcModAccessControl;
 import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
 import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
 import nl.tsmeele.myrods.apiDataStructures.Kw;
 import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.apiDataStructures.ModAVUMetadataInp;
 import nl.tsmeele.myrods.apiDataStructures.ModAccessControlInp;
-import nl.tsmeele.myrods.high.Session;
+import nl.tsmeele.myrods.high.Hirods;
+import nl.tsmeele.myrods.irodsDataTypes.RcDataObjUnlink;
+import nl.tsmeele.myrods.irodsDataTypes.RcModAVUMetadata;
+import nl.tsmeele.myrods.irodsDataTypes.RcModAccessControl;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
@@ -55,36 +55,35 @@ public class AccScienceTest {
 		
 		// Establish connection with server and authenticate
 		System.out.println("Connect and login:\n");
-		Session session = new Session();
-		if (session.pamLogin(host, port, username, userzone, password)) {
+		Hirods session = new Hirods(host,port);
+		if (session.pamLogin(username, userzone, password, username, userzone)) {
 			System.out.println("Pam auth successful");
 		} else {
 			System.out.println("Could not login");
 			System.exit(1);
 		}
-		ServerConnection irodsSession = session.getIrodsSession();
-		System.out.println("is connected = " + irodsSession.isConnected());
-		System.out.println("is ssl = " + irodsSession.isSsl());
-		System.out.println("protocol = " + irodsSession.getProtocol().name());
+		System.out.println("is connected = " + session.isConnected());
+		System.out.println("is ssl = " + session.isSsl());
+		System.out.println("protocol = " + session.getProtocol().name());
 				
 		
-		String existingObj = "/nluu6a/home/research-ton-test/mybook1.docx";
-		String homeColl = "/nluu6a/home/research-ton-test";
+		String existingObj = "/uu/home/research-ton/test2.txt";
+		String homeColl = "/uu/home/research-ton";
 		
 		// show execution of a rule
 		System.out.println("\n\nDEMO: Execution of a Rule\n");
-		ExeRule rule = new ExeRule(irodsSession);
+		ExeRule rule = new ExeRule(session);
 		rule.execute();
 		
 		// show execution of a general query
 		System.out.println("\n\nDEMO: Execution of a General Query\n");
-		ExeGeneralQuery query = new ExeGeneralQuery(irodsSession);
+		ExeGeneralQuery query = new ExeGeneralQuery(session);
 		query.execute(homeColl, "%");
 		
 		// show get file
 		System.out.println("\n\nDEMO: Execution of a data object Get data transfer\n");
 		GetOrPutFile tx = new GetOrPutFile(session);
-		tx.setThreads(8);
+		//tx.setThreads(8);
 		Log.timerStart();
 		tx.get(existingObj, "/tmp/boek-4-jul-2024.docx");
 		Log.timerRead("GET transfer done");
@@ -102,28 +101,26 @@ public class AccScienceTest {
 		
 		// checksum a data object
 		System.out.println("\n\nDEMO: Execution of a data object chksum\n");
-		ChksumDataObject chksum = new ChksumDataObject(irodsSession);
+		ChksumDataObject chksum = new ChksumDataObject(session);
 		chksum.execute(newDataObj);
-		
+//		
 		// and remove the newly added data object
 		DataObjInp dataObjInp = new DataObjInp(newDataObj, null);
-		RcDataObjUnlink rcDataObjUnlink = new RcDataObjUnlink(dataObjInp);
-		rcDataObjUnlink.sendTo(irodsSession);
+		session.rcDataObjUnlink(dataObjInp);
 		
 		// mod access
 		// "modAccessControlInp_PI", "int recursiveFlag; str *accessLevel; str *userName; str *zone; str *path;",
 
 		System.out.println("\n\nDEMO ACCESS CONTROL\n");
-		String targetUser = "a.p.m.smeele@uu.nl";
-		String targetAcl = Kw.ACCESS_READ_OBJECT;
+		String targetUser = username;
+		String targetAcl = "write"; //Kw.ACCESS_READ_OBJECT;
 		String object = existingObj;
-		ModAccessControlInp access = new ModAccessControlInp(0, targetAcl, targetUser, "nluu6a", object);
-		RcModAccessControl rcModAccessControl = new RcModAccessControl(access);
-		Message aclReply = rcModAccessControl.sendTo(irodsSession);
-		if (aclReply.getIntInfo() >= 0) {
-			System.out.println("Access for user " + targetUser + " on object " + object + " set to " + targetAcl);
+		ModAccessControlInp access = new ModAccessControlInp(0, targetAcl, targetUser, userzone, object);
+		session.rcModAccessControl(access);
+		if (session.error) {
+			System.out.println("Failed to set ACL for user " + targetUser + " on " + object + " ierror = " + session.intInfo);
 		} else {
-			System.out.println("Failed to set ACL for user " + targetUser + " on " + object + " ierror = " + aclReply.getIntInfo());
+			System.out.println("Access for user " + targetUser + " on object " + object + " set to " + targetAcl);
 		}
 		
 		// add metadata
@@ -141,15 +138,14 @@ public class AccScienceTest {
 		args.add(metaU);
 		KeyValPair kv = new KeyValPair();
 		ModAVUMetadataInp modAVUMetaDataInp = new ModAVUMetadataInp(args, kv);
-		RcModAVUMetadata rcModAVUMetadata = new RcModAVUMetadata(modAVUMetaDataInp);
-		Message metaReply = rcModAVUMetadata.sendTo(irodsSession);
-		if (metaReply.getIntInfo() >= 0) {
-			System.out.println("Metadata 'set' on object " + object + " AVU = " + metaAVU);
+		session.rcModAVUMetadata(modAVUMetaDataInp);
+		if (session.error) {
+			System.out.println("Failed to 'set' metadata on object " + object + " ierror = " + session.intInfo);
 		} else {
-			System.out.println("Failed to 'set' metadata on object " + object + " ierror = " + metaReply.getIntInfo());
+			System.out.println("Metadata 'set' on object " + object + " AVU = " + metaAVU);
 		}
 		// we're all done
-		session.disconnect();
+		session.rcDisconnect();
 		System.exit(0);
 	}
 }

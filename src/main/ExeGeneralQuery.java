@@ -2,6 +2,7 @@ package main;
 
 import java.io.IOException;
 
+import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.apiDataStructures.Columns;
 import nl.tsmeele.myrods.apiDataStructures.GenQueryInp;
 import nl.tsmeele.myrods.apiDataStructures.GenQueryOut;
@@ -19,9 +20,9 @@ import nl.tsmeele.myrods.plumbing.MyRodsException;
  *
  */
 public class ExeGeneralQuery {
-	private ServerConnection irodsSession;
+	private Irods irodsSession;
 
-	public ExeGeneralQuery(ServerConnection irodsSession) {
+	public ExeGeneralQuery(Irods irodsSession) {
 		this.irodsSession = irodsSession;
 	}
 
@@ -48,13 +49,11 @@ public class ExeGeneralQuery {
 		// execute the query
 		GenQueryInp genQueryInp = new GenQueryInp(maxRows, continueInx, partialStartIndex,
 				queryOptions, new KeyValPair(), inxIvalPair , inxValPair);
-		RcGenQuery rcGenQuery = new RcGenQuery(genQueryInp);
-		Message reply = rcGenQuery.sendTo(irodsSession);
-		if (reply.getIntInfo() < 0) {
-			System.out.println("Query failed, ierror = " + reply.getIntInfo());
+		GenQueryOut genOut = irodsSession.rcGenQuery(genQueryInp);
+		if (irodsSession.error) {
+			System.out.println("Query failed, ierror = " + irodsSession.intInfo);
 			return;
 		}
-		GenQueryOut genOut = (GenQueryOut) reply.getMessage();
 		System.out.println("query succesful!");
 		System.out.println(genOut);
 	}	

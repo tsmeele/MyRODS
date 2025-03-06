@@ -3,10 +3,10 @@ package main;
 import nl.tsmeele.myrods.high.DataTransfer;
 import nl.tsmeele.myrods.high.DataTransferMultiThreaded;
 import nl.tsmeele.myrods.high.DataTransferSingleThreaded;
+import nl.tsmeele.myrods.high.Hirods;
 import nl.tsmeele.myrods.high.LocalFile;
 import nl.tsmeele.myrods.high.PosixFile;
 import nl.tsmeele.myrods.high.Replica;
-import nl.tsmeele.myrods.high.Session;
 
 /** Demonstrator class to show data transfers between local files and data objects.
  *  Precondition: user has logged in via the Session class  
@@ -14,12 +14,12 @@ import nl.tsmeele.myrods.high.Session;
  *
  */
 public class GetOrPutFile {
-	private Session session;
+	private Hirods session;
 	private int threadCount = 1;
 	private int threadsUsed = 0;
 
 	
-	public GetOrPutFile(Session session) {
+	public GetOrPutFile(Hirods session) {
 		this.session = session;
 	}
 	

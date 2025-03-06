@@ -29,7 +29,7 @@ public class ChksumDataObject {
 		RodsObjStat rodsObjStat = irods.rcObjStat(objectPath, ObjType.DATAOBJECT);
 		if (irods.error) {
 			// errorcode -31000 = DATA OBJECT DOES NOT EXIST
-			System.out.println("Data object " + objectPath + " does not exist, unable to continue. error = " + irods.returnCode);
+			System.out.println("Data object " + objectPath + " does not exist, unable to continue. error = " + irods.intInfo);
 			return;
 		} else {
 			System.out.println("Status information on '" + objectPath + "' before chksum call");
@@ -42,7 +42,7 @@ public class ChksumDataObject {
 		DataObjInp dataObjInp = new DataObjInp(objectPath, kvChksum);
 		String checksum = irods.rcDataObjChksum(dataObjInp);
 		if (irods.error) {
-			System.out.println("Chksum call reports failure, ierror = " + irods.returnCode );
+			System.out.println("Chksum call reports failure, ierror = " + irods.intInfo );
 		} else {
 			System.out.println("Chksum call reports success. Checksum is: " + checksum);
 		}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import nl.tsmeele.log.Log;
+import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.apiDataStructures.ExecMyRuleInp;
 import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
 import nl.tsmeele.myrods.apiDataStructures.Kw;
@@ -24,9 +25,9 @@ import nl.tsmeele.myrods.plumbing.MyRodsException;
  */
 public class ExeRule {
 	private final String EXTERNALRULE = "@external rule ";
-	private ServerConnection irodsSession;
+	private Irods irodsSession;
 	
-	public ExeRule(ServerConnection irodsSession) {
+	public ExeRule(Irods irodsSession) {
 		this.irodsSession = irodsSession;
 	}
 	
@@ -59,10 +60,7 @@ public class ExeRule {
 		
 		// execute the rule
 		ExecMyRuleInp ruleInp = new ExecMyRuleInp(myRule, rHostAddr, condInput, outParamDesc, inputVars);
-		RcExecMyRule rcExecMyRule = new RcExecMyRule(ruleInp);
-		Message reply = rcExecMyRule.sendTo(irodsSession);
-		Log.debug(reply.toString());
-		MsParamArray msArray = (MsParamArray) reply.getMessage();
+		MsParamArray msArray = irodsSession.rcExecMyRule(ruleInp);
 		
 		// show returned parameters
 		System.out.println("OUTPUTVARS:");

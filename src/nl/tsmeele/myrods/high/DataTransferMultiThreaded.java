@@ -202,12 +202,14 @@ public class DataTransferMultiThreaded extends DataTransfer {
 	}
 	
 	
-	private PosixFile allocateFileHandle(PosixFile file) throws MyRodsException {
+	private PosixFile allocateFileHandle(PosixFile file) throws MyRodsException, IOException {
 		PosixFile local = file.cloneProperties();
 		if (file.getClass() == Replica.class) {
 			// allocate a new session for the localized replica
-			SessionPool pool = ((Replica)file).getSession().getSessionPool();
-			((Replica)local).setSession(pool.allocate());
+			IrodsPool pool = ((Replica)file).irodsPool;
+			((Replica)local).session = pool.allocate();
+			// new session belongs to the existing pool
+			((Replica)local).irodsPool = pool;
 		}
 		return local;
 	}
@@ -217,8 +219,8 @@ public class DataTransferMultiThreaded extends DataTransfer {
 			return;
 		}
 		if (file.getClass() == Replica.class) {
-			Session s = ((Replica)file).getSession();
-			s.getSessionPool().free(s);
+			Replica r = (Replica) file;
+			r.irodsPool.free(r.session);
 		}
 	}
 	

@@ -7,10 +7,13 @@ import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 public class Hirods extends Irods {
-
+	public IrodsPool irodsPool = null;
+	
+	
 	public Hirods(String host, int port) {
 		super(host, port);
 	}
+	
 	
 	public boolean pamLogin(String proxyUser, String proxyZone, String proxyPamPassword,
 			String clientUser, String clientZone) throws MyRodsException, IOException {
@@ -48,7 +51,9 @@ public class Hirods extends Irods {
 		byte[] challenge = rcAuthRequest();
 		if (error) return false;
 		rcAuthResponse(proxyUser + "#" + proxyZone, proxyNativePassword, challenge);
-		return !error;
+		if (error) return false;
+		irodsPool = new IrodsPool(this);
+		return true;
 	}
 
 	

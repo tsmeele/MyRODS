@@ -364,6 +364,7 @@ public class Kw {
 	public static final String ACCESS_READ_SYSTEM_METADATA               = "read_system_metadata";
 	public static final String ACCESS_READ_METADATA                      = "read_metadata";
 	public static final String ACCESS_READ_OBJECT                        = "read_object";
+	// -> rcModAccessControl expects "read". There appears to be no keyword for access level "read" 
 	public static final String ACCESS_WRITE_ANNOTATION                   = "write_annotation";
 	public static final String ACCESS_CREATE_METADATA                    = "create_metadata";
 	public static final String ACCESS_MODIFY_METADATA                    = "modify_metadata";
@@ -371,6 +372,7 @@ public class Kw {
 	public static final String ACCESS_ADMINISTER_OBJECT                  = "administer_object";
 	public static final String ACCESS_CREATE_OBJECT                      = "create_object";
 	public static final String ACCESS_MODIFY_OBJECT                      = "modify_object";
+	// -> rcModAccessControl expects "write". There appears to be no keyword for access level "write" 
 	public static final String ACCESS_DELETE_OBJECT                      = "delete_object";
 	public static final String ACCESS_CREATE_TOKEN                       = "create_token";
 	public static final String ACCESS_DELETE_TOKEN                       = "delete_token";
