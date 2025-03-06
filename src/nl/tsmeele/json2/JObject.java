@@ -175,7 +175,7 @@ public class JObject extends HashMap<String,Json> implements Json{
 				}
 				// read integer digits
 				i = readDigits(s, i);
-				int intValue = Integer.parseInt(s.substring(startIndex, i));
+				long intValue = Long.parseLong(s.substring(startIndex, i));
 				// it is an integer if neither a fraction nor an exponent is present
 				if (i >= s.length() || ( 
 						s.charAt(i) != '.' && 

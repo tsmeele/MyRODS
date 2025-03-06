@@ -3,11 +3,11 @@ package nl.tsmeele.json2;
 import java.util.ArrayList;
 
 public class JNumber implements Json {
-	public int i;
+	public long i;
 	public double d;
 	public boolean isInt;
 	
-	public JNumber(int i) {
+	public JNumber(long i) {
 		this.i = i;
 		isInt = true;
 	}
