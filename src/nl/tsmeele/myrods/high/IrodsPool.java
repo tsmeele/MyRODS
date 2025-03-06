@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.tsmeele.myrods.apiDataStructures.Irods;
+import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 public class IrodsPool {

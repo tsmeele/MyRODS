@@ -1,8 +1,8 @@
 package nl.tsmeele.myrods.irodsStructures;
 
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.DataObjInp;
 
 /**
  * Calculates/checks checksums of replicas.

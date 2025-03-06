@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import nl.tsmeele.myrods.apiDataStructures.Message;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
+import nl.tsmeele.myrods.api.Message;
 import nl.tsmeele.myrods.plumbing.MessageSerializer;
 
 /**

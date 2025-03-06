@@ -1,9 +1,9 @@
 package nl.tsmeele.myrods.irodsStructures;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
-import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
-import nl.tsmeele.myrods.apiDataStructures.Kw;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.DataObjInp;
+import nl.tsmeele.myrods.api.KeyValPair;
+import nl.tsmeele.myrods.api.Kw;
 
 public class RcGetResourceInfoForOperation extends RodsApiCall  {
 

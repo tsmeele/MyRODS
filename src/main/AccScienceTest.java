@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import nl.tsmeele.log.Log;
-import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
-import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
-import nl.tsmeele.myrods.apiDataStructures.Kw;
-import nl.tsmeele.myrods.apiDataStructures.Message;
-import nl.tsmeele.myrods.apiDataStructures.ModAVUMetadataInp;
-import nl.tsmeele.myrods.apiDataStructures.ModAccessControlInp;
+import nl.tsmeele.myrods.api.DataObjInp;
+import nl.tsmeele.myrods.api.KeyValPair;
+import nl.tsmeele.myrods.api.Kw;
+import nl.tsmeele.myrods.api.Message;
+import nl.tsmeele.myrods.api.ModAVUMetadataInp;
+import nl.tsmeele.myrods.api.ModAccessControlInp;
 import nl.tsmeele.myrods.high.Hirods;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjUnlink;
 import nl.tsmeele.myrods.irodsStructures.RcModAVUMetadata;

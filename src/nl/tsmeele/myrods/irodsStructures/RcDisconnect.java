@@ -2,8 +2,8 @@ package nl.tsmeele.myrods.irodsStructures;
 
 import java.io.IOException;
 
-import nl.tsmeele.myrods.apiDataStructures.Message;
-import nl.tsmeele.myrods.apiDataStructures.MessageType;
+import nl.tsmeele.myrods.api.Message;
+import nl.tsmeele.myrods.api.MessageType;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
 
 /**

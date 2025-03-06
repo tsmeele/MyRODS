@@ -1,8 +1,8 @@
 package nl.tsmeele.myrods.irodsStructures;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.Message;
-import nl.tsmeele.myrods.apiDataStructures.MessageType;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.Message;
+import nl.tsmeele.myrods.api.MessageType;
 
 /**
  * Superclass for all RODS_API type API calls to iRODS server.

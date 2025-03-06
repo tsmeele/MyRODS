@@ -1,7 +1,7 @@
 package nl.tsmeele.myrods.irodsStructures;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.JsonInp;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.JsonInp;
 
 public class RcGetFileDescriptorInfo extends RodsApiCall {
 

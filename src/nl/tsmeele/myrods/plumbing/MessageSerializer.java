@@ -2,10 +2,10 @@ package nl.tsmeele.myrods.plumbing;
 
 import java.io.IOException;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.Message;
-import nl.tsmeele.myrods.apiDataStructures.MessageType;
-import nl.tsmeele.myrods.apiDataStructures.RError;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.Message;
+import nl.tsmeele.myrods.api.MessageType;
+import nl.tsmeele.myrods.api.RError;
 import nl.tsmeele.myrods.irodsStructures.DataInt;
 import nl.tsmeele.myrods.irodsStructures.DataString;
 import nl.tsmeele.myrods.irodsStructures.DataStruct;

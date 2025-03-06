@@ -2,12 +2,12 @@ package main;
 
 import java.io.IOException;
 
-import nl.tsmeele.myrods.apiDataStructures.DataObjInp;
-import nl.tsmeele.myrods.apiDataStructures.Irods;
-import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
-import nl.tsmeele.myrods.apiDataStructures.Message;
-import nl.tsmeele.myrods.apiDataStructures.ObjType;
-import nl.tsmeele.myrods.apiDataStructures.RodsObjStat;
+import nl.tsmeele.myrods.api.DataObjInp;
+import nl.tsmeele.myrods.api.Irods;
+import nl.tsmeele.myrods.api.KeyValPair;
+import nl.tsmeele.myrods.api.Message;
+import nl.tsmeele.myrods.api.ObjType;
+import nl.tsmeele.myrods.api.RodsObjStat;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjChksum;
 import nl.tsmeele.myrods.irodsStructures.RcObjStat;
 import nl.tsmeele.myrods.plumbing.ServerConnection;

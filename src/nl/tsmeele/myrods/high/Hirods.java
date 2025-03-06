@@ -3,7 +3,7 @@ package nl.tsmeele.myrods.high;
 
 import java.io.IOException;
 
-import nl.tsmeele.myrods.apiDataStructures.Irods;
+import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 public class Hirods extends Irods {

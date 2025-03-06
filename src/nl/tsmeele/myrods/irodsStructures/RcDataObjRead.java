@@ -1,7 +1,7 @@
 package nl.tsmeele.myrods.irodsStructures;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.OpenedDataObjInp;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.OpenedDataObjInp;
 
 public class RcDataObjRead extends RodsApiCall {
 	

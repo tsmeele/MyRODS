@@ -1,7 +1,7 @@
 package nl.tsmeele.myrods.irodsStructures;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.GeneralAdminInp;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.GeneralAdminInp;
 
 public class RcGeneralAdmin extends RodsApiCall {
 

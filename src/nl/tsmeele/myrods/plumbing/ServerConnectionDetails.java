@@ -1,6 +1,6 @@
 package nl.tsmeele.myrods.plumbing;
 
-import nl.tsmeele.myrods.apiDataStructures.IrodsCsNegType;
+import nl.tsmeele.myrods.api.IrodsCsNegType;
 import nl.tsmeele.myrods.irodsStructures.DataInt;
 import nl.tsmeele.myrods.irodsStructures.DataString;
 import nl.tsmeele.myrods.irodsStructures.DataStruct;

@@ -1,6 +1,6 @@
 package nl.tsmeele.myrods.misc;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
+import nl.tsmeele.myrods.api.Api;
 import nl.tsmeele.myrods.irodsStructures.DataPtr;
 import nl.tsmeele.myrods.irodsStructures.DataString;
 import nl.tsmeele.myrods.irodsStructures.DataStruct;

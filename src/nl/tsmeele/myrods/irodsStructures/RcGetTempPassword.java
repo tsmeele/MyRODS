@@ -4,7 +4,7 @@ package nl.tsmeele.myrods.irodsStructures;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
+import nl.tsmeele.myrods.api.Api;
 
 /**
  * API call to receive a hash for building a one-time password for the user stated at rcConnect.

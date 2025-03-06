@@ -1,8 +1,8 @@
 package nl.tsmeele.myrods.misc;
 
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.KeyValPair;
 import nl.tsmeele.myrods.irodsStructures.DataInt;
 import nl.tsmeele.myrods.irodsStructures.DataString;
 import nl.tsmeele.myrods.irodsStructures.DataStruct;

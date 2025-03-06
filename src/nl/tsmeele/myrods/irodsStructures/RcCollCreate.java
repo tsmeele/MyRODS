@@ -1,8 +1,8 @@
 package nl.tsmeele.myrods.irodsStructures;
 
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.CollInp;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.CollInp;
 
 /**
  * Creates a collection.

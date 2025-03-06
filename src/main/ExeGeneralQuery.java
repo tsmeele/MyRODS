@@ -2,14 +2,14 @@ package main;
 
 import java.io.IOException;
 
-import nl.tsmeele.myrods.apiDataStructures.Columns;
-import nl.tsmeele.myrods.apiDataStructures.GenQueryInp;
-import nl.tsmeele.myrods.apiDataStructures.GenQueryOut;
-import nl.tsmeele.myrods.apiDataStructures.InxIvalPair;
-import nl.tsmeele.myrods.apiDataStructures.InxValPair;
-import nl.tsmeele.myrods.apiDataStructures.Irods;
-import nl.tsmeele.myrods.apiDataStructures.KeyValPair;
-import nl.tsmeele.myrods.apiDataStructures.Message;
+import nl.tsmeele.myrods.api.Columns;
+import nl.tsmeele.myrods.api.GenQueryInp;
+import nl.tsmeele.myrods.api.GenQueryOut;
+import nl.tsmeele.myrods.api.InxIvalPair;
+import nl.tsmeele.myrods.api.InxValPair;
+import nl.tsmeele.myrods.api.Irods;
+import nl.tsmeele.myrods.api.KeyValPair;
+import nl.tsmeele.myrods.api.Message;
 import nl.tsmeele.myrods.irodsStructures.RcGenQuery;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
 import nl.tsmeele.myrods.plumbing.MyRodsException;

@@ -1,6 +1,6 @@
 package nl.tsmeele.myrods.irodsStructures;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
+import nl.tsmeele.myrods.api.Api;
 
 /**
  * API call to authenticate using a PAM (plaintext) password.

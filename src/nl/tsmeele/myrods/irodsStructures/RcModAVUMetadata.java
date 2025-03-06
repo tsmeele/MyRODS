@@ -1,7 +1,7 @@
 package nl.tsmeele.myrods.irodsStructures;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.ModAVUMetadataInp;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.ModAVUMetadataInp;
 
 public class RcModAVUMetadata extends RodsApiCall {
 

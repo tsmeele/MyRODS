@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
-import nl.tsmeele.myrods.apiDataStructures.Message;
+import nl.tsmeele.myrods.api.Message;
 
 /**
  * The class IrodsOutputStream buffers and packs outgoing Irods messages.

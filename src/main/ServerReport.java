@@ -2,10 +2,10 @@ package main;
 
 import java.io.IOException;
 
-import nl.tsmeele.myrods.apiDataStructures.Irods;
-import nl.tsmeele.myrods.apiDataStructures.IrodsCsNegType;
-import nl.tsmeele.myrods.apiDataStructures.MiscSvrInfo;
-import nl.tsmeele.myrods.apiDataStructures.RodsVersion;
+import nl.tsmeele.myrods.api.Irods;
+import nl.tsmeele.myrods.api.IrodsCsNegType;
+import nl.tsmeele.myrods.api.MiscSvrInfo;
+import nl.tsmeele.myrods.api.RodsVersion;
 import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
 
 /** Demonstrator class that retrieves and reports public attributes of an iRODS server.

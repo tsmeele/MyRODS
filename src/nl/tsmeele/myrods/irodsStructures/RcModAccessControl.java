@@ -1,7 +1,7 @@
 package nl.tsmeele.myrods.irodsStructures;
 
-import nl.tsmeele.myrods.apiDataStructures.Api;
-import nl.tsmeele.myrods.apiDataStructures.ModAccessControlInp;
+import nl.tsmeele.myrods.api.Api;
+import nl.tsmeele.myrods.api.ModAccessControlInp;
 
 public class RcModAccessControl extends RodsApiCall {
 
