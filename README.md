@@ -61,10 +61,10 @@ they chain a few API calls together.
 
 The class **Hirods** is a subclass of the class Irods (which was mentioned earlier). 
 Hirods supports: 
-- PAM and Native scheme authentication. 
-- single and multi-threaded data transfers, where multi-threaded transfers use port 1247.
+- PAM and Native scheme authentication.
+- Single and multi-threaded data transfers, where multi-threaded transfers use port 1247.
 
-data transfers are supported between any type of datafile that is an 
+Data transfers are supported between any type of datafile that is an 
 implementation of the interface PosixFile.  Currently there are
 two implementations of PosixFile: **LocalFile** and **Replica**.  
 Hence the equivalent of an 'iput' is achieved by using a LocalFile as 
@@ -89,11 +89,11 @@ A notable limitation is that MyRODS (only) performs parallel data transport over
 port 1247, similar to the iRODS Python Client. It does not attempt to 
 use any "high" ports.
 As a consequence, parallel data transports will require an iRODS server not
-older than release 4.2.8+.
+older than release 4.2.8.
 
 Each iRODS release may bring forward new API calls. 
-This may imply some maintenance effort on the MyRODS library. 
-As the iRODS server functions are documented partly inline, 
+This implies some maintenance effort on the MyRODS library. 
+As the iRODS server functions are documented partly in-line, 
 adding support for new API calls will often require some exploration of 
 server source code, to find and implement the 
 pack instruction specifications needed to support input and output parameters. 
