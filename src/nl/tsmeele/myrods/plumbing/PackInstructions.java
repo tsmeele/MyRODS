@@ -207,6 +207,8 @@ public class PackInstructions  extends HashMap<String, ArrayList<String>> {
 				"ModDataObjMeta_PI", "struct *DataObjInfo_PI; struct *KeyValPair_PI;",
 				// lib/api/include/irods/modAccessControl.h
 				"modAccessControlInp_PI", "int recursiveFlag; str *accessLevel; str *userName; str *zone; str *path;",
+				// plugins/api/include/irods/plugins/api/switch_user_types.h
+				"SwitchUserInp_PI", "str username[64]; str zone[64]; struct KeyValPair_PI;",
 				
 		};
 		return packInstructions;

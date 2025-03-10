@@ -36,6 +36,7 @@ import nl.tsmeele.myrods.irodsStructures.RcPamAuthRequest;
 import nl.tsmeele.myrods.irodsStructures.RcReplicaOpen;
 import nl.tsmeele.myrods.irodsStructures.RcSslEnd;
 import nl.tsmeele.myrods.irodsStructures.RcSslStart;
+import nl.tsmeele.myrods.irodsStructures.RcSwitchUser;
 import nl.tsmeele.myrods.irodsStructures.RodsCall;
 import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
 import nl.tsmeele.myrods.plumbing.ServerConnection;
@@ -226,6 +227,10 @@ public class Irods {
 	public String rcPamAuthRequest(String userName, String pamPassword, int ttl) throws MyRodsException, IOException {
 		DataStruct response = exchangeRequest(new RcPamAuthRequest(userName, pamPassword, ttl));
 		return response.lookupString("irodsPamPassword"); 
+	}
+	
+	public void rcSwitchUser(SwitchUserInp switchUserInp) throws MyRodsException, IOException {
+		exchangeRequest(new RcSwitchUser(switchUserInp));
 	}
 	
 
