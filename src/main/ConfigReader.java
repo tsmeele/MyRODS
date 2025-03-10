@@ -17,22 +17,23 @@ import java.util.Scanner;
  */
 public class ConfigReader {
 	private static final String CONFIG_FILE = "./irods.ini";
+	private static final String[] DEFAULT_REQUIRED_KEYWORDS = {};
 	
 	public Map<String,String> readConfig()  {
-		return readConfigFile(CONFIG_FILE);
+		return readConfig(CONFIG_FILE, DEFAULT_REQUIRED_KEYWORDS);
 	}
 	
 	public Map<String,String> readConfig(String path)  {
-		return readConfigFile(path);
+		return readConfig(path, DEFAULT_REQUIRED_KEYWORDS);
 	}
 	
 	public Map<String,String> readConfig(String[] requiredKeywords)  {
-		Map<String,String> config = readConfig(CONFIG_FILE);
-		return supplementInteractive(config, requiredKeywords);
+		return readConfig(CONFIG_FILE, requiredKeywords);
 	}
 	
 	public Map<String,String> readConfig(String path, String[] requiredKeywords) {
-		Map<String,String> config =  readConfig(path);
+		Map<String,String> config =  readConfigFile(path);
+		if (config == null) return null;
 		return supplementInteractive(config, requiredKeywords);
 	}
 	
