@@ -30,6 +30,7 @@ public class Flag {
 	public static final int UPPER_CASE_WHERE = 0x200;
 	// bits to set in the value array
 	//  values 0 and 1 will just return the column content
+	public static final int SELECT_NORMAL = 1;
 	// defined in lib/core/include/irods/rodsGenQuery.h
 	public static final int SELECT_MIN = 2;
 	public static final int SELECT_MAX = 3;
