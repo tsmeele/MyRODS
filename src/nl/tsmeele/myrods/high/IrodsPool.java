@@ -17,7 +17,7 @@ public class IrodsPool {
 	private Irods parent;
 	private ArrayList<IrodsPoolEntry> idle = new ArrayList<IrodsPoolEntry>();
 	private ArrayList<Irods> busy = new ArrayList<Irods>();
-	private Timer timer = new Timer();
+	private Timer timer = null;
 
 	public IrodsPool(Irods parent) {
 		this.parent = parent;
@@ -72,6 +72,9 @@ public class IrodsPool {
 				}
 			}
 		};
+		if (timer == null) {
+			timer = new Timer();
+		}
 		timer.schedule(task, now + elapsed);
 	}
 	
@@ -87,7 +90,9 @@ public class IrodsPool {
 				// ignore
 			}
 		}
-		timer.cancel();
+		if (timer != null) {
+			timer.cancel();
+		}
 	}
 	
 }
