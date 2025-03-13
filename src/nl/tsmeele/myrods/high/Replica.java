@@ -257,7 +257,7 @@ public class Replica implements PosixFile {
 
 	@Override
 	public boolean isFile() {
-		if (exists) {
+		if (exists && objSize != null) {
 			return true;
 		}
 		// the status of the replica might be 'not exists' yet another option is that its status
@@ -275,7 +275,7 @@ public class Replica implements PosixFile {
 	@Override
 	public Long getFileSize() {
 		if (isFile() && objSize != null) {
-			return objSize;
+				return objSize;
 		}
 		return null;
 	}
