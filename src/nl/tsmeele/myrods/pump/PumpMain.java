@@ -138,7 +138,7 @@ public class PumpMain {
 		// pump data to destination, per owner
 		String sLocalZone = source.getLocalZone();
 		String dLocalZone = destination.getLocalZone();
-		// disconnect original connections to avoid timeouts
+		// disconnect original connections, we will reconnect on behalf of data object owner(s) going forward
 		source.rcDisconnect();
 		destination.rcDisconnect();
 		for (String owner : owners.keySet()) {

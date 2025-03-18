@@ -10,7 +10,6 @@ import nl.tsmeele.myrods.api.RodsObjStat;
 import nl.tsmeele.myrods.high.DataTransfer;
 import nl.tsmeele.myrods.high.DataTransferMultiThreaded;
 import nl.tsmeele.myrods.high.DataTransferSingleThreaded;
-import nl.tsmeele.myrods.high.PosixFile;
 import nl.tsmeele.myrods.high.PosixFileFactory;
 import nl.tsmeele.myrods.high.Replica;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
@@ -57,7 +56,7 @@ public class DataPump {
 		
 		if (!clientZone.equals(sLocalZone)) {
 			System.err.println("Warning: Skipping data object copy for owner '" + firstObj.getOwner() + "'\n" +
-							   "         Owner must be a local zone user on source server.");
+							   "         Owner must be a local zone user on the source server.");
 			return;
 		}
 
@@ -66,7 +65,6 @@ public class DataPump {
 			) {
 			return;
 		}
-
 		
 		// we will copy data objects within a sub-collection, establish path to the root of source and destination trees
 		String sRoot;
@@ -79,10 +77,10 @@ public class DataPump {
 		}
 		String dRoot = ctx.destinationCollection;
 		
-		// open a log to record actions
+		// open a log to record the results of completed actions
 		LogFile logFile = new LogFile(ctx.options.get("log"));
 		
-		// copy listed data objects, create destination collections on the fly where needed
+		// copy listed set of data objects, create destination collections on the fly where needed
 		PosixFileFactory posix = new PosixFileFactory();
 		String currentCollection = "";
 		list.sortByPath();
@@ -95,7 +93,7 @@ public class DataPump {
 			} else {
 				dCollName = dRoot;
 			}
-			// create destination collection
+			// create destination collection (if it does not yet exist)
 			if (!obj.collName.equals(currentCollection)) {
 				currentCollection = obj.collName;
 				Log.debug("Start of destination collection " + dCollName);
@@ -105,13 +103,13 @@ public class DataPump {
 					};
 				}
 			}
-			// setup source and destination iRODS connections for this data object
+			// prepare replica references for this data object in source and destination
 			String destObjPath = dCollName + "/" + obj.dataName;
 			if (verbose || debug) System.out.println("...copying from " + obj.getPath() + " to " + destObjPath);
 			Replica sourceReplica = posix.createReplica(source, obj.getPath());
 			Replica destinationReplica = posix.createReplica(destination, destObjPath);
 			if (destinationReplica.isFile()) {
-				String message = "destination file already exists: '" + destObjPath + "'";
+				String message = "skipping, destination object already exists: '" + destObjPath + "'";
 				logFile.LogError(obj.getPath(), message);
 				System.err.println(message);
 				continue;
@@ -129,7 +127,7 @@ public class DataPump {
 				tx.transfer();
 			} catch (IOException e) {
 				transferError = true;
-				String message = "Transfer failed: " + e.getMessage();
+				String message = "Transfer failed with exception: " + e.getMessage();
 				logFile.LogError(obj.getPath(), message);
 				if (verbose || debug) {
 					System.err.println(obj.getPath() + ": " + message);
@@ -154,21 +152,21 @@ public class DataPump {
 			if (rodsObjStat.objSize != obj.dataSize) {
 				String message = " copied replica size (" + rodsObjStat.objSize + ") does not match source size (" + obj.dataSize + ")";
 				logFile.LogError(obj.getPath(), message);
-				if (verbose || debug) System.out.println("Copy failed: " + obj.getPath() + message);
+				System.err.println("Copy failed: " + obj.getPath() + message);
 				// attempt to remove the 'partial' data object at destination
 				DataObjInp dataObjInp = new DataObjInp(destObjPath, null);
 				destination.rcDataObjUnlink(dataObjInp);
 				if (destination.error) {
 					Log.debug("unable to unlink '" + destObjPath + "' iRODS error = " + destination.intInfo);
 				} else {
-					if (verbose || debug) System.out.println("Resulting partial data object removed from destination");
+					if (verbose || debug) System.err.println("Cleaned up partial replica copy of data object at destination");
 				}
 			} else {
 				logFile.LogDone(obj.getPath());
 				if (verbose || debug) System.out.println("Copied and OK: " + obj.getPath());
-			}
-			
-		}
+			}	
+		} // end For
+		source.rcDisconnect();
 		destination.rcDisconnect();
 	}
 	
