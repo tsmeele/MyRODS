@@ -124,6 +124,11 @@ public class ServerConnection {
 				        socket.getPort(), 
 				        false	// no autoclose of underlying socket
 				        );
+		// TODO: Enable specific SSL/TLS protocols
+		// NB: exception handling will be needed to deal with incompatible protocols
+		// String[] enabledProtocols = new String[] {"TLSv1.3", "TLSv1.2", "TLSv1.1", "TLSv1"};
+		// sslSocket.setEnabledProtocols(enabledProtocols);
+		
 		// update streams to use the SSL socket going forward
 		irodsIn = new IrodsInputStream(sslSocket.getInputStream(), protocol);
 		irodsOut = new IrodsOutputStream(sslSocket.getOutputStream(), protocol);   
