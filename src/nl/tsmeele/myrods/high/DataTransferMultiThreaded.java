@@ -120,9 +120,13 @@ public class DataTransferMultiThreaded extends DataTransfer {
 			offset = offset + bytesToTransfer;
 			remainingBytesToTransfer -= bytesToTransfer;
 		}
-		
 		// coordinator transfers the remaining bytes part
-		long bytesDone = seekAndTransferBytes(source, offset, dest, offset, remainingBytesToTransfer);
+		long bytesDone = 0;
+		try {
+			bytesDone = seekAndTransferBytes(source, offset, dest, offset, remainingBytesToTransfer, "MAIN");
+		} catch (IOException e) {
+			Log.debug(e.getMessage());
+		}
 
 		// coordinator waits until all other treads have terminated (and closed their files)
 		for (int t = 0; t < subChannels; t++) {
@@ -166,37 +170,79 @@ public class DataTransferMultiThreaded extends DataTransfer {
 		
 		public Long call() throws IOException, MyRodsException {
 			Log.debug("Thread " + id + " started, will tx " + byteCount + " at offset " + sourceOffset);
+			System.out.println("Thread " + id + " started, will tx " + byteCount + " at offset " + sourceOffset);
 			// open source and destination
 			// as this is a secondary channel, both source and destination will already exist
-			localSource.openRead();
-			localDest.openWrite();
-			// seek to our part of the file, and transfer relevant bytes
-			long transferredBytes = seekAndTransferBytes(localSource, sourceOffset, localDest, destOffset, byteCount);
-			localSource.close();
-			localDest.close();
+			IOException exception = null;	// we will register any exceptions while processing, throw it finally
+			long transferredBytes = 0;
+			try {
+				localSource.openRead();
+				localDest.openWrite();
+				// seek to our part of the file, and transfer relevant bytes
+				transferredBytes = seekAndTransferBytes(localSource, sourceOffset, localDest, destOffset, byteCount, ("" + id));
+			} catch (IOException e) {
+				exception = e;
+			}
+			// make sure that resources are released, even in case of an exception
+			try {
+				localSource.close();
+			} catch (IOException e) { 
+				if (exception == null) exception = e;
+			}
+			try {
+				localDest.close();
+			} catch (IOException e) {
+				if (exception == null) exception = e;
+			}
 			releaseFileHandle(localSource);
 			releaseFileHandle(localDest);
+			if (exception != null) {
+				Log.debug("Thread " + id + " ending, throws exception: " + exception.getMessage());
+				throw exception;
+			} 
 			Log.debug("Thread " + id + " ending");
 			return (long) transferredBytes; 
 		}
 	}
 	
 	private long seekAndTransferBytes(PosixFile source, long sourceOffset, 
-						PosixFile dest, long destOffset, long byteCount) throws IOException {
+						PosixFile dest, long destOffset, long byteCount, String threadId) throws MyRodsException  {
 		if (sourceOffset > 0) {
-			source.lseek(sourceOffset);
+			try {
+				source.lseek(sourceOffset);
+			} catch (IOException e) {
+				throw new MyRodsException(threadId + " IO error at source seek: " + e.getMessage());
+			}
 		}
 		if (destOffset > 0) {
-			dest.lseek(destOffset);
+			try {
+				dest.lseek(destOffset);
+			} catch (IOException e) {
+				throw new MyRodsException(threadId + " IO error at destination seek: " + e.getMessage());
+			}
 		}
+		
 		long bytesToTransfer = byteCount;
 		int chunk = (int) Math.min(chunkSize, byteCount);
-		byte[] bytes = source.read(chunk);
+		byte[] bytes;
+		try {
+			bytes = source.read(chunk);
+		} catch (IOException e) {
+			throw new MyRodsException(threadId + " IO error while reading: " + e.getMessage());
+		}
 		while (bytes.length > 0) {
-			dest.write(bytes);
+			try {
+				dest.write(bytes);
+			} catch (IOException e) {
+				throw new MyRodsException(threadId + " IO error while writing: " + e.getMessage());
+			}
 			byteCount -= bytes.length;
 			chunk = (int) Math.min(chunkSize,  byteCount);
-			bytes = source.read(chunk);
+			try {
+				bytes = source.read(chunk);
+			} catch (IOException e) {
+				throw new MyRodsException(threadId + " IO error while reading: " + e.getMessage());
+			}
 		}
 		return bytesToTransfer - byteCount;   // bytes actually transferred
 	}
@@ -206,10 +252,8 @@ public class DataTransferMultiThreaded extends DataTransfer {
 		PosixFile local = file.cloneProperties();
 		if (file.getClass() == Replica.class) {
 			// allocate a new session for the localized replica
-			IrodsPool pool = ((Replica)file).irodsPool;
+			IrodsPool pool = ((Replica)file).session.irodsPool;
 			((Replica)local).session = pool.allocate();
-			// new session belongs to the existing pool
-			((Replica)local).irodsPool = pool;
 		}
 		return local;
 	}
@@ -220,7 +264,7 @@ public class DataTransferMultiThreaded extends DataTransfer {
 		}
 		if (file.getClass() == Replica.class) {
 			Replica r = (Replica) file;
-			r.irodsPool.free(r.session);
+			r.session.irodsPool.free(r.session);
 		}
 	}
 	

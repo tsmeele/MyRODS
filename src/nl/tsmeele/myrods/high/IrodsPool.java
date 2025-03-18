@@ -14,16 +14,16 @@ public class IrodsPool {
 	private static final int MAX_ENTRIES = 42;	// maximum number of active iRods server connections in pool
 
 	public int maxEntries = MAX_ENTRIES;
-	private Irods parent;
+	private Hirods parent;
 	private ArrayList<IrodsPoolEntry> idle = new ArrayList<IrodsPoolEntry>();
-	private ArrayList<Irods> busy = new ArrayList<Irods>();
+	private ArrayList<Hirods> busy = new ArrayList<Hirods>();
 	private Timer timer = null;
 
-	public IrodsPool(Irods parent) {
+	public IrodsPool(Hirods parent) {
 		this.parent = parent;
 	}
 	
-	public synchronized Irods allocate() throws MyRodsException, IOException {
+	public synchronized Hirods allocate() throws MyRodsException, IOException {
 		if (!idle.isEmpty()) {
 			IrodsPoolEntry entry = idle.remove(0);
 			busy.add(entry.irods);
@@ -32,12 +32,12 @@ public class IrodsPool {
 		if (busy.size() > maxEntries) {
 			throw new MyRodsException("Irods connection pool exhausted");
 		}
-		Irods irods = parent.cloneConnection();
+		Hirods irods = parent.cloneConnection();
 		busy.add(irods);
 		return irods;
 	}
 	
-	public synchronized void free(Irods irods) {
+	public synchronized void free(Hirods irods) {
 		int i = busy.indexOf(irods);
 		if (i >= 0) {
 			busy.remove(i);

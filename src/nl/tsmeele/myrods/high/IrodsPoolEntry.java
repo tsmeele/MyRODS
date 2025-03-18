@@ -2,13 +2,12 @@ package nl.tsmeele.myrods.high;
 
 import java.time.Instant;
 
-import nl.tsmeele.myrods.api.Irods;
 
 public class IrodsPoolEntry {
-	public Irods irods = null;
+	public Hirods irods = null;
 	public Long createTimeStamp;
 	
-	public IrodsPoolEntry(Irods irods) {
+	public IrodsPoolEntry(Hirods irods) {
 		this.irods = irods;
 		createTimeStamp = Instant.now().getEpochSecond();
 	}

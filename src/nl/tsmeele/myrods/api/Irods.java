@@ -65,7 +65,7 @@ public class Irods {
 	protected ServerConnection serverConnection = new ServerConnection();
 	protected String host;
 	protected int port;
-	private String authenticatedPassword = null;
+	protected String authenticatedPassword = null;
 
 	
 	
@@ -103,34 +103,34 @@ public class Irods {
 	}
 	
 	
-	public Irods cloneConnection() throws IOException, MyRodsException {
-		if (!serverConnection.isConnected() || authenticatedPassword == null) {
-			throw new MyRodsException("Unable to clone: Missing authenticated iRODS connection");
-		}
-		Irods irods2 = new Irods(host, port);
-		ServerConnectionDetails sd = serverConnection.getSessionDetails();
-		
-		RcConnect rcConnect = new RcConnect(sd.startupPack, sd.clientPolicy);
-		// clone connects to the server
-		irods2.rcConnect(rcConnect);
-		if (irods2.error) {
-			throw new MyRodsException("Unable to clone: cannot connect to server");
-		}
-		// clone authenticates
-		byte[] challenge = irods2.rcAuthRequest();
-		if (irods2.error) {
-			irods2.rcDisconnect();
-			throw new MyRodsException("Unable to clone: authentication request failed");
-		}
-		String proxyUser = sd.startupPack.lookupString("proxyUser");
-		String proxyZone = sd.startupPack.lookupString("proxyRcatZone");
-		irods2.rcAuthResponse(proxyUser + "#" + proxyZone, authenticatedPassword, challenge);
-		if (irods2.error) {
-			irods2.rcDisconnect();
-			throw new MyRodsException("Unable to clone: authentication failed");
-		}
-		return irods2;
-	}
+//	public Irods cloneConnection() throws IOException, MyRodsException {
+//		if (!serverConnection.isConnected() || authenticatedPassword == null) {
+//			throw new MyRodsException("Unable to clone: Missing authenticated iRODS connection");
+//		}
+//		Irods irods2 = new Irods(host, port);
+//		ServerConnectionDetails sd = serverConnection.getSessionDetails();
+//		
+//		RcConnect rcConnect = new RcConnect(sd.startupPack, sd.clientPolicy);
+//		// clone connects to the server
+//		irods2.rcConnect(rcConnect);
+//		if (irods2.error) {
+//			throw new MyRodsException("Unable to clone: cannot connect to server");
+//		}
+//		// clone authenticates
+//		byte[] challenge = irods2.rcAuthRequest();
+//		if (irods2.error) {
+//			irods2.rcDisconnect();
+//			throw new MyRodsException("Unable to clone: authentication request failed");
+//		}
+//		String proxyUser = sd.startupPack.lookupString("proxyUser");
+//		String proxyZone = sd.startupPack.lookupString("proxyRcatZone");
+//		irods2.rcAuthResponse(proxyUser + "#" + proxyZone, authenticatedPassword, challenge);
+//		if (irods2.error) {
+//			irods2.rcDisconnect();
+//			throw new MyRodsException("Unable to clone: authentication failed");
+//		}
+//		return irods2;
+//	}
 
 	
 	//    API CALLS START HERE
@@ -156,7 +156,7 @@ public class Irods {
 	}
 	
 	// execute rcConnect using a prepared startup pack
-	private RodsVersion rcConnect(RcConnect startupPack) throws MyRodsException, IOException {
+	protected RodsVersion rcConnect(RcConnect startupPack) throws MyRodsException, IOException {
 		if (!serverConnection.isConnected()) {
 			serverConnection.connect(host, port);
 		}
@@ -170,6 +170,7 @@ public class Irods {
 	}
 	
 	public void rcDisconnect() throws MyRodsException, IOException {
+		if (!serverConnection.isConnected()) return;
 		RcDisconnect request = new RcDisconnect();
 		request.sendTo(serverConnection);	// skip action to receive a response
 		intInfo = 0;

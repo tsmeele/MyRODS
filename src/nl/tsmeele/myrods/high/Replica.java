@@ -34,8 +34,8 @@ public class Replica implements PosixFile {
 	private String replicaToken = null;
 	
 	// connection
-	public Irods session = null;
-	public IrodsPool irodsPool = null;
+	public Hirods session = null;
+	//public IrodsPool irodsPool = null;
 	private String host = null;
 	
 	private int numThreads = 0;
@@ -43,13 +43,13 @@ public class Replica implements PosixFile {
 	protected Replica() {
 	}
 	
-	protected void setSession(Irods session) {
+	protected void setSession(Hirods session) {
 		this.session = session;
 	}
 	
 	protected void setReplica(Hirods session, String objPath, String resource) {
 		this.session = session;
-		this.irodsPool = session.irodsPool;
+		//this.irodsPool = session.irodsPool;
 		this.host = session.getHost();
 		this.objPath = objPath;
 		this.resource = resource;
@@ -58,7 +58,7 @@ public class Replica implements PosixFile {
 	
 	protected void setReplica(Hirods session, String objPath, int replNum) {
 		this.session = session;
-		this.irodsPool = session.irodsPool;
+		//this.irodsPool = session.irodsPool;
 		this.host = session.getHost();
 		this.objPath = objPath;
 		this.replNum = replNum;
@@ -292,7 +292,7 @@ public class Replica implements PosixFile {
 
 	@Override
 	public int maxThreads() {
-		if (session == null || irodsPool == null) {
+		if (session == null || session.irodsPool == null) {
 			return 0; // 0 means no limitation
 		}
 		if (openForWrite && replicaToken == null) {
@@ -300,7 +300,7 @@ public class Replica implements PosixFile {
 			// restrict data transfer to single-threaded transfer
 			return 1;
 		}
-		return irodsPool.maxEntries - 1;
+		return session.irodsPool.maxEntries - 1;
 	}
 
 	private boolean serverVersionNumberIsAtLeast(String minimumVersion) {
