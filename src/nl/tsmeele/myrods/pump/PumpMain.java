@@ -27,7 +27,13 @@ public class PumpMain {
 
 	public static void main(String[] args) throws IOException {
 		Context ctx = new Context();
-		ctx.processArgs(args);
+		try {
+			ctx.processArgs(args);
+		} catch (MyRodsException e) {
+			System.err.println(e.getMessage() + "\n");
+			System.out.println(Context.usage());
+			System.exit(1);
+		}
 		boolean verbose = ctx.options.containsKey("verbose");
 		boolean debug = ctx.options.containsKey("debug");
 		if (debug) {
