@@ -14,12 +14,15 @@ Ton
 
 
 ## Installation
+
 Some parts of the iRODS protocol require communication via SSL protocol.
 Using those features will require your Java Truststore to trust 
 the server certificate of the iRODS server that you connect to.
 The MyRODS library should only depend on classes provided with the
 standard Java Runtime Environment. JRE openjdk version 11.0.23 
-has been used to test MyRODS. 
+has been used to test MyRODS.    
+NB: Older openjdk versions are likely incompatible due to changes
+made in ByteBuffer class.
 
 # Architecture
 The package *plumbing* takes care of communication protocols, message
