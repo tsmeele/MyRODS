@@ -69,12 +69,11 @@ public class ConfigReader {
 			String line = reader.readLine();
 			while (line != null) {
 				int i = line.indexOf("=");
-				if (i < 1) {
-					continue;
+				if (i >= 0) {
+					String key = line.substring(0, i).trim();
+					String value = line.substring(i).replaceFirst("=", "").trim();
+					config.put(key, value);
 				}
-				String key = line.substring(0, i).trim();
-				String value = line.substring(i).replaceFirst("=", "").trim();
-				config.put(key, value);
 				line = reader.readLine();
 			}
 		} catch (IOException e) {}
