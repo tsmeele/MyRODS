@@ -5,6 +5,9 @@ import java.io.IOException;
 import nl.tsmeele.log.Log;
 import nl.tsmeele.myrods.api.CollInp;
 import nl.tsmeele.myrods.api.DataObjInp;
+import nl.tsmeele.myrods.api.Flag;
+import nl.tsmeele.myrods.api.KeyValPair;
+import nl.tsmeele.myrods.api.Kw;
 import nl.tsmeele.myrods.api.ObjType;
 import nl.tsmeele.myrods.api.RodsObjStat;
 import nl.tsmeele.myrods.high.DataTransfer;
@@ -185,7 +188,9 @@ public class DataPump {
 	
 	private boolean ensureCollectionExists(Pirods destination, String collName) throws MyRodsException, IOException {
 		final int CATALOG_ALREADY_HAS_ITEM_BY_THAT_NAME = -809000;
-		CollInp collInp = new CollInp(collName);
+		KeyValPair condInput = new KeyValPair();
+		condInput.put(Kw.RECURSIVE_OPR__KW, "");	// create intermediate collections too 
+		CollInp collInp = new CollInp(collName, 0, 0, condInput);
 		destination.rcCollCreate(collInp);
 		if (destination.error) {
 			if (destination.intInfo == CATALOG_ALREADY_HAS_ITEM_BY_THAT_NAME) {
