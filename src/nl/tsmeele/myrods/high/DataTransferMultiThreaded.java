@@ -170,7 +170,6 @@ public class DataTransferMultiThreaded extends DataTransfer {
 		
 		public Long call() throws IOException, MyRodsException {
 			Log.debug("Thread " + id + " started, will tx " + byteCount + " at offset " + sourceOffset);
-			System.out.println("Thread " + id + " started, will tx " + byteCount + " at offset " + sourceOffset);
 			// open source and destination
 			// as this is a secondary channel, both source and destination will already exist
 			IOException exception = null;	// we will register any exceptions while processing, throw it finally
