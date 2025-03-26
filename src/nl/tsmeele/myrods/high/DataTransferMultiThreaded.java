@@ -29,9 +29,11 @@ public class DataTransferMultiThreaded extends DataTransfer {
 		int maxThreads = minimumOfDefined(source.maxThreads(), dest.maxThreads());
 		// never use more threads than requested
 		maxThreads = minimumOfDefined(maxThreads, threads);
-		if (threads < 1) {
-			// no specific threadcount was requested, we need to be creative
-			threads = findOptimalThreadCount(source.getFileSize(), maxThreads);
+		int optimalThreads = findOptimalThreadCount(source.getFileSize(), maxThreads);
+		if (threads < 1 || threads > optimalThreads) {
+			// no specific threadcount was requested,
+			// or user specifies more threads than what would be useful at this file size
+			threads = optimalThreads;
 		}
 		this.threads = threads;
 	}
