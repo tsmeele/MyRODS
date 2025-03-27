@@ -22,7 +22,7 @@ public enum ObjType {
 		return id;
 	}
 	
-	public ObjType lookup(int id) {
+	public static ObjType lookup(int id) {
 		for (ObjType t : values()) {
 			if (t.id == id) {
 				return t;
