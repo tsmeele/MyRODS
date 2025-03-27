@@ -5,7 +5,6 @@ import java.io.IOException;
 import nl.tsmeele.log.Log;
 import nl.tsmeele.myrods.api.CollInp;
 import nl.tsmeele.myrods.api.DataObjInp;
-import nl.tsmeele.myrods.api.Flag;
 import nl.tsmeele.myrods.api.KeyValPair;
 import nl.tsmeele.myrods.api.Kw;
 import nl.tsmeele.myrods.api.ObjType;
@@ -47,8 +46,6 @@ public class DataPump {
 		}
 	}
 	
-	
-	
 	public void pump() throws MyRodsException, IOException {
 		if (list.isEmpty()) return;
 		Pirods source = new Pirods(ctx, true);
@@ -57,17 +54,47 @@ public class DataPump {
 		String clientUsername = firstObj.ownerName;
 		String clientZone = firstObj.ownerZone;
 		
+		// SOURCE LOGIN
+		// if we are unable to login on source as clientUser, we will use our proxyUser 
+		// NB: Could be caused by creator of data object is no longer a user on the zone
+		source.login(clientUsername, clientZone);
+		boolean useProxySource = source.error;
+		boolean useProxyDestination = useProxySource;
+		if (useProxySource) {
+			source.rcDisconnect();	// need to reconnect as proxy user
+			source.login();
+			if (source.error) {
+				System.err.println(source.pUsername + " reconnect to source failed. iRODS error = " + source.intInfo);
+				return;
+			}
+			Log.debug("Source logged in as proxy user");
+		}
+		// DESTINATION LOGIN
+		// do not try to find an equivalent clientUser if it was a remote user on source
+		// as this could cause inappropriate mapping
 		if (!clientZone.equals(sLocalZone)) {
-			System.err.println("Warning: Skipping data object copy for owner '" + firstObj.getOwner() + "'\n" +
-							   "         Owner must be a local zone user on the source server.");
-			return;
+			Log.debug("Owner '" + firstObj.getOwner() + "' is not a local-zone user on source.");
+			useProxyDestination = true;
 		}
-
-		// login on source and destination on behalf of the owner
-		if (! (loginOnBehalf(source, clientUsername, clientZone) && loginOnBehalf(destination, clientUsername, dLocalZone))
-			) {
-			return;
+		// attempt to login on destination as equivalent client user
+		if (!useProxyDestination) {
+			destination.login(clientUsername, dLocalZone);
+			if (destination.error) {
+				Log.debug("Destination client user login failed, iRODS error = " + destination.intInfo);
+				useProxyDestination = true;	// login failed, we will use proxy user instead
+			}
 		}
+		// try proxy login if client user login is inappropriate or failed
+		if (useProxyDestination) {
+			destination.rcDisconnect();
+			destination.login();
+			if (destination.error) {
+				System.err.println(destination.pUsername + " reconnect to destination failed. iRODS error = " + destination.intInfo);
+				return;
+			}
+			Log.debug("Destination logged in as proxy user");
+		}
+		
 		
 		// we will copy data objects within a sub-collection, establish path to the root of source and destination trees
 		String sRoot;
@@ -138,25 +165,53 @@ public class DataPump {
 			}
 			// After a failed data object copy we will need to reconnect and login again
 			if (transferError) {
-				if (! (loginOnBehalf(source, clientUsername, clientZone) && loginOnBehalf(destination, clientUsername, dLocalZone))
-						) {
+				source.rcDisconnect();
+				if (useProxySource) {
+					source.login();
+				} else {
+					source.login(clientUsername, clientZone);
+				}
+				// only attempt destination login if source login was successful
+				if (!source.error) {
+					destination.rcDisconnect();
+					if (useProxyDestination) {
+						destination.login();
+					} else {
+						destination.login(clientUsername, dLocalZone);
+					}
+					if (destination.error) {
+						System.err.println("Reconnect to destination failed, iRODS error = " + source.intInfo);
+					}
+				} else {
+					System.err.println("Reconnect to source failed, iRODS error = " + source.intInfo);
+				}
+				if (source.error || destination.error) {
 					System.err.println("Transfer of data objects for owner " + clientUsername + " aborted");
 					return;
 				}
 			}
-			// check integrity of result using data size info
-			RodsObjStat rodsObjStat = destination.rcObjStat(destObjPath, ObjType.DATAOBJECT);
-			if (destination.error) {
-				String message = "iRODS error: " + destination.intInfo + " (at destination) ";
-				logFile.LogError(obj.getPath(), message);
-				System.err.println(message + " while checking info on '" + destObjPath + "'");
-				continue;
-			} 
-			if (rodsObjStat.objSize != obj.dataSize) {
-				String message = " copied replica size (" + rodsObjStat.objSize + ") does not match source size (" + obj.dataSize + ")";
-				logFile.LogError(obj.getPath(), message);
-				System.err.println("Copy failed: " + obj.getPath() + message);
-				// attempt to remove the 'partial' data object at destination
+			// upon successful successful, check integrity of result using data size info
+			if (!transferError) {
+				RodsObjStat rodsObjStat = destination.rcObjStat(destObjPath, ObjType.DATAOBJECT);
+				if (destination.error) {
+					String message = "iRODS error: " + destination.intInfo + " (at destination) ";
+					logFile.LogError(obj.getPath(), message);
+					System.err.println(message + " while checking info on '" + destObjPath + "'");
+					transferError = true; // flag attempt to perform cleanup of partial data object
+				}
+				if (rodsObjStat.objSize == obj.dataSize) {
+					if (verbose || debug) System.out.println("Copied and OK: " + obj.getPath());
+					logFile.LogDone(obj.getPath());
+				} else {
+					String message = " copied replica size (" + rodsObjStat.objSize + ") does not match source size (" + obj.dataSize + ")";
+					logFile.LogError(obj.getPath(), message);
+					System.err.println("Copy failed: " + obj.getPath() + message);
+					transferError = true;	// flag cleanup needed of partial data object
+				} 
+			}
+			// if transfer failed or resulting object is of insufficient quality,
+			// attempt to remove the 'partial' data object at destination
+			if (transferError) {
 				DataObjInp dataObjInp = new DataObjInp(destObjPath, null);
 				destination.rcDataObjUnlink(dataObjInp);
 				if (destination.error) {
@@ -164,26 +219,12 @@ public class DataPump {
 				} else {
 					if (verbose || debug) System.err.println("Cleaned up partial replica copy of data object at destination");
 				}
-			} else {
-				logFile.LogDone(obj.getPath());
-				if (verbose || debug) System.out.println("Copied and OK: " + obj.getPath());
-			}	
+			} 	
 		} // end For
 		source.rcDisconnect();
 		destination.rcDisconnect();
 	}
 	
-	
-	private boolean loginOnBehalf(Pirods irods, String clientUsername, String clientZone) throws MyRodsException, IOException {
-		irods.login(clientUsername, clientZone);
-		if (irods.error) {
-			System.err.println("Error: Failed to login to zone " + clientZone + " on behalf of '" + clientUsername +  
-					"'. iRODS error = " + irods.intInfo);
-			return false;
-		}
-		Log.debug("logged in as " + clientUsername + "#" + clientZone);
-		return true;
-	}
 
 	
 	private boolean ensureCollectionExists(Pirods destination, String collName) throws MyRodsException, IOException {
