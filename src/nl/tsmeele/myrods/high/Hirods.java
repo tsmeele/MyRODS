@@ -19,7 +19,6 @@ import nl.tsmeele.myrods.irodsStructures.RcConnect;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 import nl.tsmeele.myrods.plumbing.ServerConnectionDetails;
 import nl.tsmeele.myrods.pump.DataObject;
-import nl.tsmeele.myrods.pump.DataObjectList;
 
 public class Hirods extends Irods {
 	public IrodsPool irodsPool = null;

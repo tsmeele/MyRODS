@@ -2,12 +2,8 @@ package nl.tsmeele.myrods.pump;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 
-import main.ConfigReader;
 import nl.tsmeele.log.Log;
 import nl.tsmeele.log.LogLevel;
 import nl.tsmeele.myrods.api.AccessType;
