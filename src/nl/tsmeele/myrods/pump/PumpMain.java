@@ -10,6 +10,8 @@ import java.util.Map;
 import main.ConfigReader;
 import nl.tsmeele.log.Log;
 import nl.tsmeele.log.LogLevel;
+import nl.tsmeele.myrods.api.AccessType;
+import nl.tsmeele.myrods.api.ObjType;
 import nl.tsmeele.myrods.api.RodsObjStat;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
@@ -94,20 +96,33 @@ public class PumpMain {
 			System.err.println("ERROR: Unable to find source object. iRODS error = " + source.intInfo);
 			return false;
 		}
-		boolean sourceObjIsDataObject = sourceObjStat.objType == 1;
+		ObjType sourceObjType = ObjType.lookup(sourceObjStat.objType);
 		RodsObjStat destinationObjStat = destination.rcObjStat(ctx.destinationCollection, null);
 		if (destination.error) {
 			System.err.println("ERROR: Unable to find destination collection. iRODS error = " + destination.intInfo);
 			return false;
 		}
-		boolean destinationIsCollection = destinationObjStat.objType == 2;
-		if (!destinationIsCollection) {
+		if (ObjType.lookup(destinationObjStat.objType) != ObjType.COLLECTION ) {
 			System.err.println("ERROR: Destination must be collection type.");
 			return false;
 		}
+		// find out if the proxy user has sufficient access to the source and destination objects
+		boolean accessSource = source.checkAccess(ctx.sUsername, ctx.sZone, sourceObjType, 
+				ctx.sourceObject, AccessType.READ);
+		if (!accessSource) {
+			System.err.println("Warning: user " + ctx.sUsername + " lacks 'read' access to source object\n" + 
+							   "         Copy operation may fail if original object creator no longer exists on source");
+		}
+		boolean accessDestination = destination.checkAccess(ctx.dUsername, ctx.dZone, ObjType.COLLECTION, 
+				ctx.destinationCollection, AccessType.OWN);
+		if (!accessDestination) {
+			System.err.println("Warning: user " + ctx.dUsername + " lacks 'own' access to destination collection\n" +
+							   "         Copy operation may fail if original object creator does not exist on destination");
+		}
+		
 		// assemble list of objects to copy
 		DataObjectList list = null;
-		if (sourceObjIsDataObject) {
+		if (sourceObjType == ObjType.DATAOBJECT) {
 			// we will copy just one object
 			list = new DataObjectList();
 			list.add(new DataObject(

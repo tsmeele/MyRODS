@@ -191,6 +191,7 @@ public class DataPump {
 				}
 			}
 			// upon successful successful, check integrity of result using data size info
+			// update log with result
 			if (!transferError) {
 				RodsObjStat rodsObjStat = destination.rcObjStat(destObjPath, ObjType.DATAOBJECT);
 				if (destination.error) {
@@ -224,8 +225,6 @@ public class DataPump {
 		source.rcDisconnect();
 		destination.rcDisconnect();
 	}
-	
-
 	
 	private boolean ensureCollectionExists(Pirods destination, String collName) throws MyRodsException, IOException {
 		final int CATALOG_ALREADY_HAS_ITEM_BY_THAT_NAME = -809000;
