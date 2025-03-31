@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import nl.tsmeele.myrods.high.DataObject;
+
 public class DataObjectList extends ArrayList<DataObject> {
 	private static final long serialVersionUID = 1L;
 	

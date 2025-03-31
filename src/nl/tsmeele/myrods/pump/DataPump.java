@@ -9,6 +9,7 @@ import nl.tsmeele.myrods.api.KeyValPair;
 import nl.tsmeele.myrods.api.Kw;
 import nl.tsmeele.myrods.api.ObjType;
 import nl.tsmeele.myrods.api.RodsObjStat;
+import nl.tsmeele.myrods.high.DataObject;
 import nl.tsmeele.myrods.high.DataTransfer;
 import nl.tsmeele.myrods.high.DataTransferMultiThreaded;
 import nl.tsmeele.myrods.high.DataTransferSingleThreaded;

@@ -9,6 +9,7 @@ import nl.tsmeele.log.LogLevel;
 import nl.tsmeele.myrods.api.AccessType;
 import nl.tsmeele.myrods.api.ObjType;
 import nl.tsmeele.myrods.api.RodsObjStat;
+import nl.tsmeele.myrods.high.DataObject;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 public class PumpMain {
