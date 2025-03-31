@@ -14,6 +14,7 @@ import nl.tsmeele.myrods.api.InxValPair;
 import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.api.KeyValPair;
 import nl.tsmeele.myrods.api.Kw;
+import nl.tsmeele.myrods.api.ModAVUMetadataInp;
 import nl.tsmeele.myrods.api.ObjType;
 import nl.tsmeele.myrods.irodsStructures.DataInt;
 import nl.tsmeele.myrods.irodsStructures.RcConnect;
@@ -163,10 +164,7 @@ public class Hirods extends Irods {
 			GenQueryOut genOut = rcGenQuery(genQueryInp);
 			if (error) break;
 			for (int i = 0; i < genOut.rowCount; i++) {
-				AVU avu = new AVU();
-				avu.name = genOut.data[i][0];
-				avu.value = genOut.data[i][1];
-				avu.units = genOut.data[i][2];
+				AVU avu = new AVU(genOut.data[i][0], genOut.data[i][1], genOut.data[i][2]);
 				avus.add(avu);
 			}
 			// prepare for next set of rows
@@ -184,6 +182,36 @@ public class Hirods extends Irods {
 		return avus;
 	}
 
+	public boolean addAvus(String rodsObjType, String name, ArrayList<AVU> avus) throws MyRodsException, IOException {
+		return addAvus(rodsObjType, name, avus, false);
+	}
+	
+	public boolean addAvus(String rodsObjType, String name, ArrayList<AVU> avus, boolean admin) throws MyRodsException, IOException {
+		if (!isAuthenticated()) return false;
+		KeyValPair condInput = new KeyValPair();
+		if (admin) {
+			condInput.put(Kw.ADMIN_KW, null);
+		}
+		boolean result = true;
+		for (AVU avu : avus) {
+			ArrayList<String> args = new ArrayList<String>();
+			args.add("add");
+			args.add(rodsObjType);
+			args.add(name);
+			args.add(avu.name);			// attribute name and value must be present
+			args.add(avu.value); 
+			if (avu.units != null) {
+				args.add(avu.units);	// whereas attribute units is optional
+			}
+			ModAVUMetadataInp modAVUMetaDataInp = new ModAVUMetadataInp(args, condInput);
+			rcModAVUMetadata(modAVUMetaDataInp);
+			if (error) {
+				result = false;
+			}
+		}
+		return result;
+	}
+	
 	
 	public boolean checkAccess(String userName, String userZone, ObjType type, String objpath, AccessType desiredPermission) 
 			throws MyRodsException, IOException {
