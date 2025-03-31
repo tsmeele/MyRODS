@@ -13,12 +13,12 @@ import nl.tsmeele.myrods.api.InxIvalPair;
 import nl.tsmeele.myrods.api.InxValPair;
 import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.api.KeyValPair;
+import nl.tsmeele.myrods.api.Kw;
 import nl.tsmeele.myrods.api.ObjType;
 import nl.tsmeele.myrods.irodsStructures.DataInt;
 import nl.tsmeele.myrods.irodsStructures.RcConnect;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 import nl.tsmeele.myrods.plumbing.ServerConnectionDetails;
-import nl.tsmeele.myrods.pump.DataObject;
 
 public class Hirods extends Irods {
 	public IrodsPool irodsPool = null;
@@ -103,6 +103,86 @@ public class Hirods extends Irods {
 		return true;
 	}
 
+	public ArrayList<AVU> getAvus(String rodsObjType, String name) throws MyRodsException, IOException {
+		return getAvus(rodsObjType, name, false);
+	}
+	
+	public ArrayList<AVU> getAvus(String rodsObjType, String name, boolean admin) throws MyRodsException, IOException {
+		if (!isAuthenticated()) return null;
+		ArrayList<AVU> avus = new ArrayList<AVU>();
+		InxIvalPair inxIvalPair = new InxIvalPair();
+		InxValPair inxValPair = new InxValPair();
+		KeyValPair condInput = new KeyValPair();
+		if (admin) {
+			condInput.put(Kw.ADMIN_KW, null);
+		}
+		switch (rodsObjType.toLowerCase()) {
+		case "-d": {
+			inxIvalPair.put(Columns.META_DATA_ATTR_NAME.getId(), Flag.SELECT_NORMAL);
+			inxIvalPair.put(Columns.META_DATA_ATTR_VALUE.getId(), Flag.SELECT_NORMAL);
+			inxIvalPair.put(Columns.META_DATA_ATTR_UNITS.getId(), Flag.SELECT_NORMAL);
+			inxValPair.put(Columns.DATA_NAME.getId(), "= '"+ DataObject.basename(name) + "'");
+			inxValPair.put(Columns.COLL_NAME.getId(), "= '"+ DataObject.parent(name) + "'");
+			break;
+		}
+		case "-c": {
+			inxIvalPair.put(Columns.META_COLL_ATTR_NAME.getId(), Flag.SELECT_NORMAL);
+			inxIvalPair.put(Columns.META_COLL_ATTR_VALUE.getId(), Flag.SELECT_NORMAL);
+			inxIvalPair.put(Columns.META_COLL_ATTR_UNITS.getId(), Flag.SELECT_NORMAL);
+			inxValPair.put(Columns.COLL_NAME.getId(), "= '"+ name + "'");
+			break;
+		}
+		case "-r": {
+			inxIvalPair.put(Columns.META_RESC_ATTR_NAME.getId(), Flag.SELECT_NORMAL);
+			inxIvalPair.put(Columns.META_RESC_ATTR_VALUE.getId(), Flag.SELECT_NORMAL);
+			inxIvalPair.put(Columns.META_RESC_ATTR_UNITS.getId(), Flag.SELECT_NORMAL);
+			inxValPair.put(Columns.RESC_NAME.getId(), "= '"+ name + "'");
+			break;
+		}
+		case "-u": {
+			inxIvalPair.put(Columns.META_USER_ATTR_NAME.getId(), Flag.SELECT_NORMAL);
+			inxIvalPair.put(Columns.META_USER_ATTR_VALUE.getId(), Flag.SELECT_NORMAL);
+			inxIvalPair.put(Columns.META_USER_ATTR_UNITS.getId(), Flag.SELECT_NORMAL);
+			int hash = name.lastIndexOf('#');
+			if (hash < 0) {
+				inxValPair.put(Columns.USER_NAME.getId(), "= '"+ name + "'");
+			} else {
+				inxValPair.put(Columns.USER_NAME.getId(), "= '"+ name.substring(0,hash) + "'");
+				inxValPair.put(Columns.USER_ZONE.getId(), "= '"+ name.substring(hash + 1) + "'");
+			}
+			break;
+		}
+		default:
+			return avus;
+		} // switch
+		int maxRows = 256;
+		GenQueryInp genQueryInp = new GenQueryInp(maxRows, 0, 0, 0,
+				condInput, inxIvalPair , inxValPair);
+		boolean done = false;
+		while (!done) {
+			GenQueryOut genOut = rcGenQuery(genQueryInp);
+			if (error) break;
+			for (int i = 0; i < genOut.rowCount; i++) {
+				AVU avu = new AVU();
+				avu.name = genOut.data[i][0];
+				avu.value = genOut.data[i][1];
+				avu.units = genOut.data[i][2];
+				avus.add(avu);
+			}
+			// prepare for next set of rows
+			DataInt continueInx = (DataInt) genQueryInp.lookupName("continueInx");
+			continueInx.set(genOut.continueInx);
+			if (genOut.rowCount < 256) {
+				// last rowset received
+				break;
+			}
+		}
+		// close query
+				DataInt GenInpMaxRows = (DataInt) genQueryInp.lookupName("maxRows");
+				GenInpMaxRows.set(0);
+				rcGenQuery(genQueryInp);
+		return avus;
+	}
 
 	
 	public boolean checkAccess(String userName, String userZone, ObjType type, String objpath, AccessType desiredPermission) 
