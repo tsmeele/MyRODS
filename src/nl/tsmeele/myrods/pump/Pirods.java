@@ -8,6 +8,7 @@ import nl.tsmeele.myrods.api.GenQueryOut;
 import nl.tsmeele.myrods.api.InxIvalPair;
 import nl.tsmeele.myrods.api.InxValPair;
 import nl.tsmeele.myrods.api.KeyValPair;
+import nl.tsmeele.myrods.high.DataObject;
 import nl.tsmeele.myrods.high.Hirods;
 import nl.tsmeele.myrods.irodsStructures.DataInt;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
