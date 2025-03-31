@@ -1,4 +1,4 @@
-package nl.tsmeele.myrods.pump;
+package nl.tsmeele.myrods.high;
 
 public class DataObject {
 	public String collName;
@@ -45,7 +45,7 @@ public class DataObject {
 	
 	public static String basename(String path) {
 		int i = path.lastIndexOf('/');
-		if (i < 0) return path;
-		return path.substring(i);
+		if (i < 0 || i == path.length() - 1) return path;
+		return path.substring(i + 1);
 	}
 }
