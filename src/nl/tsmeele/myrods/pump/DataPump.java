@@ -22,8 +22,6 @@ public class DataPump {
 	private String sLocalZone;
 	private String dLocalZone;
 	private DataObjectList list;
-	private boolean verbose;
-	private boolean debug;
 	private int threads = 1;
 	
 	
@@ -32,8 +30,6 @@ public class DataPump {
 		this.sLocalZone = sLocalZone;
 		this.dLocalZone = dLocalZone;
 		this.list = list;	
-		verbose = ctx.options.containsKey("verbose");
-		debug = ctx.options.containsKey("debug");
 		String sThreads = ctx.options.get("threads");
 		if (sThreads != null) {
 			try {
@@ -65,7 +61,7 @@ public class DataPump {
 			source.rcDisconnect();	// need to reconnect as proxy user
 			source.login();
 			if (source.error) {
-				System.err.println(source.pUsername + " reconnect to source failed. iRODS error = " + source.intInfo);
+				Log.error(source.pUsername + " reconnect to source failed. iRODS error = " + source.intInfo);
 				return;
 			}
 			Log.debug("Source logged in as proxy user");
@@ -90,7 +86,7 @@ public class DataPump {
 			destination.rcDisconnect();
 			destination.login();
 			if (destination.error) {
-				System.err.println(destination.pUsername + " reconnect to destination failed. iRODS error = " + destination.intInfo);
+				Log.error(destination.pUsername + " reconnect to destination failed. iRODS error = " + destination.intInfo);
 				return;
 			}
 			Log.debug("Destination logged in as proxy user");
@@ -136,13 +132,13 @@ public class DataPump {
 			}
 			// prepare replica references for this data object in source and destination
 			String destObjPath = dCollName + "/" + obj.dataName;
-			if (verbose || debug) System.out.println("...copying from " + obj.getPath() + " to " + destObjPath);
+			Log.info("...copying from " + obj.getPath() + " to " + destObjPath);
 			Replica sourceReplica = posix.createReplica(source, obj.getPath());
 			Replica destinationReplica = posix.createReplica(destination, destObjPath);
 			if (destinationReplica.isFile()) {
 				String message = "skipping, destination object already exists: '" + destObjPath + "'";
 				logFile.LogError(obj.getPath(), message);
-				System.err.println(message);
+				Log.error(message);
 				continue;
 			}
 			// copy the data object
@@ -160,9 +156,7 @@ public class DataPump {
 				transferError = true;
 				String message = "Transfer failed with exception: " + e.getMessage();
 				logFile.LogError(obj.getPath(), message);
-				if (verbose || debug) {
-					System.err.println(obj.getPath() + ": " + message);
-				}
+				Log.info(obj.getPath() + ": " + message);
 			}
 			// After a failed data object copy we will need to reconnect and login again
 			if (transferError) {
@@ -181,13 +175,13 @@ public class DataPump {
 						destination.login(clientUsername, dLocalZone);
 					}
 					if (destination.error) {
-						System.err.println("Reconnect to destination failed, iRODS error = " + source.intInfo);
+						Log.error("Reconnect to destination failed, iRODS error = " + source.intInfo);
 					}
 				} else {
-					System.err.println("Reconnect to source failed, iRODS error = " + source.intInfo);
+					Log.error("Reconnect to source failed, iRODS error = " + source.intInfo);
 				}
 				if (source.error || destination.error) {
-					System.err.println("Transfer of data objects for owner " + clientUsername + " aborted");
+					Log.error("Transfer of data objects for owner " + clientUsername + " aborted");
 					return;
 				}
 			}
@@ -198,16 +192,16 @@ public class DataPump {
 				if (destination.error) {
 					String message = "iRODS error: " + destination.intInfo + " (at destination) ";
 					logFile.LogError(obj.getPath(), message);
-					System.err.println(message + " while checking info on '" + destObjPath + "'");
+					Log.error(message + " while checking info on '" + destObjPath + "'");
 					transferError = true; // flag attempt to perform cleanup of partial data object
 				}
 				if (rodsObjStat.objSize == obj.dataSize) {
-					if (verbose || debug) System.out.println("Copied and OK: " + obj.getPath());
+					Log.info("Copied and OK: " + obj.getPath());
 					logFile.LogDone(obj.getPath());
 				} else {
 					String message = " copied replica size (" + rodsObjStat.objSize + ") does not match source size (" + obj.dataSize + ")";
 					logFile.LogError(obj.getPath(), message);
-					System.err.println("Copy failed: " + obj.getPath() + message);
+					Log.error("Copy failed: " + obj.getPath() + message);
 					transferError = true;	// flag cleanup needed of partial data object
 				} 
 			}
@@ -219,7 +213,7 @@ public class DataPump {
 				if (destination.error) {
 					Log.debug("unable to unlink '" + destObjPath + "' iRODS error = " + destination.intInfo);
 				} else {
-					if (verbose || debug) System.err.println("Cleaned up partial replica copy of data object at destination");
+					Log.info("Cleaned up partial replica copy of data object at destination");
 				}
 			} 	
 		} // end For
@@ -239,13 +233,11 @@ public class DataPump {
 				Log.debug("Destination collection already exists: " + collName);
 				return true;
 			}
-			System.err.println("ERROR: Unable to create destination collection '" + collName + 
+			Log.error("Unable to create destination collection '" + collName + 
 					"' iRODS error = " + destination.intInfo);
 			return false;
 		}
-		if (verbose || debug) {
-			System.out.println("Destination collection created: " + collName);
-		}
+		Log.info("Destination collection created: " + collName);
 		return true;
 	}
 	

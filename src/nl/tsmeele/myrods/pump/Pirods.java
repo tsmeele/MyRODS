@@ -68,21 +68,7 @@ public class Pirods extends Hirods {
 		return userType.equals("rodsadmin");
 	}
 	
-	public String getLocalZone() throws MyRodsException, IOException {
-		if (!isAuthenticated()) return null;
-		// SELECT clause
-		InxIvalPair inxIvalPair = new InxIvalPair();
-		inxIvalPair.put(Columns.ZONE_NAME.getId(), Flag.SELECT_NORMAL);	
-		// WHERE clause
-		InxValPair inxValPair = new InxValPair();
-		inxValPair.put(Columns.ZONE_TYPE.getId(), "= 'local'");
-		int maxRows = 1;
-		GenQueryInp genQueryInp = new GenQueryInp(maxRows, 0, 0, Flag.AUTO_CLOSE,
-				new KeyValPair(), inxIvalPair , inxValPair);
-		GenQueryOut genOut = rcGenQuery(genQueryInp);
-		if (error || genOut.columnCount < 1 || genOut.rowCount < 1) return null;
-		return genOut.data[0][0];
-	}
+
 
 	public DataObjectList selectDataObjects(String collectionName) throws MyRodsException, IOException {
 		if (!isAuthenticated()) return null;
