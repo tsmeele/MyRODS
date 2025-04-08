@@ -210,7 +210,6 @@ public class Hirods extends Irods {
 		if (admin) {
 			condInput.put(Kw.ADMIN_KW, null);
 		}
-		boolean result = true;
 		for (AVU avu : avus) {
 			ArrayList<String> args = new ArrayList<String>();
 			args.add("add");
@@ -224,10 +223,10 @@ public class Hirods extends Irods {
 			ModAVUMetadataInp modAVUMetaDataInp = new ModAVUMetadataInp(args, condInput);
 			rcModAVUMetadata(modAVUMetaDataInp);
 			if (error) {
-				result = false;
+				return false;
 			}
 		}
-		return result;
+		return true;
 	}
 	
 	
