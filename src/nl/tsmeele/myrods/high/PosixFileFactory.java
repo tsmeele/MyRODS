@@ -4,13 +4,13 @@ import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 public class PosixFileFactory {
 	
-	public LocalFile createLocalFile(String path) {
+	public static LocalFile createLocalFile(String path) {
 		LocalFile local = new LocalFile();
 		local.setPath(path);
 		return local;
 	}
 	
-	public Replica createReplica(Hirods hirods, String logicalPath, String resource) throws MyRodsException {
+	public static Replica createReplica(Hirods hirods, String logicalPath, String resource) throws MyRodsException {
 		if (!hirods.isAuthenticated()) {
 			throw new MyRodsException("Unable to reference replica, please authenticate first");
 		}
@@ -19,7 +19,7 @@ public class PosixFileFactory {
 		return replica;
 	}
 	
-	public Replica createReplica(Hirods hirods, String logicalPath, int replicaNumber) throws MyRodsException {
+	public static Replica createReplica(Hirods hirods, String logicalPath, int replicaNumber) throws MyRodsException {
 		if (!hirods.isAuthenticated()) {
 			throw new MyRodsException("Unable to reference replica, please authenticate first");
 		}
@@ -28,7 +28,7 @@ public class PosixFileFactory {
 		return replica;
 	}
 
-	public Replica createReplica(Hirods hirods, String logicalPath) throws MyRodsException {
+	public static Replica createReplica(Hirods hirods, String logicalPath) throws MyRodsException {
 		if (!hirods.isAuthenticated()) {
 			throw new MyRodsException("Unable to reference replica, please authenticate first");
 		}
