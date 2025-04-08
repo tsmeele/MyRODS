@@ -93,7 +93,7 @@ public class Log {
 	 * @param message  content
 	 */
 	@SuppressWarnings("rawtypes")
-	public static void println(Enum level, String message) {
+	public static synchronized void println(Enum level, String message) {
 		if (level.ordinal() <= logLevel.ordinal() ) {
 			out.println(stamp() + "  " + level.toString() + ": " + message);
 		}
