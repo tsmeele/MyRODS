@@ -2,6 +2,7 @@ package nl.tsmeele.myrods.plumbing;
 
 import java.io.IOException;
 
+import nl.tsmeele.log.Log;
 import nl.tsmeele.myrods.api.Api;
 import nl.tsmeele.myrods.api.Message;
 import nl.tsmeele.myrods.api.MessageType;
@@ -80,6 +81,7 @@ public class MessageSerializer {
 		header.add(new DataInt("intInfo", intInfo));
 		// header is always packed using XML protocol
 		packedHeader = Packer.pack(IrodsProtocolType.XML_PROT, header);
+		Log.debug("SENT: " + this.toString());
 	}
 	
 	public String toString() {
@@ -119,6 +121,7 @@ public class MessageSerializer {
 			msg.setErrorMessage(new RError(errorMessage));
 		}
 		msg.setBs(packedBs);
+		Log.debug("RECEIVED: " + this.toString());
 		return msg;
 	}
 	
