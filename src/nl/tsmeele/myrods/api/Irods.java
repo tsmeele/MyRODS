@@ -34,6 +34,7 @@ import nl.tsmeele.myrods.irodsStructures.RcModDataObjMeta;
 import nl.tsmeele.myrods.irodsStructures.RcObjStat;
 import nl.tsmeele.myrods.irodsStructures.RcPamAuthRequest;
 import nl.tsmeele.myrods.irodsStructures.RcReplicaOpen;
+import nl.tsmeele.myrods.irodsStructures.RcRmColl;
 import nl.tsmeele.myrods.irodsStructures.RcSslEnd;
 import nl.tsmeele.myrods.irodsStructures.RcSslStart;
 import nl.tsmeele.myrods.irodsStructures.RcSwitchUser;
@@ -265,6 +266,11 @@ public class Irods {
 	public void rcCollCreate(CollInp collInp) throws MyRodsException, IOException {
 		exchangeRequest(new RcCollCreate(collInp));
 		return;
+	}
+	
+	public CollOprStat rcRmColl(CollInp collInp) throws MyRodsException, IOException {
+		DataStruct response = exchangeRequest(new RcRmColl(collInp));
+		return new CollOprStat(response);
 	}
 	
 	public void rcDataObjCreate(DataObjInp dataObjInp) throws MyRodsException, IOException {
