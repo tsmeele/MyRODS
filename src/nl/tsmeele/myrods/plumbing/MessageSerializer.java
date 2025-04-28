@@ -90,6 +90,7 @@ public class MessageSerializer {
 			apiNum = "(" + Api.lookup(intInfo) + ")";
 		}
 		return "PACKEDMESSAGE " + messageType.getLabel() + "\n" +
+				"Hdr(" + packedHeader.length + ") " + 
 				"Msg(" + (packedMessage == null ? "null" : packedMessage.length) + ") " +
 				"Err(" + (packedErrorMessage == null ? "null" : packedErrorMessage.length) + ") " +
 				"bs(" + packedBs.length + ") " +
