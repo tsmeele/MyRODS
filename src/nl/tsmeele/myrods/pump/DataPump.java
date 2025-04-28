@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import nl.tsmeele.log.Log;
+import nl.tsmeele.myrods.api.AccessType;
 import nl.tsmeele.myrods.api.CollInp;
 import nl.tsmeele.myrods.api.DataObjInp;
 import nl.tsmeele.myrods.api.KeyValPair;
@@ -71,10 +72,15 @@ public class DataPump {
 		String clientZone = firstObj.ownerZone;
 		
 		// SOURCE LOGIN
-		// if we are unable to login on source as clientUser, we will use our proxyUser 
+		// if we are unable to login on source as clientUsername, we will use our proxyUser 
 		// NB: Could be caused by creator of data object is no longer a user on the zone
 		source.login(clientUsername, clientZone);
 		boolean useProxySource = source.error;
+		if (!useProxySource) {
+			// check that the creator (clientUsername) has sufficient rights on the source objects, we test the first object (only)
+			// if not, we will use the proxyuser instead
+			useProxySource = !source.checkAccess(clientUsername, clientZone, ObjType.DATAOBJECT, firstObj.getPath(), AccessType.OWN);
+		}
 		boolean useProxyDestination = useProxySource;
 		if (useProxySource) {
 			source.rcDisconnect();	// need to reconnect as proxy user
