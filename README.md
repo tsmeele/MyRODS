@@ -12,6 +12,21 @@ about the current state of this protocol, its benefits and limitations.
 
 Ton
 
+## Example usage
+Use the MyRods library to execute iRODS API calls. The below example demonstrates how the class Irods
+is used to communicate with an iRODS server. 
+
+	Irods irods = new Irods(host, port);
+	RodsVersion version = irods.rcConnect(proxyUser, proxyZone, clientUser, clientZone);
+	if (irods.error) {
+		throw new RuntimeException("Unable to connect, error is " + irods.intInfo);
+	}
+	MiscSvrInfo miscSvrInfo = irods.rcMiscSvrInfo();
+	System.out.println("zone is " + miscSvrInfo.rodsZone);
+	irods.rcDisconnect();
+	
+The iRODS API supports the exchange of complex data structures. In the example, MiscSvrInfo 
+is returned.
 
 ## Installation
 
@@ -104,6 +119,10 @@ As the iRODS server functions are documented partly in-line,
 adding support for new API calls will often require some exploration of 
 server source code, to find and implement the 
 pack instruction specifications needed to support input and output parameters. 
-Should you need support for a particular API call, please let me know.  
+Should you need support for a particular API call, please let me know.
+
+#License
+Copyright (c) 2024-2025 Ton Smeele
+MyRods is licensed under the GNU Lesser General Public License version 3 or higher (LGPLv3+). See the COPYING.LESSER file for details.
 
 
