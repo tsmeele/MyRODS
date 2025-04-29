@@ -121,7 +121,7 @@ server source code, to find and implement the
 pack instruction specifications needed to support input and output parameters. 
 Should you need support for a particular API call, please let me know.
 
-#License
+# License
 Copyright (c) 2024-2025 Ton Smeele
 MyRods is licensed under the GNU Lesser General Public License version 3 or higher (LGPLv3+). See the COPYING.LESSER file for details.
 
