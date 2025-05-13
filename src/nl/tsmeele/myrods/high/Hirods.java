@@ -234,7 +234,7 @@ public class Hirods extends Irods {
 	// The creation of a genQueryIterator will open a query at the iRODS server.
 	// To avoid keeping queries open, the client application MUST continue calls to next() until hasNext() is exhausted.
 	// Alternatively the client application may call the iterator method closeQuery() to close without reading all row sets
-	public Iterator<GenQueryOut> genQueryIterator(GenQueryInp genQueryInp) throws MyRodsException, IOException {
+	public GenQueryIterator genQueryIterator(GenQueryInp genQueryInp) throws MyRodsException, IOException {
 		return new GenQueryIterator(this, genQueryInp);
 	}
 	
