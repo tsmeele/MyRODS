@@ -3,6 +3,7 @@ package nl.tsmeele.myrods.high;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import nl.tsmeele.myrods.api.AccessType;
 import nl.tsmeele.myrods.api.Columns;
@@ -104,6 +105,7 @@ public class Hirods extends Irods {
 		return true;
 	}
 	
+	// TODO: remove this method, should use rcGetMiscSvrInfo instead
 	public String getLocalZone() throws MyRodsException, IOException {
 		if (!isAuthenticated()) return null;
 		// SELECT clause
@@ -229,6 +231,12 @@ public class Hirods extends Irods {
 		return true;
 	}
 	
+	// The creation of a genQueryIterator will open a query at the iRODS server.
+	// To avoid keeping queries open, the client application MUST continue calls to next() until hasNext() is exhausted.
+	// Alternatively the client application may call the iterator method closeQuery() to close without reading all row sets
+	public Iterator<GenQueryOut> genQueryIterator(GenQueryInp genQueryInp) throws MyRodsException, IOException {
+		return new GenQueryIterator(this, genQueryInp);
+	}
 	
 	public boolean checkAccess(String userName, String userZone, ObjType type, String objpath, AccessType desiredPermission) 
 			throws MyRodsException, IOException {
@@ -274,8 +282,8 @@ public class Hirods extends Irods {
 			}
 		}
 		// close query
-		DataInt GenInpMaxRows = (DataInt) genQueryInp.lookupName("maxRows");
-		GenInpMaxRows.set(0);
+		DataInt genInpMaxRows = (DataInt) genQueryInp.lookupName("maxRows");
+		genInpMaxRows.set(0);
 		rcGenQuery(genQueryInp);
 		return hasDesiredPermission;
 	}
