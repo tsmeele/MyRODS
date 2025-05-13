@@ -152,7 +152,6 @@ public class DataPump {
 				currentCollection = obj.collName;
 				Log.debug("Start of destination collection " + dCollName);
 				if (!dCollName.equals(destinationRoot)) {
-					// 
 					// create destination collection (if it does not yet exist) and copy collection AVU's
 					if (!ensureCollectionExists(destination, dCollName)) {
 						return;
@@ -224,7 +223,7 @@ public class DataPump {
 				}
 			}
 			
-			// analyze transfered data
+			// analyze transferred data
 			if (!transferError) {	
 				// transfer was successful, check integrity of result using data size info
 				RodsObjStat rodsObjStat = destination.rcObjStat(destObjPath, ObjType.DATAOBJECT);
@@ -267,7 +266,7 @@ public class DataPump {
 	private boolean transferDataObjectAVUs(ArrayList<AVU> sourceAVUlist, Pirods destination, String destObjPath) throws MyRodsException, IOException {
 		if (sourceAVUlist.isEmpty()) return true;
 		Log.debug("About to copy " + sourceAVUlist.size() + " AVUs from source to destination");
-		// todo: might need to transform some AVU's here, e.g. to change a reference to the zone
+		// TODO: might need to transform some AVU's here, e.g. to change a reference to the zone
 		boolean result = destination.addAvus("-d", destObjPath, sourceAVUlist);
 		if (!result) {
 			Log.error("Unable to add AVUs to " + destObjPath + " iRODS error = " + destination.intInfo);
@@ -298,9 +297,4 @@ public class DataPump {
 		
 		return true;
 	}
-	
-	
-	
-	
-
 }

@@ -101,7 +101,7 @@ public class DataStruct extends Data implements Iterable<Data> {
 	public byte[] lookupByte(String name) {
 		try {
 			return ((DataBinArray)lookupName(name, false)).get();
-		}catch (Exception e) {}
+		} catch (Exception e) {}
 		return null;
 	}
 	
@@ -122,5 +122,4 @@ public class DataStruct extends Data implements Iterable<Data> {
 		sb.append("}");
 		return sb.toString();
 	}
-	
 }

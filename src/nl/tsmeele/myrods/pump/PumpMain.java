@@ -66,7 +66,7 @@ public class PumpMain {
 		// close any open connections
 		source.rcDisconnect();
 		destination.rcDisconnect();
-		System.exit(result? 0 : 2);
+		System.exit(result ? 0 : 2);
 	}
 	
 	private static boolean actions(Context ctx, Pirods source, Pirods destination) throws MyRodsException, IOException {
@@ -141,9 +141,9 @@ public class PumpMain {
 		int originalSize = list.size();
 		if (resumeFilter != null) {
 			list = list.filterObjects(resumeFilter);
-			Log.info("Resume log contains " + resumeFilter.size() + " succesfully copied objects");
+			Log.info("Resume log contains " + resumeFilter.size() + " successfully copied objects");
 			if (list.size() < originalSize) {
-					Log.info("Copy list reduced by " + (originalSize - list.size()) + " objects");
+				Log.info("Copy list reduced by " + (originalSize - list.size()) + " objects");
 			}
 		}
 		// per owner, copy all data objects from source to destination
@@ -173,8 +173,6 @@ public class PumpMain {
 		return true;
 	}
 	
-	
-	
 
 	private static boolean loginAndAssertPrivs(Pirods irods) throws MyRodsException, IOException {
 		irods.login();
@@ -191,11 +189,9 @@ public class PumpMain {
 		}
 		return true;
 	}
-	
 
 	
 	private static long timeStamp() {
 		return Instant.now().getEpochSecond();
 	}
-
 }
