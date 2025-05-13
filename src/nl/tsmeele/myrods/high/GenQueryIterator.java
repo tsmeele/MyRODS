@@ -6,17 +6,18 @@ import java.util.Iterator;
 import nl.tsmeele.myrods.api.Flag;
 import nl.tsmeele.myrods.api.GenQueryInp;
 import nl.tsmeele.myrods.api.GenQueryOut;
+import nl.tsmeele.myrods.api.Irods;
 import nl.tsmeele.myrods.irodsStructures.DataInt;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 public class GenQueryIterator implements Iterator<GenQueryOut> {
 	private int maxRows = 256;	// default (and preferred) row set size
-	private Hirods hirods;
+	private Irods hirods;
 	private GenQueryInp genQueryInp; 
 	private GenQueryOut genQueryOut;
 	private boolean moreRowSets = true;
 	
-	public GenQueryIterator(Hirods hirods, GenQueryInp genQueryInp) throws MyRodsException, IOException {
+	public GenQueryIterator(Irods hirods, GenQueryInp genQueryInp) throws MyRodsException, IOException {
 		this.hirods = hirods;
 		this.genQueryInp = genQueryInp;
 		// make sure the query uses a sound row set size
