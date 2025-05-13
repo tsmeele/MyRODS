@@ -63,11 +63,17 @@ public class DataPump {
 	}
 	
 	
+	/**
+	 * Copy (data) objects from source to destination for one given user
+	 * @throws MyRodsException
+	 * @throws IOException
+	 */
 	public void pump() throws MyRodsException, IOException {
 		if (list.isEmpty()) return;
 		Pirods source = new Pirods(ctx, true);
 		Pirods destination = new Pirods(ctx, false);
 		DataObject firstObj = list.get(0);
+		// We assume that all data objects afterward will have the same creator user
 		String clientUsername = firstObj.ownerName;
 		String clientZone = firstObj.ownerZone;
 		
@@ -134,7 +140,8 @@ public class DataPump {
 		// copy listed set of data objects, create destination collections on the fly where needed
 		String currentCollection = "";
 		int pumpActionsCount = 0;
-		list.sortByPath();	// we traverse the tree depth-first, and create collections on the go
+		// we traverse the tree depth-first, and create collections on the go
+		list.sortByPath();
 		
 		for (DataObject obj : list) {
 			pumpActionsCount++;
@@ -277,6 +284,14 @@ public class DataPump {
 		return result;
 	}
 	
+	/**
+	 * Try to create collection first to see if it exists
+	 * @param destination
+	 * @param collName
+	 * @return If destination collection was created/already exists (true) or failed to create (false)
+	 * @throws MyRodsException
+	 * @throws IOException
+	 */
 	private boolean ensureCollectionExists(Pirods destination, String collName) throws MyRodsException, IOException {
 		final int CATALOG_ALREADY_HAS_ITEM_BY_THAT_NAME = -809000;
 		KeyValPair condInput = new KeyValPair();

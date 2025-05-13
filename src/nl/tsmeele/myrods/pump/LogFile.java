@@ -48,6 +48,13 @@ public class LogFile {
 		logfile.flush();
 	}
 
+
+	/**
+	 * Reads the list of files from the file, putting it in a HashMap
+	 * @param path
+	 * @return HashMap of data object paths as keys, whether the object has been copied as value
+	 * @throws IOException
+	 */
 	public static HashMap<String,Boolean> slurpCompletedObjects(String path) throws IOException  {
 		HashMap<String,Boolean> out = new HashMap<String,Boolean>();
 		BufferedReader br;

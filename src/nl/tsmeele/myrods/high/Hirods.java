@@ -226,6 +226,11 @@ public class Hirods extends Irods {
 		return new GenQueryIterator(this, genQueryInp);
 	}
 	
+	/**
+	 * Check user has access to given data object or collection
+	 * @throws MyRodsException
+	 * @throws IOException
+	 */
 	public boolean checkAccess(String userName, String userZone, ObjType type, String objpath, AccessType desiredPermission) 
 			throws MyRodsException, IOException {
 		if (!isAuthenticated()) return false;

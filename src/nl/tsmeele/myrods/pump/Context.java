@@ -19,6 +19,7 @@ public class Context {
 	
 	// commandline info that can be queried after processing:
 	public HashMap<String,String> options = new HashMap<String,String>();
+	// Reminder: sourceObject can point to a data object OR collection
 	public String sourceObject = null;
 	public String destinationCollection = null;
 	public String sHost, sUsername, sZone, sPassword;
