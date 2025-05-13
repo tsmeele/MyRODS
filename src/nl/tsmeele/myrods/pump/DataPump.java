@@ -63,11 +63,17 @@ public class DataPump {
 	}
 	
 	
+	/**
+	 * Copy (data) objects from source to destination for one given user
+	 * @throws MyRodsException
+	 * @throws IOException
+	 */
 	public void pump() throws MyRodsException, IOException {
 		if (list.isEmpty()) return;
 		Pirods source = new Pirods(ctx, true);
 		Pirods destination = new Pirods(ctx, false);
 		DataObject firstObj = list.get(0);
+		// We assume that all data objects afterward will have the same creator user
 		String clientUsername = firstObj.ownerName;
 		String clientZone = firstObj.ownerZone;
 		
@@ -134,7 +140,8 @@ public class DataPump {
 		// copy listed set of data objects, create destination collections on the fly where needed
 		String currentCollection = "";
 		int pumpActionsCount = 0;
-		list.sortByPath();	// we traverse the tree depth-first, and create collections on the go
+		// we traverse the tree depth-first, and create collections on the go
+		list.sortByPath();
 		
 		for (DataObject obj : list) {
 			pumpActionsCount++;
