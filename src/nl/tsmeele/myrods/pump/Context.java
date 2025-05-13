@@ -27,7 +27,6 @@ public class Context {
 	public boolean sAuthPam, dAuthPam;
 	
 	
-	
 	public void processArgs(String[] args) throws MyRodsException {
 		// set defaults
 		options.put("log", LOG_FILE);

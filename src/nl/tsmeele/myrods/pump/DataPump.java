@@ -152,7 +152,6 @@ public class DataPump {
 				currentCollection = obj.collName;
 				Log.debug("Start of destination collection " + dCollName);
 				if (!dCollName.equals(destinationRoot)) {
-					// 
 					// create destination collection (if it does not yet exist) and copy collection AVU's
 					if (!ensureCollectionExists(destination, dCollName)) {
 						return;
@@ -224,7 +223,7 @@ public class DataPump {
 				}
 			}
 			
-			// analyze transfered data
+			// analyze transferred data
 			if (!transferError) {	
 				// transfer was successful, check integrity of result using data size info
 				RodsObjStat rodsObjStat = destination.rcObjStat(destObjPath, ObjType.DATAOBJECT);
@@ -298,9 +297,4 @@ public class DataPump {
 		
 		return true;
 	}
-	
-	
-	
-	
-
 }

@@ -54,7 +54,6 @@ public class DataObjectList extends ArrayList<DataObject> {
 	}
 	
 	public DataObjectList filterObjects(HashMap<String, Boolean> filter) {
-
 		DataObjectList out = new DataObjectList();
 		for (DataObject obj : this) {
 			if (!filter.containsKey(obj.getPath())) {
@@ -63,6 +62,4 @@ public class DataObjectList extends ArrayList<DataObject> {
 		}
 		return out;
 	}
-	
-	
 }

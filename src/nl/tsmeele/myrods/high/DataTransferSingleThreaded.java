@@ -48,7 +48,6 @@ public class DataTransferSingleThreaded extends DataTransfer {
 	private void closeFiles() throws MyRodsException, IOException {
 		source.close();
 		dest.close();
-		
 	}
 
 

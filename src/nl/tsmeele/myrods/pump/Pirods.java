@@ -128,5 +128,4 @@ public class Pirods extends Hirods {
 		rcGenQuery(genQueryInp);
 		return list;
 	}
-	
 }
