@@ -2,6 +2,7 @@ package nl.tsmeele.myrods.high;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import nl.tsmeele.myrods.api.Flag;
 import nl.tsmeele.myrods.api.GenQueryInp;
@@ -12,27 +13,30 @@ import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 public class GenQueryIterator implements Iterator<GenQueryOut> {
 	private int maxRows = 256;	// default (and preferred) row set size
-	private Irods hirods;
+	private Irods irods;
 	private GenQueryInp genQueryInp; 
 	private GenQueryOut genQueryOut;
 	private boolean moreRowSets = true;
 	
-	public GenQueryIterator(Irods hirods, GenQueryInp genQueryInp) throws MyRodsException, IOException {
-		this.hirods = hirods;
+	public GenQueryIterator(Irods irods, GenQueryInp genQueryInp) throws MyRodsException, IOException {
+		this.irods = irods;
 		this.genQueryInp = genQueryInp;
-		// make sure the query uses a sound row set size
+		// indicate we need a fresh query handle
+		DataInt continueInx = (DataInt) this.genQueryInp.lookupName("continueInx");
+		continueInx.set(0);
+		// ensure the query has a sound row set size
 		DataInt genInpMaxRows = (DataInt) genQueryInp.lookupName("maxRows");
 		if (genInpMaxRows.get() <= 0) {
 			genInpMaxRows.set(maxRows);
 		} else {
 			maxRows = genInpMaxRows.get();
 		}
-		// execute query and cache returned first row set
-		genQueryOut = hirods.rcGenQuery(genQueryInp);
-		if (hirods.error) {
+		// execute query and cache the returned first row set
+		genQueryOut = irods.rcGenQuery(genQueryInp);
+		if (irods.error) {
 			// problem executing query, we will indicate this by not returning a first row set
 			moreRowSets = false;
-		}
+		} 
 	}
 
 	@Override
@@ -43,40 +47,28 @@ public class GenQueryIterator implements Iterator<GenQueryOut> {
 	@Override
 	public GenQueryOut next() {
 		if (!moreRowSets) {
-			return null;
+			throw new NoSuchElementException();
 		}
-		// prepare genQueryInp for reading at next set of rows
-		DataInt continueInx = (DataInt) genQueryInp.lookupName("continueInx");
-		continueInx.set(genQueryOut.continueInx);
-	
-		if (genQueryOut.rowCount < maxRows) {
-			// turns out that we read the last row set, prepare genQueryInp to close query
+		if (queryHasBeenClosedByServer()) {
 			moreRowSets = false;
-			DataInt genInpMaxRows = (DataInt) genQueryInp.lookupName("maxRows");
-			genInpMaxRows.set(0);
-		}
-		
-		// take special action for AUTO_CLOSE
-		DataInt queryOptions = (DataInt) genQueryInp.lookupName("options");
-		if ((queryOptions.get() & Flag.AUTO_CLOSE) > 0) {
-			// AUTO_CLOSE option was requested, hence the server will have closed the query after our first call
-			// we return the first row set and flag that this is the last one
-			moreRowSets = false;
+			// return the last cached row set
 			return genQueryOut;
 		}
-
-		GenQueryOut thisRowSet = genQueryOut;
-		// load the next row set in cache OR close query 
-		// and return the previously cached row set
+		// there are more row sets to get, set genQueryInp to continue reading from an already open query handle
+		DataInt continueInx = (DataInt) genQueryInp.lookupName("continueInx");
+		continueInx.set(genQueryOut.continueInx);
+		
+		// return the currently cached row set, and replenish the cache with a new row set
+		GenQueryOut currentRowSet = genQueryOut;
 		try {
-			genQueryOut = hirods.rcGenQuery(genQueryInp);
-			if (hirods.error) {
+			genQueryOut = irods.rcGenQuery(genQueryInp);
+			if (irods.error) {
 				moreRowSets = false;
-			}
+			} 
 		} catch (IOException e) {
 			moreRowSets = false;
 		}
-		return thisRowSet;
+		return currentRowSet;
 	}
 
 	public void closeQuery() {
@@ -84,13 +76,27 @@ public class GenQueryIterator implements Iterator<GenQueryOut> {
 			return;
 		}
 		moreRowSets = false;
+		if (queryHasBeenClosedByServer()) {
+			return;
+		}	
+		// we explicitly request to close the query, by indicating that we want to receive 0 rows.
 		DataInt genInpMaxRows = (DataInt) genQueryInp.lookupName("maxRows");
 		genInpMaxRows.set(0);
 		try {
-			genQueryOut = hirods.rcGenQuery(genQueryInp);
+			genQueryOut = irods.rcGenQuery(genQueryInp);
 		} catch (IOException e) {
 			// ignore, we already have changed moreRowSets to false to indicate closed query.
 		}
+	}
+	
+	private boolean queryHasBeenClosedByServer() {
+		/*
+		 * A query will have been closed by the server when:
+		 * a) either we have requested for immediate closure using the AUTO_CLOSE flag in our query
+		 * b) or we have received less rows than the requested amount
+		 */
+		DataInt queryOptions = (DataInt) genQueryInp.lookupName("options");
+		return (queryOptions.get() & Flag.AUTO_CLOSE) > 0 || genQueryOut.rowCount < maxRows;
 	}
 	
 	
