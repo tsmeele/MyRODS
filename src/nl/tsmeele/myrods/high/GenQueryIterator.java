@@ -54,7 +54,8 @@ public class GenQueryIterator implements Iterator<GenQueryOut> {
 			// return the last cached row set
 			return genQueryOut;
 		}
-		// there are more row sets to get, set genQueryInp to continue reading from an already open query handle
+		// there are more row sets to get
+		// use the already open query handle for our next request
 		DataInt continueInx = (DataInt) genQueryInp.lookupName("continueInx");
 		continueInx.set(genQueryOut.continueInx);
 		
@@ -71,6 +72,11 @@ public class GenQueryIterator implements Iterator<GenQueryOut> {
 		return currentRowSet;
 	}
 
+	/**
+	 * When hasNext() is true (hence more row sets available for processing), 
+	 * and the client application wants to stop query processing,  
+	 * the query should be closed explicitly by calling closeQuery().
+	 */
 	public void closeQuery() {
 		if (!moreRowSets) {
 			return;
@@ -79,7 +85,10 @@ public class GenQueryIterator implements Iterator<GenQueryOut> {
 		if (queryHasBeenClosedByServer()) {
 			return;
 		}	
-		// we explicitly request to close the query, by indicating that we want to receive 0 rows.
+		// use the open query handle for our request
+		DataInt continueInx = (DataInt) genQueryInp.lookupName("continueInx");
+		continueInx.set(genQueryOut.continueInx);
+		// ask for closure by requesting zero rows 
 		DataInt genInpMaxRows = (DataInt) genQueryInp.lookupName("maxRows");
 		genInpMaxRows.set(0);
 		try {
