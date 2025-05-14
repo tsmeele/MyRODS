@@ -82,8 +82,4 @@ public class ConfigReader {
 		} catch (IOException e) {}
 		return config;
 	}
-	
-
-	
-
 }
