@@ -3,8 +3,6 @@ package nl.tsmeele.myrods.high;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import nl.tsmeele.myrods.api.AccessType;
 import nl.tsmeele.myrods.api.Columns;
 import nl.tsmeele.myrods.api.Flag;
@@ -174,31 +172,21 @@ public class Hirods extends Irods {
 			break;
 		}
 		default:
+			// unsupported object type
 			return avus;
-		} // switch
+		}
 		int maxRows = 256;
 		GenQueryInp genQueryInp = new GenQueryInp(maxRows, 0, 0, 0,
 				condInput, inxIvalPair , inxValPair);
-		boolean done = false;
-		while (!done) {
-			GenQueryOut genOut = rcGenQuery(genQueryInp);
-			if (error) break;
+		// execute query and retrieve all AVU's 
+		GenQueryIterator it = genQueryIterator(genQueryInp);
+		while (it.hasNext()) {
+			GenQueryOut genOut = it.next();
 			for (int i = 0; i < genOut.rowCount; i++) {
 				AVU avu = new AVU(genOut.data[i][0], genOut.data[i][1], genOut.data[i][2]);
 				avus.add(avu);
 			}
-			// prepare for next set of rows
-			DataInt continueInx = (DataInt) genQueryInp.lookupName("continueInx");
-			continueInx.set(genOut.continueInx);
-			if (genOut.rowCount < 256) {
-				// last rowset received
-				break;
-			}
 		}
-		// close query
-				DataInt GenInpMaxRows = (DataInt) genQueryInp.lookupName("maxRows");
-				GenInpMaxRows.set(0);
-				rcGenQuery(genQueryInp);
 		return avus;
 	}
 
