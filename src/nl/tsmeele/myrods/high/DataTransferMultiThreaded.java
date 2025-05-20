@@ -92,7 +92,7 @@ public class DataTransferMultiThreaded extends DataTransfer {
 			// establish offset and bytecount for this thread
 			long bytesToTransfer = Math.min(remainingBytesToTransfer, partSize);
 			if (bytesToTransfer <= 0) {
-				// apparently all data has been transfered, no need for this and further threads
+				// apparently all data has been transferred, no need for this and further threads
 				// (even though the user has requested more threads to be used)
 				subChannels = t;	// adjust so that we know less threads need to be monitored
 				break;
@@ -130,7 +130,7 @@ public class DataTransferMultiThreaded extends DataTransfer {
 			Log.debug(e.getMessage());
 		}
 
-		// coordinator waits until all other treads have terminated (and closed their files)
+		// coordinator waits until all other threads have terminated (and closed their files)
 		for (int t = 0; t < subChannels; t++) {
 			@SuppressWarnings("unchecked")
 			Future<Long> f = (Future<Long>)future[t];
@@ -147,7 +147,7 @@ public class DataTransferMultiThreaded extends DataTransfer {
 		// now close primary channel files, this will finalize any replicas involved
 		closeFilesPrimaryChannel();
 		if (bytesDone < source.getFileSize()) {
-			throw new MyRodsException("Transfer incomplete, only " + bytesDone + " bytes were transfered");
+			throw new MyRodsException("Transfer incomplete, only " + bytesDone + " bytes were transferred");
 		}
 	}
 	
@@ -286,9 +286,4 @@ public class DataTransferMultiThreaded extends DataTransfer {
 		source.close();
 		dest.close();
 	}
-
-
-
-	
-	
 }

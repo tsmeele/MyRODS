@@ -92,7 +92,7 @@ public interface PosixFile {
 	
 	/** Reads the requested number of bytes at current position.
 	 *  returns 0 bytes if at EOF
-	 * @param bytes	numbe rof bytes to read
+	 * @param bytes	number of bytes to read
 	 * @return	bytes read
 	 * @throws IOException 
 	 */

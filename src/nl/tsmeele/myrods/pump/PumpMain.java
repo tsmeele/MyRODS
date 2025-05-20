@@ -66,9 +66,18 @@ public class PumpMain {
 		// close any open connections
 		source.rcDisconnect();
 		destination.rcDisconnect();
-		System.exit(result? 0 : 2);
+		System.exit(result ? 0 : 2);
 	}
 	
+	/**
+	 * Copy contents from source to destination
+	 * @param ctx Context, including various config params such as resume file
+	 * @param source
+	 * @param destination
+	 * @return whether the copy part of the function was able to (partly) run
+	 * @throws MyRodsException
+	 * @throws IOException
+	 */
 	private static boolean actions(Context ctx, Pirods source, Pirods destination) throws MyRodsException, IOException {
 		// login and make sure we have rodsadmin privs
 		Log.debug("before login & check privs");
@@ -103,7 +112,7 @@ public class PumpMain {
 			Log.error("Destination must be collection type.");
 			return false;
 		}
-		// find out if the proxy user has sufficient access to the source and destination objects
+		// find out if the proxy user (rodsadmin user) has sufficient access to the source and destination objects
 		boolean accessSource = source.checkAccess(ctx.sUsername, ctx.sZone, sourceObjType, 
 				ctx.sourceObject, AccessType.READ);
 		if (!accessSource) {
@@ -120,7 +129,7 @@ public class PumpMain {
 		// assemble list of objects to copy
 		DataObjectList list = null;
 		if (sourceObjType == ObjType.DATAOBJECT) {
-			// we will copy just one object
+			// we will copy just one object, since only one was specified
 			list = new DataObjectList();
 			list.add(new DataObject(
 					DataObject.parent(ctx.sourceObject),
@@ -137,13 +146,14 @@ public class PumpMain {
 			Log.info("Selected source is a collection with " + list.size() + " objects");
 			Log.debug("got list of objects");
 		}
-		// filter object list by resume filter, if needed
+		// originalSize is the total number of data objects copied or to be copied
 		int originalSize = list.size();
+		// filter object list by resume filter, if needed
 		if (resumeFilter != null) {
 			list = list.filterObjects(resumeFilter);
-			Log.info("Resume log contains " + resumeFilter.size() + " succesfully copied objects");
+			Log.info("Resume log contains " + resumeFilter.size() + " successfully copied objects");
 			if (list.size() < originalSize) {
-					Log.info("Copy list reduced by " + (originalSize - list.size()) + " objects");
+				Log.info("Copy list reduced by " + (originalSize - list.size()) + " objects");
 			}
 		}
 		// per owner, copy all data objects from source to destination
@@ -173,9 +183,14 @@ public class PumpMain {
 		return true;
 	}
 	
-	
-	
 
+	/**
+	 * Login and determine if user is a rodsadmin
+	 * @param irods
+	 * @return if can login and is rodsadmin
+	 * @throws MyRodsException
+	 * @throws IOException
+	 */
 	private static boolean loginAndAssertPrivs(Pirods irods) throws MyRodsException, IOException {
 		irods.login();
 		if (irods.error) {
@@ -191,11 +206,9 @@ public class PumpMain {
 		}
 		return true;
 	}
-	
 
 	
 	private static long timeStamp() {
 		return Instant.now().getEpochSecond();
 	}
-
 }

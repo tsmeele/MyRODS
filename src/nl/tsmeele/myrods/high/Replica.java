@@ -261,7 +261,7 @@ public class Replica implements PosixFile {
 			return true;
 		}
 		// the status of the replica might be 'not exists' yet another option is that its status
-		// simply has not been checked so far...we will need to query the server.
+		// simply has not been checked so far... we will need to query the server.
 		try {
 			RodsObjStat rodsObjStat = session.rcObjStat(objPath, ObjType.DATAOBJECT);
 			if (!session.error) {
@@ -314,16 +314,4 @@ public class Replica implements PosixFile {
 		}
 		return false;
 	}
-	
-	
-	
-	
-	
-	
-
-
-
-
-
-
 }

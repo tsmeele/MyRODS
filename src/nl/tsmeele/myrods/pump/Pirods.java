@@ -69,7 +69,13 @@ public class Pirods extends Hirods {
 	}
 	
 
-
+	/**
+	 * Get list of data objects inside of collection
+	 * @param collectionName
+	 * @return DataObjectList of data objects
+	 * @throws MyRodsException
+	 * @throws IOException
+	 */
 	public DataObjectList selectDataObjects(String collectionName) throws MyRodsException, IOException {
 		if (!isAuthenticated()) return null;
 		// SELECT clause
@@ -98,6 +104,14 @@ public class Pirods extends Hirods {
 		return out;
 	}
 	
+
+	/**
+	 * Run given genquery to collect a list of data objects that match that query
+	 * @param genQueryInp
+	 * @return list of data objects (DataObjectList)
+	 * @throws MyRodsException
+	 * @throws IOException
+	 */
 	private DataObjectList executeQueryDataObjects(GenQueryInp genQueryInp) throws MyRodsException, IOException {
 		DataObjectList list = new DataObjectList();
 		boolean done = false;
@@ -128,5 +142,4 @@ public class Pirods extends Hirods {
 		rcGenQuery(genQueryInp);
 		return list;
 	}
-	
 }
