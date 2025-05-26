@@ -1,4 +1,4 @@
-package main;
+package nl.tsmeele.myrods.high;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

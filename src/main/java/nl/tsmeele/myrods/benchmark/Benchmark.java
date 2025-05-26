@@ -1,4 +1,4 @@
-package main;
+package nl.tsmeele.myrods.benchmark;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -20,6 +20,7 @@ import nl.tsmeele.myrods.api.KeyValPair;
 import nl.tsmeele.myrods.api.Kw;
 import nl.tsmeele.myrods.api.ObjType;
 import nl.tsmeele.myrods.api.OpenedDataObjInp;
+import nl.tsmeele.myrods.high.ConfigReader;
 import nl.tsmeele.myrods.high.DataObject;
 import nl.tsmeele.myrods.high.DataTransfer;
 import nl.tsmeele.myrods.high.DataTransferSingleThreaded;
