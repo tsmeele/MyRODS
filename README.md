@@ -99,7 +99,7 @@ at the iRODS API level. The classes provided in the high package can
 be mixed with regular API calls, they are included for convenience
 reasons (and for my research).
 
-Lastly, package *main* contains some classes that demonstrate how to use
+Lastly, package *benchmark* demonstrates how to use
 the library. 
 
 # Concluding remarks

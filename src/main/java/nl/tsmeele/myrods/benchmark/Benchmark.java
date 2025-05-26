@@ -1,7 +1,6 @@
 package nl.tsmeele.myrods.benchmark;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 
 import nl.tsmeele.log.Log;
@@ -9,7 +8,6 @@ import nl.tsmeele.log.LogLevel;
 import nl.tsmeele.myrods.api.CollInp;
 import nl.tsmeele.myrods.api.CollOprStat;
 import nl.tsmeele.myrods.api.Columns;
-import nl.tsmeele.myrods.api.DataObjInp;
 import nl.tsmeele.myrods.api.Flag;
 import nl.tsmeele.myrods.api.GenQueryInp;
 import nl.tsmeele.myrods.api.GenQueryOut;
@@ -19,22 +17,19 @@ import nl.tsmeele.myrods.api.IrodsCsNegType;
 import nl.tsmeele.myrods.api.KeyValPair;
 import nl.tsmeele.myrods.api.Kw;
 import nl.tsmeele.myrods.api.ObjType;
-import nl.tsmeele.myrods.api.OpenedDataObjInp;
 import nl.tsmeele.myrods.high.ConfigReader;
-import nl.tsmeele.myrods.high.DataObject;
 import nl.tsmeele.myrods.high.DataTransfer;
 import nl.tsmeele.myrods.high.DataTransferSingleThreaded;
 import nl.tsmeele.myrods.high.Hirods;
 import nl.tsmeele.myrods.high.PosixFile;
 import nl.tsmeele.myrods.high.PosixFileFactory;
 import nl.tsmeele.myrods.high.Replica;
-import nl.tsmeele.myrods.irodsStructures.Data;
 import nl.tsmeele.myrods.irodsStructures.DataInt;
 import nl.tsmeele.myrods.plumbing.IrodsProtocolType;
 import nl.tsmeele.myrods.plumbing.MyRodsException;
 
 public class Benchmark {
-	static final String CONFIGPATH = "benchmark.ini";
+	static final String CONFIGPATH = "benchmark.ini"; // to create this file, see localVM.ini in this repo as an example
 	static String zone, host, username, userzone, password;
 	static int port;
 	static Hirods session;

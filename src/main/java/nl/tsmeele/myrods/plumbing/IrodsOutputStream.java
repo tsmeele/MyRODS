@@ -35,7 +35,7 @@ public class IrodsOutputStream extends OutputStream {
 	
 	/**
 	 * stream data using agreed upon protocol
-	 * @param content
+	 * @param msg
 	 * @throws IOException
 	 */
 	public void writeMessage(Message msg) throws IOException {

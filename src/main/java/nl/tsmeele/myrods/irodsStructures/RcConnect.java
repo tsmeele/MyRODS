@@ -67,7 +67,8 @@ public class RcConnect extends RodsCall {
 	 * @param proxyZone
 	 * @param clientUser
 	 * @param clientZone
-	 * @param applicationNAme
+	 * @param applicationName
+	 * @param clientPolicy
 	 */
 	public RcConnect(IrodsProtocolType irodsProt, int reconnFlag, int connectCnt,
 			String proxyUser, String proxyZone, String clientUser, String clientZone, 
