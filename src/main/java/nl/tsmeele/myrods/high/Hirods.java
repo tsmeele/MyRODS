@@ -120,6 +120,24 @@ public class Hirods extends Irods {
 		return genOut.data[0][0];
 	}
 	
+	public String getUserType(String userName, String zone) throws MyRodsException, IOException {
+		if (!this.isAuthenticated()) return null;
+		// SELECT clause
+		InxIvalPair inxIvalPair = new InxIvalPair();
+		inxIvalPair.put(Columns.USER_TYPE.getId(), Flag.SELECT_NORMAL);	
+		// WHERE clause
+		InxValPair inxValPair = new InxValPair();
+		inxValPair.put(Columns.USER_NAME.getId(), "= '" + userName + "'");
+		inxValPair.put(Columns.USER_ZONE.getId(), "= '" + zone + "'");
+		int maxRows = 1;
+		GenQueryInp genQueryInp = new GenQueryInp(maxRows, 0, 0, Flag.AUTO_CLOSE,
+				new KeyValPair(), inxIvalPair , inxValPair);
+		GenQueryOut genOut = rcGenQuery(genQueryInp);
+		if (error || genOut.columnCount < 1 || genOut.rowCount < 1) return null;
+		String userType = genOut.data[0][0];
+		return userType;
+	}
+	
 
 
 	public ArrayList<AVU> getAvus(String rodsObjType, String name) throws MyRodsException, IOException {
