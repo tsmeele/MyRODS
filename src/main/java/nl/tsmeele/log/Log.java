@@ -44,6 +44,10 @@ public class Log {
 		println(LogLevel.ERROR, message);
 	}
 	
+	public static void warning(String message) {
+		println(LogLevel.WARNING, message);
+	}
+	
 	public static void info(String message) {
 		println(LogLevel.INFO, message);
 	}
