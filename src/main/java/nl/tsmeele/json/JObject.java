@@ -25,7 +25,7 @@ public class JObject extends HashMap<String,Json> implements Json{
 			else {
 				isNext = true;
 			}
-			sb.append(key + ":");
+			sb.append(JString.serialize(key) + ":");
 			sb.append(get(key).toString());
 		}
 		sb.append("}");
