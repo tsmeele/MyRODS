@@ -1,18 +1,13 @@
 package nl.tsmeele.myrods.high;
 
+
 import nl.tsmeele.myrods.api.ObjType;
 
-public abstract class IrodsObject {
-	public String ownerName;
-	public String ownerZone;
+public abstract class IrodsObject implements Comparable<IrodsObject> {
+	public IrodsUser owner;
 	
 	public IrodsObject(String ownerName, String ownerZone) {
-		this.ownerName = ownerName;
-		this.ownerZone = ownerZone;
-	}
-	
-	public String getOwner() {
-		return ownerName + "#" + ownerZone;
+		owner = new IrodsUser(ownerName, ownerZone);
 	}
 	
 	public boolean isCollection() {
@@ -25,6 +20,13 @@ public abstract class IrodsObject {
 	public abstract ObjType getType();
 
 	public abstract String getPath();
+	
+	public abstract String getParentPath();
+	
+	@Override
+	public int compareTo(IrodsObject other) {
+		return getPath().compareTo(other.getPath());
+	}
 
 	public static String parent(String path) {
 		int i = path.lastIndexOf('/');

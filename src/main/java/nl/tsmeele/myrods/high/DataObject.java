@@ -21,6 +21,11 @@ public class DataObject extends IrodsObject {
 	}
 	
 	@Override
+	public String getParentPath() {
+		return collName;
+	}
+	
+	@Override
 	public ObjType getType() {
 		return ObjType.DATAOBJECT;
 	}
@@ -37,6 +42,8 @@ public class DataObject extends IrodsObject {
 	public String toString() {
 		return collName + "/" + dataName;
 	}
+
+
 
 
 

@@ -10,6 +10,10 @@ public class Collection extends IrodsObject {
 		this.collName = collName;
 	}
 	
+	public String getParentPath() {
+		return super.parent(collName);
+	}
+	
 	@Override
 	public String getPath() {
 		return collName;
