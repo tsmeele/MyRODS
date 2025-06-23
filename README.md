@@ -10,6 +10,9 @@ The article is titled "Distributed Shared Collection Communication Protocol".
 By taking the effort to create an implementation, I learned a lot 
 about the current state of this protocol, its benefits and limitations.
 
+The [MyRODS paper](myrods.pdf) describes the design of this library
+in more detail. 
+
 Ton
 
 ## Example usage
