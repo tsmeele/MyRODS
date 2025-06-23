@@ -12,6 +12,7 @@ about the current state of this protocol, its benefits and limitations.
 
 The [MyRODS paper](myrods.pdf) describes the design of this library
 in more detail. 
+NB: Use a PDF viewer (instead of Github renderer) to read the paper. 
 
 Ton
 
