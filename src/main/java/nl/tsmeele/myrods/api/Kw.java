@@ -382,7 +382,12 @@ public class Kw {
 	public static final String ACCESS_INHERIT                            = "inherit";
 	public static final String ACCESS_NO_INHERIT                         = "noinherit";
 
+	// defined in lib/api/include/irods/modAccessControl.h :
 	
+	// Used to indicate a resource instead of requiring a change to the protocol
+	public static final String MOD_RESC_PREFIX							= "resource:";
+	// To indicate admin mode, without protocol change.
+	public static final String MOD_ADMIN_MODE_PREFIX 					= "admin:"; 
 	
 	
 	
