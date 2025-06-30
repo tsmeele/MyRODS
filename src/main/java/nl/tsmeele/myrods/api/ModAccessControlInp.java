@@ -40,7 +40,8 @@ public class ModAccessControlInp extends DataStruct {
 	 * 
 	 * path:
 	 *   - basically the path to the object
-	 *   - some quirks have been added, see below:
+	 * 
+	 * some quirks have been added to access levels, see below:
 	 *         excerpt from lib/api/include/irods/modAccessControl.h :
 	 *         #define MOD_RESC_PREFIX "resource:"  // Used to indicate a resource instead of requiring a change to the protocol
 	 *         #define MOD_ADMIN_MODE_PREFIX "admin:" // To indicate admin mode, without protocol change.
