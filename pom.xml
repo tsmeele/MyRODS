@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.tsmeele</groupId>
 	<artifactId>myrods</artifactId>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.1.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>myrods</name>
 	<description>client library to access iRODS servers</description>
