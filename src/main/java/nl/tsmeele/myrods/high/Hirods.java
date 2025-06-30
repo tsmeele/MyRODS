@@ -255,43 +255,32 @@ public class Hirods extends Irods {
 		if (type == ObjType.COLLECTION) {
 			inxIvalPair.put(Columns.COLL_ACCESS_USER_ID.getId(), Flag.SELECT_NORMAL);
 			inxValPair.put(Columns.COLL_NAME.getId(), "= '"+ objpath + "'");
+			// NB: a string compare suffices because the access types are all strings of 4 digits
+			inxValPair.put(Columns.COLL_ACCESS_TYPE.getId(), ">= '" + String.valueOf(desiredPermission.getId()) + "'");
 		} else {
 			inxIvalPair.put(Columns.DATA_ACCESS_USER_ID.getId(), Flag.SELECT_NORMAL);
 			inxValPair.put(Columns.DATA_NAME.getId(), "= '"+ DataObject.basename(objpath) + "'");
 			inxValPair.put(Columns.COLL_NAME.getId(), "= '"+ DataObject.parent(objpath) + "'");
+			// NB: a string compare suffices because the access types are all strings of 4 digits
+			inxValPair.put(Columns.DATA_ACCESS_TYPE.getId(), ">= '" + String.valueOf(desiredPermission.getId()) + "'");
 		}
-		// NB: a string compare suffices because the access types are all strings of 4 digits
-		inxValPair.put(Columns.COLL_ACCESS_TYPE.getId(), ">= '" + String.valueOf(desiredPermission.getId()) + "'");
+
 		int maxRows = 256;
 		GenQueryInp genQueryInp = new GenQueryInp(maxRows, 0, 0, 0,
 				new KeyValPair(), inxIvalPair , inxValPair);
-		boolean hasDesiredPermission = false;
-		boolean done = false;
-		while (!done) {
-			GenQueryOut genOut = rcGenQuery(genQueryInp);
-			if (error) break;
-			// browse through list of groups that are granted the desired access level to the collection
+		GenQueryIterator it = genQueryIterator(genQueryInp);
+		while (it.hasNext()) {
+			GenQueryOut genOut = it.next();
 			for (int i = 0; i < genOut.rowCount; i++) {
 				// check if the user is a member of this group
 				if (users.contains(genOut.data[i][0])) {	// COLL_ACCESS_USER_ID
-					hasDesiredPermission = true;
-					done = true;
-					break;
+					// user has required access
+					it.closeQuery();
+					return true;
 				}
 			}
-			// prepare for next set of rows
-			DataInt continueInx = (DataInt) genQueryInp.lookupName("continueInx");
-			continueInx.set(genOut.continueInx);
-			if (genOut.rowCount < 256) {
-				// last rowset received
-				break;
-			}
 		}
-		// close query
-		DataInt genInpMaxRows = (DataInt) genQueryInp.lookupName("maxRows");
-		genInpMaxRows.set(0);
-		rcGenQuery(genQueryInp);
-		return hasDesiredPermission;
+		return false;
 	}
 	
 	private ArrayList<String> getUserGroupIds(String userName, String userZone) throws MyRodsException, IOException {
@@ -305,25 +294,13 @@ public class Hirods extends Irods {
 		GenQueryInp genQueryInp = new GenQueryInp(maxRows, 0, 0, 0,
 				new KeyValPair(), inxIvalPair , inxValPair);
 		ArrayList<String> users = new ArrayList<String>();
-		boolean done = false;
-		while (!done) {
-			GenQueryOut genOut = rcGenQuery(genQueryInp);
-			if (error) break;	// query error or CAT_NO_ROWS_FOUND
+		GenQueryIterator it = genQueryIterator(genQueryInp);
+		while (it.hasNext()) {
+			GenQueryOut genOut = it.next();
 			for (int i = 0; i < genOut.rowCount; i++) {
 				users.add(genOut.data[i][0]);	// USER_GROUP_ID
 			}
-			// prepare for next set of rows
-			DataInt continueInx = (DataInt) genQueryInp.lookupName("continueInx");
-			continueInx.set(genOut.continueInx);
-			if (genOut.rowCount < 256) {
-				// last rowset received
-				break;
-			}
 		}
-		// close query
-		DataInt GenInpMaxRows = (DataInt) genQueryInp.lookupName("maxRows");
-		GenInpMaxRows.set(0);
-		rcGenQuery(genQueryInp);
 		return users;
 	}
 }
