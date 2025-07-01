@@ -41,13 +41,21 @@ public class MsParamArray extends DataStruct {
 	public MsParamArray(DataStruct dataStruct) {
 		super("MsParamArray_PI");
 		addFrom(dataStruct);
+		int paramLen = this.lookupInt("paramLen");
 		// convert members from generic DataStruct to MsParam
-		DataArray array = (DataArray) get(2);
-		for (Data member : array) {
-			DataPtr paramPtr = (DataPtr) member;
+		if (paramLen < 2) {
+			DataPtr paramPtr = (DataPtr) get(2); 
 			DataStruct param = 
 					RodsCall.convertToOutputClass((DataStruct)paramPtr.get());
 			paramPtr.set(0, param);
+		} else {
+			DataArray array = (DataArray) get(2);
+			for (Data member : array) {
+				DataPtr paramPtr = (DataPtr) member;
+				DataStruct param = 
+					RodsCall.convertToOutputClass((DataStruct)paramPtr.get());
+				paramPtr.set(0, param);
+			}
 		}
 		
 	}
