@@ -16,6 +16,7 @@ import nl.tsmeele.myrods.irodsStructures.RcDataObjCreate;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjLseek;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjOpen;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjRead;
+import nl.tsmeele.myrods.irodsStructures.RcDataObjRepl;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjUnlink;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjWrite;
 import nl.tsmeele.myrods.irodsStructures.RcDisconnect;
@@ -304,6 +305,10 @@ public class Irods {
 	public String rcDataObjChksum(DataObjInp dataObjInp) throws MyRodsException, IOException {
 		DataStruct response = exchangeRequest(new RcDataObjChksum(dataObjInp));
 		return response.lookupString("myStr");
+	}
+	
+	public void rcDataObjRepl(DataObjInp dataObjInp) throws MyRodsException, IOException {
+		exchangeRequest(new RcDataObjRepl(dataObjInp));
 	}
 	
 	public JObject rcReplicaOpen(DataObjInp dataObjInp) throws MyRodsException, IOException {
