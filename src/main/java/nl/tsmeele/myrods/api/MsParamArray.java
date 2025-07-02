@@ -41,13 +41,17 @@ public class MsParamArray extends DataStruct {
 	public MsParamArray(DataStruct dataStruct) {
 		super("MsParamArray_PI");
 		addFrom(dataStruct);
+		if (this.size() == 0) return;
 		int paramLen = this.lookupInt("paramLen");
 		// convert members from generic DataStruct to MsParam
 		if (paramLen < 2) {
+			// array is not present in zero/single item case
 			DataPtr paramPtr = (DataPtr) get(2); 
-			DataStruct param = 
-					RodsCall.convertToOutputClass((DataStruct)paramPtr.get());
-			paramPtr.set(0, param);
+			DataStruct param = null;
+			if (paramPtr != null) { 
+				param = RodsCall.convertToOutputClass((DataStruct)paramPtr.get());
+				paramPtr.set(0, param);
+			}
 		} else {
 			DataArray array = (DataArray) get(2);
 			for (Data member : array) {
@@ -81,11 +85,16 @@ public class MsParamArray extends DataStruct {
 	}
 	
 	private class MsParamIterator implements Iterator<MsParam> {
+		private int nItems;
 		private int index;
+		
+		public void setItems(int n) {
+			nItems = n;
+		}
 		
 		@Override
 		public boolean hasNext() {
-			return getArray().size() > index;
+			return nItems > index;
 		}
 
 		@Override
@@ -93,7 +102,13 @@ public class MsParamArray extends DataStruct {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
-			DataPtr p = (DataPtr) getArray().get(index);
+			DataPtr p = null;
+			if (nItems < 2) {
+				// array is not present in zero/single item case
+				p = (DataPtr) get(2);
+			} else {
+				p = (DataPtr) getArray().get(index);
+			}
 			MsParam msParam = (MsParam) p.get();
 			index++;
 			return msParam;
@@ -101,7 +116,9 @@ public class MsParamArray extends DataStruct {
 	}
 	
 	public Iterator<MsParam> msParamIterator() {
-		return new MsParamIterator();
+		MsParamIterator it = new MsParamIterator();
+		it.setItems(lookupInt("paramLen"));
+		return (Iterator<MsParam>) it;
 	}
 	
 }
