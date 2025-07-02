@@ -81,6 +81,10 @@ public class Unpacker {
 				dataStruct.add(unpackArray(dataStruct, parsed, buf));
 				continue;
 			}
+			if (parsed.getCardinality() == 0) {
+				// case:  "type var[0]"  (hence array is not present)
+				continue;
+			}
 			if (parsed.isPointer()) {
 				// case:  "type *var" 
 				dataStruct.add(unpackPointer(dataStruct, parsed, buf));
