@@ -17,6 +17,7 @@ import nl.tsmeele.myrods.irodsStructures.RcDataObjLseek;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjOpen;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjRead;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjRepl;
+import nl.tsmeele.myrods.irodsStructures.RcDataObjTrim;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjUnlink;
 import nl.tsmeele.myrods.irodsStructures.RcDataObjWrite;
 import nl.tsmeele.myrods.irodsStructures.RcDisconnect;
@@ -103,36 +104,6 @@ public class Irods {
 	public String getHost() {
 		return host;
 	}
-	
-	
-//	public Irods cloneConnection() throws IOException, MyRodsException {
-//		if (!serverConnection.isConnected() || authenticatedPassword == null) {
-//			throw new MyRodsException("Unable to clone: Missing authenticated iRODS connection");
-//		}
-//		Irods irods2 = new Irods(host, port);
-//		ServerConnectionDetails sd = serverConnection.getSessionDetails();
-//		
-//		RcConnect rcConnect = new RcConnect(sd.startupPack, sd.clientPolicy);
-//		// clone connects to the server
-//		irods2.rcConnect(rcConnect);
-//		if (irods2.error) {
-//			throw new MyRodsException("Unable to clone: cannot connect to server");
-//		}
-//		// clone authenticates
-//		byte[] challenge = irods2.rcAuthRequest();
-//		if (irods2.error) {
-//			irods2.rcDisconnect();
-//			throw new MyRodsException("Unable to clone: authentication request failed");
-//		}
-//		String proxyUser = sd.startupPack.lookupString("proxyUser");
-//		String proxyZone = sd.startupPack.lookupString("proxyRcatZone");
-//		irods2.rcAuthResponse(proxyUser + "#" + proxyZone, authenticatedPassword, challenge);
-//		if (irods2.error) {
-//			irods2.rcDisconnect();
-//			throw new MyRodsException("Unable to clone: authentication failed");
-//		}
-//		return irods2;
-//	}
 
 	
 	//    API CALLS START HERE
@@ -276,6 +247,10 @@ public class Irods {
 	
 	public void rcDataObjCreate(DataObjInp dataObjInp) throws MyRodsException, IOException {
 		exchangeRequest(new RcDataObjCreate(dataObjInp));
+	}
+	
+	public void rcDataObjTrim(DataObjInp dataObjInp) throws MyRodsException, IOException {
+		exchangeRequest(new RcDataObjTrim(dataObjInp));
 	}
 	
 	public void rcDataObjUnlink(DataObjInp dataObjInp) throws MyRodsException, IOException {
