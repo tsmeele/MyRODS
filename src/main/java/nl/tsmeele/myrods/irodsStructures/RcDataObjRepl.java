@@ -16,7 +16,15 @@ public class RcDataObjRepl extends RodsApiCall {
 	 * REPL_NUM_KW - "value" = The replica number to use as source copy. (optional)
 	 * RESC_NAME_KW - "value" = The source Resource (optional). 
 	 * DEST_RESC_NAME_KW - "value" = The destination Resource. 
-	 * ADMIN_KW - Admin removing other users' files. Only files in trash can be removed.
+	 * ADMIN_KW - Admin mode (override access restrictions) (requires rodsadmin privs)
+	 * 
+	 * undocumented?:
+	 * VERIFY_CHKSUM_KW - compute and verify checksum
+	 *                    NB: checksum must be present on source replica
+	 * REG_CHKSUM_KW  - compute, do NOT verify, checksum
+	 *                    NB: checksum (only) added to the new replica
+	 * NO_COMPUTE_KW  - do NOT compute a checksum
+	 * SU_CLIENT_USER_KW  - act as agent for client user (requires rodsadmin privs)
 	 * 
 	 */
 	
