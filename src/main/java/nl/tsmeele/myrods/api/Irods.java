@@ -159,7 +159,8 @@ public class Irods {
 	
 	public MiscSvrInfo rcMiscSvrInfo() throws MyRodsException, IOException {
 		String serverVersion = serverConnection.getSessionDetails().relVersion.get();
-		if (ServerConnectionDetails.compareVersions(serverVersion, "4.3.3") > 0) {
+		System.out.println("SERVER VERSION=" + serverVersion);
+		if (ServerConnectionDetails.compareVersions(serverVersion, "rods4.3.3") > 0) {
 			// use updated reply format (certinfo has been added)
 			DataStruct response = exchangeRequest(new RcMiscSvrInfo434());
 			return new MiscSvrInfo(response);
