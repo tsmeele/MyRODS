@@ -30,6 +30,7 @@ import nl.tsmeele.myrods.irodsStructures.RcGetLimitedPassword;
 import nl.tsmeele.myrods.irodsStructures.RcGetResourceInfoForOperation;
 import nl.tsmeele.myrods.irodsStructures.RcGetTempPassword;
 import nl.tsmeele.myrods.irodsStructures.RcMiscSvrInfo;
+import nl.tsmeele.myrods.irodsStructures.RcMiscSvrInfo434;
 import nl.tsmeele.myrods.irodsStructures.RcModAVUMetadata;
 import nl.tsmeele.myrods.irodsStructures.RcModAccessControl;
 import nl.tsmeele.myrods.irodsStructures.RcModDataObjMeta;
@@ -157,6 +158,13 @@ public class Irods {
 	}
 	
 	public MiscSvrInfo rcMiscSvrInfo() throws MyRodsException, IOException {
+		String serverVersion = serverConnection.getSessionDetails().relVersion.get();
+		if (ServerConnectionDetails.compareVersions(serverVersion, "4.3.3") > 0) {
+			// use updated reply format (certinfo has been added)
+			DataStruct response = exchangeRequest(new RcMiscSvrInfo434());
+			return new MiscSvrInfo(response);
+		}
+		// use pre-4.3.4 reply format (has no certinfo)
 		DataStruct response = exchangeRequest(new RcMiscSvrInfo());
 		return new MiscSvrInfo(response);
 	}

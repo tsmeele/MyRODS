@@ -168,7 +168,9 @@ public class PackInstructions  extends HashMap<String, ArrayList<String>> {
 				"FileRestartInfo_PI", "str fileName[MAX_NAME_LEN]; str objPath[MAX_NAME_LEN]; int numSeg; int flags; double fileSize; struct DataSeg_PI[numSeg];",
 				
 				// retrieved from lib/api/include/irods/getMiscSvrInfo.h
+				// the definition of instruction MiscSvrInfo has changed as of iRODS 4.3.4+
 				"MiscSvrInfo_PI", "int serverType; int serverBootTime; str relVersion[NAME_LEN]; str apiVersion[NAME_LEN]; str rodsZone[NAME_LEN];",
+				"MiscSvrInfo434_PI", "int serverType; int serverBootTime; str relVersion[NAME_LEN]; str apiVersion[NAME_LEN]; str rodsZone[NAME_LEN];struct BinBytesBuf_PI;",
 				// lib/api/include/irods/authRequest.h
 				"authRequestOut_PI", "bin *challenge(CHALLENGE_LEN);",
 				// lib/api/include/irods/authResponse.h
