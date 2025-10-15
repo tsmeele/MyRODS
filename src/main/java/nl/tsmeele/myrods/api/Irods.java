@@ -74,7 +74,8 @@ public class Irods {
 	
 	
 	public Irods(String host, int port) {
-		this.host = host;
+		this.host = host;import nl.tsmeele.myrods.api.MiscSvrInfo;
+
 		this.port = port;
 	}
 	
@@ -159,7 +160,6 @@ public class Irods {
 	
 	public MiscSvrInfo rcMiscSvrInfo() throws MyRodsException, IOException {
 		String serverVersion = serverConnection.getSessionDetails().relVersion.get();
-		System.out.println("SERVER VERSION=" + serverVersion);
 		if (ServerConnectionDetails.compareVersions(serverVersion, "rods4.3.3") > 0) {
 			// use updated reply format (certinfo has been added)
 			DataStruct response = exchangeRequest(new RcMiscSvrInfo434());

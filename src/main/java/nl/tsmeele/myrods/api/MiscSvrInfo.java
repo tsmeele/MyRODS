@@ -2,7 +2,6 @@ package nl.tsmeele.myrods.api;
 
 import nl.tsmeele.json.JObject;
 import nl.tsmeele.myrods.irodsStructures.DataBinArray;
-import nl.tsmeele.myrods.irodsStructures.DataCharArray;
 import nl.tsmeele.myrods.irodsStructures.DataStruct;
 
 // "MiscSvrInfo_PI":  "int serverType; int serverBootTime; str relVersion[NAME_LEN]; 
