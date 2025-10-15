@@ -74,7 +74,7 @@ public class Irods {
 	
 	
 	public Irods(String host, int port) {
-		this.host = host;import nl.tsmeele.myrods.api.MiscSvrInfo;
+		this.host = host;
 
 		this.port = port;
 	}
